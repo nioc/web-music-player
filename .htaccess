@@ -1,0 +1,4 @@
+#rewriting
+RewriteEngine on
+RewriteRule ^$ /display/player.php [L]
+RewriteRule ^stream/([0-9]+)$ /server/track.php?track=$1 [L]

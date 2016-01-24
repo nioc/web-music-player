@@ -1,0 +1,71 @@
+@CHARSET "UTF-8";
+/*! wmp.css v1.0.0 */
+body {
+    font-family: "Helvetica Neue", "Helvetica", "Calibri", "sans";
+    background-color: #383838;
+    color: white;
+}
+.clickable {
+    cursor: pointer;
+}
+.grid {
+    list-style-type: none;
+    padding: 0;
+    max-width: 30rem;
+}.grid-row {
+    display: flex;
+}
+.grid-header {
+    font-weight: bold;
+}
+.grid-col-3 {
+    display: inline-flex;
+    width: 33%;
+    max-width: 8rem;
+}
+.grid-col-4 {
+    display: inline-flex;
+    width: 25%;
+    max-width: 8rem;
+}
+.grid input{
+    width: 90%;
+    color: #383838;
+}
+.current{
+    font-weight: bold;
+    background-color: white;
+    color: #383838;
+}
+.track-title{
+
+}
+.artist-name{
+
+}
+.album-title{
+
+}
+.cover{
+    height: 200px;
+    width: 200px;
+}
+.button-icon{
+    border: none;
+    background: none;
+}
+.control{
+    padding: 1rem;
+    color: white;
+    cursor: pointer;
+    font-size: 2rem;
+}
+.fa{
+    padding: 0 0.5rem;
+}
+@media screen and (max-width:1000px) {
+    .controls, .cover{
+        text-align: center;
+        margin: auto;
+    }
+}

@@ -1,0 +1,3 @@
+RewriteEngine on
+RewriteRule ^users/([0-9]+)/playlist/tracks/?([0-9]*)$     playlist.php?userId=$1&sequence=$2 [L]
+RewriteRule ^library/tracks/?$                             library.php [L]
