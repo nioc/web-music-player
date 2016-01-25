@@ -27,7 +27,8 @@ The project is open and any contribution is welcome!
 
 To keep the code clean, we use [php-cs-fixer](http://cs.sensiolabs.org/), before commit launch this on each edited files: `php /usr/local/bin/php-cs-fixer fix /path/to/editedFile.php -v`.
 
-A little how-to fr github:
+A little how-to for github:
+
 1. Fork it
 2. Create your feature branch: `git checkout -b my-new-feature`
 3. Commit your changes (with a detailled message): `git commit -am 'Add an awesome feature'`

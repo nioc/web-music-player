@@ -6,18 +6,51 @@ Web Music Player provides and consumes some API.
 
 In case of error, the following structure is returned in the body:
 
-| Attribute | Type    | Explanation                                           |
+| Name      | Type    | Description                                           |
 |-----------|---------|-------------------------------------------------------|
 | code      | integer | The error code describing the problem                 |
 | message   | string  | Message describing the error for humans understanding |
 
-````
-{"code":500,"message":"Database is unavailable"}
+```` json
+{
+  "code":500,
+  "message":"Database is unavailable"
+}
 ````
 
 ### 1.1 Playlist
 
 Handle a user's playlist (tracks to play).
+
+"Playlist track" ressource is structured as the following:
+
+| Name     | Type   | Description                          |
+|----------|--------|--------------------------------------|
+| id       | string | Track identifier                     |
+| title    | string | Title                                |
+| file     | string | Source of the track                  |
+| userId   | string | Owner (user) identifiant             |
+| sequence | string | Track position in the playlist       |
+| album    | object | Album object (identifier and label)  |
+| artist   | object | Artist object (identifier and label) |
+
+```` json
+{
+  "id": "123",
+  "title": "Monkey gone to heaven",
+  "file": "/stream/123",
+  "userId": "1",
+  "sequence": "6",
+  "album": {
+    "id": "27",
+    "label": "Doolittle"
+  },
+  "artist": {
+    "id": "5",
+    "label": "Pixies"
+  }
+}
+````
 
 #### Get all tracks in a user's playlist
 ````
@@ -48,6 +81,32 @@ The API returns:
 ### 1.2 Tracks
 
 Handle the server library (tracks).
+
+"Tracks" ressource is structured as the following:
+
+| Name   | Type   | Description                          |
+|--------|--------|--------------------------------------|
+| id     | string | Identifier                           |
+| title  | string | Title                                |
+| file   | string | Source of the track                  |
+| album  | object | Album object (identifier and label)  |
+| artist | object | Artist object (identifier and label) |
+
+```` json
+{
+  "id": "123",
+  "title": "Monkey gone to heaven",
+  "file": "/stream/123",
+  "album": {
+    "id": "27",
+    "label": "Doolittle"
+  },
+  "artist": {
+    "id": "5",
+    "label": "Pixies"
+  }
+}
+````
 
 #### Get all tracks from the server
 ````
