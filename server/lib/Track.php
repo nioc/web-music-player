@@ -11,31 +11,70 @@
  */
 class Track
 {
-    ###START_AUTOCODE
-    /* the code below is auto generated do not remove the above tag */
-
-    public $id;                             // int(11) not_null primary_key unsigned auto_increment
-    public $file;                           // string(1024) multiple_key
-    public $album;                          // int(11) not_null multiple_key unsigned
-    public $year;                           // int(4) not_null unsigned
-    public $artist;                         // int(11) not_null multiple_key unsigned
-    public $title;                          // string(255) multiple_key
-    public $bitrate;                        // int(8) not_null unsigned
-    public $rate;                           // int(8) not_null unsigned
-    public $mode;                           // string(3) enum
-    public $size;                           // int(11) unsigned
-    public $time;                           // int(5) unsigned
-    public $track;                          // int(5) unsigned
-    public $mbid;                           // string(36)
-    public $updateTime;                     // int(11) unsigned
-    public $additionTime;                   // int(11) unsigned
-    public $composer;                       // string(256)
-
-    /* the code above is auto generated do not remove the tag below */
-    ###END_AUTOCODE
-    public function __construct()
-    {
-    }
+    /**
+     * @var int Track identifier
+     */
+    public $id;
+    /**
+     * @var string Track path and filename where the file is stored
+     */
+    public $file;
+    /**
+     * @var int Album identifier
+     */
+    public $album;
+    /**
+     * @var int Year
+     */
+    public $year;
+    /**
+     * @var int Artist identifier
+     */
+    public $artist;
+    /**
+     * @var string Track title
+     */
+    public $title;
+    /**
+     * @var int Bitrate
+     */
+    public $bitrate;
+    /**
+     * @var int Main rating
+     */
+    public $rate;
+    /**
+     * @var string Encoding bitrate mode, possible values are 'abr','vbr','cbr'
+     */
+    public $mode;
+    /**
+     * @var int File size
+     */
+    public $size;
+    /**
+     * @var int Time in seconds
+     */
+    public $time;
+    /**
+     * @var int Track number
+     */
+    public $track;
+    /**
+     * @var string MusicBrainz identifier
+     */
+    public $mbid;
+    /**
+     * @var int Last modification timestamp
+     */
+    public $updateTime;
+    /**
+     * @var int Adding timestamp
+     */
+    public $additionTime;
+    /**
+     * @var string Composer
+     */
+    public $composer;
 
     /**
      * Returns the filename for a specific track.
@@ -74,6 +113,9 @@ class Track
  */
 class Tracks
 {
+    /**
+     * @var array Tracks included in the library
+     */
     public $tracks;
 
     /**

@@ -10,21 +10,35 @@
 class Api
 {
     /**
-     * @var unknown
+     * @var string HTTP verb used to call API
      */
     public $method;
+    /**
+     * @var array Parameters provided in API call ; query parameters are in query[param], body request is in query['body']
+     */
     public $query;
+    /**
+     * @var string Requested output format
+     */
     private $outputFormat;
+    /**
+     * @var array HTTP verbs allowed for calling API
+     */
     private $allowedMethods;
-    private $contentType;
+    /**
+     * @var int HTTP status code returned by API
+     */
     private $httpCode;
-    private $body;
+    /**
+     * @var string Returned data
+     */
+    private $responseBody;
 
     /**
      * Initializes an API object with the given informations.
      *
-     * @param string $outputFormat   format ot the return of the API, default value is json
-     * @param array  $allowedMethods allowed HTTP methods for the API, default value is ['POST', 'GET', 'DELETE', 'PUT']
+     * @param string $outputFormat   Indicates API output format, default value is json
+     * @param array  $allowedMethods Allowed HTTP methods for the API, default value is ['POST', 'GET', 'DELETE', 'PUT']
      */
     public function __construct($outputFormat = 'json', $allowedMethods = array('POST', 'GET', 'DELETE', 'PUT'))
     {
@@ -55,7 +69,7 @@ class Api
     /**
      * Check the if the user have a correct authentication and authorization.
      *
-     * @param string $message message that the consumer see in case of authentication or authorization issue
+     * @param string $message Message that the consumer see in case of authentication or authorization issue
      *
      * @todo
      */
@@ -70,12 +84,12 @@ class Api
     /**
      * Output the provided data in the wished format.
      *
-     * @param number $httpCode HTTP code returned
-     * @param string $body     data returned in the HTTP response body
+     * @param int    $httpCode     HTTP code returned
+     * @param string $responseBody Data returned in the HTTP response body
      *
-     * @todo provide XML formatting (actually raw data)
+     * @todo Provide XML formatting (actually raw data)
      */
-    public function output($httpCode = 500, $body = null)
+    public function output($httpCode = 500, $responseBody = null)
     {
         //check http code format
         if (preg_match('/^\d\d\d$/', $httpCode)) {
@@ -85,32 +99,32 @@ class Api
         }
         //return http status
         http_response_code($this->httpCode);
-        $this->body = $body;
+        $this->responseBody = $responseBody;
         if (!preg_match('/^2\d\d$/', $this->httpCode)) {
             if ($this->httpCode == 403) {
                 //add the error in webserver log
                 error_log('client denied by server configuration: '.$_SERVER['SCRIPT_NAME']);
             }
-            if (isset($this->body) && is_string($this->body)) {
-                $this->body = new ErrorModel($this->httpCode, $this->body);
+            if (isset($this->responseBody) && is_string($this->responseBody)) {
+                $this->responseBody = new ErrorModel($this->httpCode, $this->responseBody);
             } else {
-                $this->body = new ErrorModel($this->httpCode);
+                $this->responseBody = new ErrorModel($this->httpCode);
             }
         }
         //return correct content-type header and output
         switch ($this->outputFormat) {
             case 'html':
                 header('Content-type: text/html; charset=UTF-8');
-                echo $this->body;
+                echo $this->responseBody;
                 break;
             case 'xml':
                 header('Content-type: application/xml; charset=UTF-8');
-                echo $this->body;
+                echo $this->responseBody;
                 break;
             case 'json':
             default:
                 header('Content-type: application/json; charset=UTF-8');
-                echo json_encode($this->body);
+                echo json_encode($this->responseBody);
         }
     }
 }
@@ -127,7 +141,7 @@ class ErrorModel
     /**
      * Initializes an error with the given informations.
      *
-     * @param number $code    Error code used by the consumer to handle it
+     * @param int    $code    Error code used by the consumer to handle it
      * @param string $message Description of the error for human understanding
      */
     public function __construct($code = 500, $message = '')

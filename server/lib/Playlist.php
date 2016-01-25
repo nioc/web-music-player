@@ -11,6 +11,9 @@
  */
 class Playlist
 {
+    /**
+     * @var array List of tracks included in a playlist
+     */
     public $tracks = array();
 
     /**
@@ -41,15 +44,19 @@ class Playlist
  */
 class PlaylistItem
 {
-    ###START_AUTOCODE
-    /* the code below is auto generated do not remove the above tag */
+    /**
+     * @var int User identifier, indicates the playlist owner
+     */
+    public $userId;
+    /**
+     * @var int Track sequence in the user playlist
+     */
+    public $sequence;
+    /**
+     * @var int Track identifier
+     */
+    public $id;
 
-    public $userId;                         // int(6) not_null primary_key multiple_key unsigned
-    public $sequence;                       // int(11) not_null primary_key unsigned
-    public $id;                             // int(11) not_null unsigned
-
-    /* the code above is auto generated do not remove the tag below */
-    ###END_AUTOCODE
     public function __construct($userId, $sequence, $id)
     {
         $this->userId = $userId;
