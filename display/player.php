@@ -23,8 +23,8 @@
             <ul class="grid">
                 <li class="grid-row" ng-repeat="track in playlist.tracks" ng-class="{current: playlist.currentTrack == $index}">
                     <span class="grid-col-4 track-title" ng-click="player.play($index)">{{track.title}}</span>
-                    <span class="grid-col-4 artist-name" ng-click="player.play($index)">{{track.artist}}</span>
-                    <span class="grid-col-4 album-title" ng-click="player.play($index)">{{track.album}}</span>
+                    <span class="grid-col-4 artist-name" ng-click="player.play($index)">{{track.artist.label}}</span>
+                    <span class="grid-col-4 album-title" ng-click="player.play($index)">{{track.album.label}}</span>
                     <span class="grid-col-4"><button class="button-icon remove" ng-click="playlist.remove(track)"><i class="fa fa-trash"></i></button></span>
                 </li>
             </ul>
@@ -43,8 +43,8 @@
                     </li>
                     <li class="grid-row clickable" ng-repeat="track in library.tracks | orderBy:library.order" ng-click="playlist.add(track)">
                         <span class="grid-col-3">{{track.title}}</span>
-                        <span class="grid-col-3">{{track.artist}}</span>
-                        <span class="grid-col-3">{{track.album}}</span>
+                        <span class="grid-col-3">{{track.artist.label}}</span>
+                        <span class="grid-col-3">{{track.album.label}}</span>
                     </li>
                 </ul>
             </section>

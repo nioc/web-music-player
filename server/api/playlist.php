@@ -35,8 +35,9 @@ switch ($api->method) {
         }
         */
         $playlistItem = new PlaylistItem($api->query['userId'], null, $api->query['body']->id);
-        if ($playlistItem->insert()) {
-            $api->output(201, $playlistItem);
+        $response = $playlistItem->insert();
+        if ($response) {
+            $api->output(201, $response);
         } else {
             $api->output(500, 'Update error');
         }

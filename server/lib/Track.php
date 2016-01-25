@@ -100,6 +100,31 @@ class Track
             return false;
         }
     }
+    /**
+     * Returns a track object with artist and album structures.
+     *
+     * @param object $track A track object from database reading
+     *
+     * @return object Track structured
+     */
+    public function structureData($track)
+    {
+        //create album structure
+        $album = new stdClass();
+        $album->id = $track->album;
+        $album->label = $track->albumLabel;
+        unset($track->album, $track->albumLabel);
+        $track->album = $album;
+
+        //create artist structure
+        $artist = new stdClass();
+        $artist->id = $track->artist;
+        $artist->label = $track->artistLabel;
+        unset($track->artist, $track->artistLabel);
+        $track->artist = $artist;
+
+        return $track;
+    }
 }
 
 /**
@@ -127,9 +152,13 @@ class Tracks
     {
         global $connection;
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
-        $query = $connection->prepare('SELECT `track`.`id`, `track`.`title`, `track`.`artist`, `track`.`file`, `track`.`album` FROM `track` WHERE 1=1 ORDER BY `additionTime` DESC;');
+        $query = $connection->prepare('SELECT `track`.`id`, `track`.`title`, `track`.`artist`, `artist`.`name` AS `artistLabel`, `track`.`album`, `album`.`name` AS `albumLabel`, CONCAT(\'/stream/\',`track`.`id`) AS `file` FROM `track`, `album`, `artist` WHERE `track`.`artist`=`artist`.`id` AND `track`.`album`=`album`.`id` ORDER BY `additionTime` DESC;');
         if ($query->execute()) {
             $this->tracks = $query->fetchAll(PDO::FETCH_CLASS);
+            foreach ($this->tracks as $track) {
+                $trackStructured = new Track();
+                $track = $trackStructured->structureData($track);
+            }
 
             return true;
         } else {

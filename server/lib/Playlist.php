@@ -24,12 +24,16 @@ class Playlist
     public function populate($userId)
     {
         global $connection;
-        //include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
-        $query = $connection->prepare('SELECT `track`.`id`, `track`.`title`, `track`.`artist`, `track`.`album`, CONCAT(\'/stream/\',`track`.`id`) AS `file`, `playlist`.`userId` , `playlist`.`sequence` FROM `track`, `playlist` WHERE `track`.`id`=`playlist`.`id` AND `playlist`.`userId`=:userId ORDER BY `sequence` ASC;');
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
+        $query = $connection->prepare('SELECT `track`.`id`, `track`.`title`, `track`.`artist`, `artist`.`name` AS `artistLabel`, `track`.`album`, `album`.`name` AS `albumLabel`, CONCAT(\'/stream/\',`track`.`id`) AS `file`, `playlist`.`userId` , `playlist`.`sequence` FROM `track`, `album`, `artist`, `playlist` WHERE `track`.`artist`=`artist`.`id` AND `track`.`album`=`album`.`id` AND `track`.`id`=`playlist`.`id` AND `playlist`.`userId`=:userId ORDER BY `sequence` ASC;');
         $query->bindValue(':userId', $userId, PDO::PARAM_INT);
         $query->execute();
         $this->tracks = $query->fetchAll(PDO::FETCH_CLASS);
+        foreach ($this->tracks as $track) {
+            $trackStructured = new Track();
+            $track = $trackStructured->structureData($track);
+        }
     }
 }
 
@@ -72,13 +76,19 @@ class PlaylistItem
     {
         global $connection;
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
-        $query = $connection->prepare('SELECT `track`.`id`, `track`.`title`, `track`.`artist`, `track`.`album`, CONCAT(\'/stream/\',`track`.`id`) AS `file`, `playlist`.`userId` , `playlist`.`sequence` FROM `track`, `playlist` WHERE `track`.`id`=`playlist`.`id` AND `playlist`.`userId`=:userId AND `playlist`.`sequence`=:sequence LIMIT 1;');
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
+        $query = $connection->prepare('SELECT `track`.`id`, `track`.`title`, `track`.`artist`, `artist`.`name` AS `artistLabel`, `track`.`album`, `album`.`name` AS `albumLabel`, CONCAT(\'/stream/\',`track`.`id`) AS `file`, `playlist`.`userId` , `playlist`.`sequence` FROM `track`, `album`, `artist`, `playlist` WHERE `track`.`artist`=`artist`.`id` AND `track`.`album`=`album`.`id` AND `track`.`id`=`playlist`.`id` AND `playlist`.`userId`=:userId AND `playlist`.`sequence`=:sequence LIMIT 1;');
         $query->bindValue(':userId',   $this->userId,   PDO::PARAM_INT);
         $query->bindValue(':sequence', $this->sequence, PDO::PARAM_INT);
         $query->execute();
         $query->setFetchMode(PDO::FETCH_INTO, $this);
+        if ($query->fetch()) {
+            $trackStructured = new Track();
 
-        return $query->fetch();
+            return $trackStructured->structureData($this);
+        } else {
+            return false;
+        }
     }
     /**
      * Inserts a specific user's track and returns it sequence number.
