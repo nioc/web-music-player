@@ -47,11 +47,11 @@ CREATE TABLE `wmp`.`track` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Identifier',
   `file` varchar(1024) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Filename where the file is stored',
   `album` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Album identifier',
-  `year` smallint(4) unsigned NOT NULL DEFAULT '0' COMMENT 'Year',
+  `year` smallint(4) unsigned DEFAULT NULL COMMENT 'Year',
   `artist` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Artist',
   `title` varchar(255) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Title',
-  `bitrate` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'Bitrate',
-  `rate` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'Main rating',
+  `bitrate` mediumint(8) unsigned DEFAULT NULL COMMENT 'Bitrate',
+  `rate` mediumint(8) unsigned DEFAULT NULL COMMENT 'Main rating',
   `mode` enum('abr','vbr','cbr') CHARACTER SET utf8 DEFAULT NULL COMMENT 'Encoding bitrate mode',
   `size` int(11) unsigned DEFAULT NULL COMMENT 'File size',
   `time` smallint(5) unsigned DEFAULT NULL COMMENT 'Time in seconds',
@@ -67,7 +67,7 @@ CREATE TABLE `wmp`.`track` (
   FULLTEXT KEY `title` (`title`),
   CONSTRAINT `track_fk_1` FOREIGN KEY (`album`) REFERENCES `album` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `track_fk_2` FOREIGN KEY (`artist`) REFERENCES `artist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB 	DEFAULT CHARSET=utf8 COMMENT='Tracks';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tracks';
 
 
 CREATE TABLE `wmp`.`playlist` (

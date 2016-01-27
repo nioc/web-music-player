@@ -101,6 +101,37 @@ class Track
         }
     }
     /**
+     * Inserts a track in database.
+     *
+     * @return bool True on success or false on failure
+     */
+    public function insert()
+    {
+        global $connection;
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        $query = $connection->prepare('INSERT INTO `wmp`.`track` (`file`, `album`, `year`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `mbid`, `updateTime`, `additionTime`, `composer`) VALUES (:file, :album, :year, :artist, :title, :bitrate, :rate, :mode, :size, :time, :track, :mbid, unix_timestamp(), unix_timestamp(), :composer);');
+        $query->bindValue(':file',     $this->file,     PDO::PARAM_STR);
+        $query->bindValue(':album',    $this->album,    PDO::PARAM_INT);
+        $query->bindValue(':year',     $this->year,     PDO::PARAM_INT);
+        $query->bindValue(':artist',   $this->artist,   PDO::PARAM_INT);
+        $query->bindValue(':title',    $this->title,    PDO::PARAM_STR);
+        $query->bindValue(':bitrate',  $this->bitrate,  PDO::PARAM_INT);
+        $query->bindValue(':rate',     $this->rate,     PDO::PARAM_INT);
+        $query->bindValue(':mode',     $this->mode,     PDO::PARAM_STR);
+        $query->bindValue(':size',     $this->size,     PDO::PARAM_INT);
+        $query->bindValue(':time',     $this->time,     PDO::PARAM_INT);
+        $query->bindValue(':track',    $this->track,    PDO::PARAM_INT);
+        $query->bindValue(':mbid',     $this->mbid,     PDO::PARAM_STR);
+        $query->bindValue(':composer', $this->composer, PDO::PARAM_STR);
+        if ($query->execute()) {
+            $this->id = $connection->lastInsertId();
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+    /**
      * Returns a track object with artist and album structures.
      *
      * @param object $track A track object from database reading
