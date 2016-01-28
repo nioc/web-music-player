@@ -27,4 +27,6 @@ $gDns = 'music.domain.com';
 $gFilesPath = '/var/www/wmp/';
 
 //override with local values
-@include_once $_SERVER['DOCUMENT_ROOT'].'/configuration/local.php';
+if (is_file($_SERVER['DOCUMENT_ROOT'].'/server/configuration/local.php')) {
+    include_once $_SERVER['DOCUMENT_ROOT'].'/server/configuration/local.php';
+}

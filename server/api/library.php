@@ -14,12 +14,12 @@ $api = new Api('json', ['GET']);
 include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
 switch ($api->method) {
     case 'GET':
+        //returns the library
         $library = new Tracks();
         if ($library->get()) {
             $api->output(200, $library->tracks);
-            exit();
         } else {
             $api->output(500, 'SQL error');
-            exit();
         }
+        break;
 }

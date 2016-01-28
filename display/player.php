@@ -9,7 +9,7 @@
         <link type="text/css" href="/display/files/wmp.css" rel="stylesheet"/>
     </head>
     <body>
-        <div ng-controller="playerCtrl" id="container">
+        <div ng-controller="playerCtrl">
             <h1>{{playlist.tracks[playlist.currentTrack].title}}</h1>
             <div class="cover">
                 <img class="cover" src="/display/files/images/default_cover.png" alt="cover"/>

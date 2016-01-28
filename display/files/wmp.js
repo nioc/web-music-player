@@ -3,8 +3,7 @@
  * version 1.0.0
  */
 'use strict';
-var wmpAnimation = angular.module('wmpAnimations', ['ngResource']);
-var wmpApp = angular.module('wmpApp', ['wmpAnimations']);
+var wmpApp = angular.module('wmpApp', ['ngResource']);
 
 //declare controller
 wmpApp.controller('playerCtrl', ['$scope', 'PlaylistItem', 'Library', 'Audio', function($scope, PlaylistItem, Library, Audio) {
@@ -17,15 +16,16 @@ wmpApp.controller('playerCtrl', ['$scope', 'PlaylistItem', 'Library', 'Audio', f
         isPlaying:false,
         isPaused:false,
         //declare function for playing current track in playlist
-        play: function(trackIndex) {
+        play(trackIndex) {
             if ($scope.playlist.tracks.length > 0 && $scope.playlist.tracks.length > $scope.playlist.currentTrack) {
                 if (this.isPaused && !angular.isDefined(trackIndex)) {
                     //resume the playing (only if there is no specific track asked)
                     audio.play();
                 } else {
                     //load new track and play it
-                    if (angular.isDefined(trackIndex))
+                    if (angular.isDefined(trackIndex)) {
                         $scope.playlist.currentTrack = trackIndex;
+                    }
                     audio.src=$scope.playlist.tracks[$scope.playlist.currentTrack].file;
                     audio.play();
                 }
@@ -34,7 +34,7 @@ wmpApp.controller('playerCtrl', ['$scope', 'PlaylistItem', 'Library', 'Audio', f
             }
         },
         //declare function to pause the playing
-        pause: function() {
+        pause() {
             if (this.isPlaying) {
                 audio.pause();
                 this.isPaused=true;
@@ -42,9 +42,10 @@ wmpApp.controller('playerCtrl', ['$scope', 'PlaylistItem', 'Library', 'Audio', f
             }
         },
         //declare function for playing previous track in playlist
-        previous: function() {
-            if (!$scope.playlist.tracks.length)
+        previous() {
+            if (!$scope.playlist.tracks.length) {
                 return;
+            }
             this.isPaused=false;
             if ($scope.playlist.currentTrack > 0) {
                 //go to previous track
@@ -56,7 +57,7 @@ wmpApp.controller('playerCtrl', ['$scope', 'PlaylistItem', 'Library', 'Audio', f
             this.play();
         },
         //declare function for playing next track in playlist
-        next: function() {
+        next() {
             if (!$scope.playlist.tracks.length) {
                 //there is no track to play, stop the playing
                 audio.pause();
@@ -85,7 +86,7 @@ wmpApp.controller('playerCtrl', ['$scope', 'PlaylistItem', 'Library', 'Audio', f
         tracks : PlaylistItem.query({userId:1}),
         currentTrack : 0,
         //declare function to add a track to the user playlist
-        add : function (track) {
+        add(track) {
             var playlistItem = new PlaylistItem(track);
             playlistItem.userId=$scope.user.id;
             PlaylistItem.save(playlistItem, function(data) {
@@ -97,7 +98,7 @@ wmpApp.controller('playerCtrl', ['$scope', 'PlaylistItem', 'Library', 'Audio', f
                 });
         },
         //declare function to remove a track from the user playlist
-        remove : function (track) {
+        remove(track) {
             track.$delete(function(){
                 //success, apply display change
                 var trackRemovedIndex = $scope.playlist.tracks.indexOf(track);
@@ -110,7 +111,7 @@ wmpApp.controller('playerCtrl', ['$scope', 'PlaylistItem', 'Library', 'Audio', f
                         $scope.playlist.currentTrack--;
                     }
                     //go to next track if the removed track was playing
-                    if ($scope.player.isPlaying && currentTrack == trackRemovedIndex) {
+                    if ($scope.player.isPlaying && currentTrack === trackRemovedIndex) {
                         $scope.player.next();
                     }
                 }
@@ -127,7 +128,7 @@ wmpApp.controller('playerCtrl', ['$scope', 'PlaylistItem', 'Library', 'Audio', f
         artist : null,
         album : null,
         title : null,
-        query : function () {
+        query() {
             $scope.library.tracks = Library.query({
                 title  : $scope.library.search.title,
                 album  : $scope.library.search.title,
