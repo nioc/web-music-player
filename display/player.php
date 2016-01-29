@@ -9,8 +9,8 @@
         <link type="text/css" href="/display/files/wmp.css" rel="stylesheet"/>
     </head>
     <body>
-        <div ng-controller="playerCtrl">
-            <h1>{{playlist.tracks[playlist.currentTrack].title}}</h1>
+        <div ng-controller="PlayerController">
+            <h1 class="current-title" ng-bind="playlist.tracks[playlist.currentTrack].title"></h1>
             <div class="cover">
                 <img class="cover" src="/display/files/images/default_cover.png" alt="cover"/>
             </div>
@@ -22,29 +22,29 @@
             </nav>
             <ul class="grid">
                 <li class="grid-row" ng-repeat="track in playlist.tracks" ng-class="{current: playlist.currentTrack == $index}">
-                    <span class="grid-col-4 track-title" ng-click="player.play($index)">{{track.title}}</span>
-                    <span class="grid-col-4 artist-name" ng-click="player.play($index)">{{track.artist.label}}</span>
-                    <span class="grid-col-4 album-title" ng-click="player.play($index)">{{track.album.label}}</span>
-                    <span class="grid-col-4"><button class="button-icon remove" ng-click="playlist.remove(track)"><i class="fa fa-trash"></i></button></span>
+                    <span class="grid-col" ng-click="player.play($index)" ng-bind="track.title"></span>
+                    <span class="grid-col" ng-click="player.play($index)" ng-bind="track.artist.label"></span>
+                    <span class="grid-col" ng-click="player.play($index)" ng-bind="track.album.label"></span>
+                    <span class="grid-col"><button class="button-icon remove" ng-click="playlist.remove(track)"><i class="fa fa-trash"></i></button></span>
                 </li>
             </ul>
             <section class="library">
                 <h1>Music Library</h1>
                 <ul class="grid">
-                    <li class="grid-row">
-                        <span class="grid-header grid-col-3">Title</span>
-                        <span class="grid-header grid-col-3">Artist</span>
-                        <span class="grid-header grid-col-3">Album</span>
+                    <li class="grid-header">
+                        <span class="grid-col">Title</span>
+                        <span class="grid-col">Artist</span>
+                        <span class="grid-col">Album</span>
                     </li>
                     <li class="grid-row">
-                        <span class="grid-col-3"><input ng-model="library.search.title" ng-change="library.search.query()" placeholder="Title"></span>
-                        <span class="grid-col-3"><input ng-model="library.search.artist" placeholder="Artist"></span>
-                        <span class="grid-col-3"><input ng-model="library.search.album" placeholder="Album"></span>
+                        <span class="grid-col"><input ng-model="library.search.title"  placeholder="Title"  ng-change="library.search.query()"></span>
+                        <span class="grid-col"><input ng-model="library.search.artist" placeholder="Artist" ng-change="library.search.query()"></span>
+                        <span class="grid-col"><input ng-model="library.search.album"  placeholder="Album"  ng-change="library.search.query()"></span>
                     </li>
                     <li class="grid-row clickable" ng-repeat="track in library.tracks | orderBy:library.order" ng-click="playlist.add(track)">
-                        <span class="grid-col-3">{{track.title}}</span>
-                        <span class="grid-col-3">{{track.artist.label}}</span>
-                        <span class="grid-col-3">{{track.album.label}}</span>
+                        <span class="grid-col" ng-bind="::track.title"></span>
+                        <span class="grid-col" ng-bind="::track.artist.label"></span>
+                        <span class="grid-col" ng-bind="::track.album.label"></span>
                     </li>
                 </ul>
             </section>

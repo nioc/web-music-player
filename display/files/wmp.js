@@ -6,7 +6,7 @@
 var wmpApp = angular.module('wmpApp', ['ngResource']);
 
 //declare controller
-wmpApp.controller('playerCtrl', ['$scope', 'PlaylistItem', 'Library', 'Audio', function($scope, PlaylistItem, Library, Audio) {
+wmpApp.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Audio', function($scope, PlaylistItem, Library, Audio) {
     //create user profile
     //@TODO call profile after signin
     $scope.user = {id:'1'};
@@ -79,7 +79,7 @@ wmpApp.controller('playerCtrl', ['$scope', 'PlaylistItem', 'Library', 'Audio', f
     };
     //automatic call to the next function when track is ended
     audio.onended=function() {
-        $scope.player.next();
+        $scope.$apply($scope.player.next());
     };
     //get playlist tracks
     $scope.playlist = {

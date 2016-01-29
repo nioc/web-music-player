@@ -8,25 +8,25 @@ body {
 .clickable {
     cursor: pointer;
 }
+.current-title {
+    overflow-x: auto;
+}
 .grid {
     list-style-type: none;
     padding: 0;
-    max-width: 30rem;
-}.grid-row {
-    display: flex;
+    max-width: 100%;
+    display: table;
+    overflow-x: scroll;
+}
+.grid-row {
+    display: table-row;
 }
 .grid-header {
+    display: table-header-group;
     font-weight: bold;
 }
-.grid-col-3 {
-    display: inline-flex;
-    width: 33%;
-    max-width: 8rem;
-}
-.grid-col-4 {
-    display: inline-flex;
-    width: 25%;
-    max-width: 8rem;
+.grid-col {
+    display: table-cell;
 }
 .grid input{
     width: 90%;
@@ -37,14 +37,8 @@ body {
     background-color: white;
     color: #383838;
 }
-.track-title{
-
-}
-.artist-name{
-
-}
-.album-title{
-
+.current .button-icon{
+    color: #383838 !important;
 }
 .cover{
     height: 200px;
@@ -53,10 +47,10 @@ body {
 .button-icon{
     border: none;
     background: none;
+    color: white;
 }
 .control{
     padding: 1rem;
-    color: white;
     cursor: pointer;
     font-size: 2rem;
 }
