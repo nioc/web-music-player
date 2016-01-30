@@ -10,6 +10,7 @@ body {
 }
 .current-title {
     overflow-x: auto;
+    height: 1.1em;
 }
 .grid {
     list-style-type: none;
@@ -54,6 +55,36 @@ body {
     cursor: pointer;
     font-size: 2rem;
 }
+.seek {
+    -webkit-appearance: none;
+    display: block;
+    width: 200px;
+    height:16px;
+    margin: 15px 0 0;
+    border: none;
+    border-radius: 20px;
+    background-color: #242323;
+    box-shadow: inset 0px 4px 4px rgba(0,0,0,.6);
+}
+.seek::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0px 0px 16px rgba(0,0,0,.6);
+}
+.seek::-moz-range-track {
+    height: 0;
+}
+.seek::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    background: white;
+    box-shadow: 0px 0px 16px rgba(0,0,0,.6);
+}
 .fa{
     padding: 0 0.5rem;
 }
@@ -61,5 +92,8 @@ body {
     .controls, .cover{
         text-align: center;
         margin: auto;
+    }
+    .seek {
+        margin: 15px auto 0;
     }
 }

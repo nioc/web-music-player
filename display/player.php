@@ -15,12 +15,18 @@
                 <img class="cover" src="/display/files/images/default_cover.png" alt="cover"/>
             </div>
             <nav class="controls">
+                <input type="range" id="seek" class="seek" value="0" max="{{player.duration}}" ng-model="player.currentTime" ng-change="player.seek()"/>
                 <button class="button-icon control prev" ng-click="player.previous()"><i class="fa fa-fast-backward" title="Previous"></i></button>
                 <button class="button-icon control play" ng-click="player.play()" ng-hide="player.isPlaying" title="Play"><i class="fa fa-play"></i></button>
                 <button class="button-icon control pause" ng-click="player.pause()" ng-show="player.isPlaying" title="Pause"><i class="fa fa-pause"></i></button>
                 <button class="button-icon control next" ng-click="player.next()"><i class="fa fa-fast-forward" title="Next"></i></button>
             </nav>
             <ul class="grid">
+                <li class="grid-header">
+                    <span class="grid-col">Title</span>
+                    <span class="grid-col">Artist</span>
+                    <span class="grid-col">Album</span>
+                </li>
                 <li class="grid-row" ng-repeat="track in playlist.tracks" ng-class="{current: playlist.currentTrack == $index}">
                     <span class="grid-col" ng-click="player.play($index)" ng-bind="track.title"></span>
                     <span class="grid-col" ng-click="player.play($index)" ng-bind="track.artist.label"></span>

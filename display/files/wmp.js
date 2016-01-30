@@ -15,6 +15,8 @@ wmpApp.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Aud
     $scope.player = {
         isPlaying:false,
         isPaused:false,
+        currentTime:0,
+        duration:0,
         //declare function for playing current track in playlist
         play(trackIndex) {
             if ($scope.playlist.tracks.length > 0 && $scope.playlist.tracks.length > $scope.playlist.currentTrack) {
@@ -28,6 +30,7 @@ wmpApp.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Aud
                     }
                     audio.src=$scope.playlist.tracks[$scope.playlist.currentTrack].file;
                     audio.play();
+                    this.currentTime = 0;
                 }
                 this.isPlaying=true;
                 this.isPaused=false;
@@ -75,12 +78,24 @@ wmpApp.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Aud
                 $scope.playlist.currentTrack = 0;
             }
             this.play($scope.playlist.currentTrack);
+        },
+        //declare function for seeking in track
+        seek() {
+            audio.currentTime = this.currentTime;
         }
     };
     //automatic call to the next function when track is ended
     audio.onended=function() {
         $scope.$apply($scope.player.next());
     };
+    //automatic update seeker
+    audio.ontimeupdate=function() {
+        $scope.$apply($scope.player.currentTime = this.currentTime);
+    };
+    //automatic update seeker max range
+    audio.ondurationchange=function() {
+        $scope.$apply($scope.player.duration = this.duration);
+    }
     //get playlist tracks
     $scope.playlist = {
         tracks : PlaylistItem.query({userId:1}),
@@ -107,7 +122,7 @@ wmpApp.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Aud
                 $scope.playlist.tracks.splice(trackRemovedIndex, 1);
                 //update currentTrack index
                 if (currentTrack >= trackRemovedIndex) {
-                    if (currentTrack > 0) {
+                    if (currentTrack >= 0) {
                         $scope.playlist.currentTrack--;
                     }
                     //go to next track if the removed track was playing
