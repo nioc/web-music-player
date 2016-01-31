@@ -146,8 +146,9 @@ wmpApp.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Aud
         display : false,
         toggleDisplay() {
             this.display = !this.display;
-            if (this.display && $scope.library.tracks.length === 0)
+            if (this.display && $scope.library.tracks.length === 0) {
                 this.search.query();
+            }
         },
         search : {
             artist : null,

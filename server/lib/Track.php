@@ -95,10 +95,11 @@ class Track
         $query->execute();
         $query->setFetchMode(PDO::FETCH_INTO, $this);
         if ($query->fetch()) {
+            //returns file path
             return $this->file;
-        } else {
-            return false;
         }
+        //return false indicating file was not found
+        return false;
     }
     /**
      * Inserts a track in database.
@@ -143,17 +144,16 @@ class Track
         //create album structure
         $album = new stdClass();
         $album->id = $track->album;
-        $album->label = $track->albumLabel;
-        unset($track->album, $track->albumLabel);
+        $album->label = $track->albumName;
+        unset($track->album, $track->albumName);
         $track->album = $album;
-
         //create artist structure
         $artist = new stdClass();
         $artist->id = $track->artist;
-        $artist->label = $track->artistLabel;
-        unset($track->artist, $track->artistLabel);
+        $artist->label = $track->artistName;
+        unset($track->artist, $track->artistName);
         $track->artist = $artist;
-
+        //return structured track
         return $track;
     }
 }
@@ -175,15 +175,51 @@ class Tracks
     public $tracks;
 
     /**
-     * Returns all the library tracks.
+     * Populates tracks collection with all library tracks matching criteria.
+     *
+     * @param array $parameters Requested parameters.
      *
      * @return bool true if the database read is ok, false otherwise
      */
-    public function get()
+    public function populateTracks($parameters)
     {
         global $connection;
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
-        $query = $connection->prepare('SELECT `track`.`id`, `track`.`title`, `track`.`artist`, `artist`.`name` AS `artistLabel`, `track`.`album`, `album`.`name` AS `albumLabel`, CONCAT(\'/stream/\',`track`.`id`) AS `file` FROM `track`, `album`, `artist` WHERE `track`.`artist`=`artist`.`id` AND `track`.`album`=`album`.`id` ORDER BY `additionTime` DESC;');
+        //handle requested parameters
+        $sqlCondition = '';
+        foreach ($parameters as $parameter => $value) {
+            if (isset($value)) {
+                switch ($parameter) {
+                    case 'trackTitle' :
+                        $sqlCondition .= ' AND `track`.`title` LIKE :trackTitle';
+                        break;
+                    case 'artistName' :
+                        $sqlCondition .= ' AND `artist`.`name` LIKE :artistName';
+                        break;
+                    case 'albumName' :
+                        $sqlCondition .= ' AND `album`.`name` LIKE :albumName';
+                        break;
+                }
+            }
+        }
+        //prepare query
+        $query = $connection->prepare('SELECT `track`.`id`, `track`.`title`, `track`.`artist`, `artist`.`name` AS `artistName`, `track`.`album`, `album`.`name` AS `albumName`, CONCAT(\'/stream/\',`track`.`id`) AS `file` FROM `track`, `album`, `artist` WHERE `track`.`artist`=`artist`.`id` AND `track`.`album`=`album`.`id`'.$sqlCondition.' ORDER BY `additionTime` DESC;');
+        //add query criteria value
+        foreach ($parameters as $parameter => $value) {
+            if (isset($value)) {
+                switch ($parameter) {
+                    case 'trackTitle' :
+                        $query->bindValue(':trackTitle', "%$value%", PDO::PARAM_STR);
+                        break;
+                    case 'artistName' :
+                        $query->bindValue(':artistName', "%$value%", PDO::PARAM_STR);
+                        break;
+                    case 'albumName' :
+                        $query->bindValue(':albumName', "%$value%", PDO::PARAM_STR);
+                        break;
+                }
+            }
+        }
         if ($query->execute()) {
             $this->tracks = $query->fetchAll(PDO::FETCH_CLASS);
             foreach ($this->tracks as $track) {
