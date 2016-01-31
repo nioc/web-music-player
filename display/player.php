@@ -21,36 +21,47 @@
                 <button class="button-icon control pause" ng-click="player.pause()" ng-show="player.isPlaying" title="Pause"><i class="fa fa-pause"></i></button>
                 <button class="button-icon control next" ng-click="player.next()"><i class="fa fa-fast-forward" title="Next"></i></button>
             </nav>
-            <ul class="grid">
+            <ul class="grid" ng-cloak>
                 <li class="grid-header">
-                    <span class="grid-col">Title</span>
-                    <span class="grid-col">Artist</span>
-                    <span class="grid-col">Album</span>
+                    <span class="grid-cell">Title</span>
+                    <span class="grid-cell">Artist</span>
+                    <span class="grid-cell">Album</span>
+                    <span class="grid-cell"/>
                 </li>
                 <li class="grid-row" ng-repeat="track in playlist.tracks" ng-class="{current: playlist.currentTrack == $index}">
-                    <span class="grid-col" ng-click="player.play($index)" ng-bind="track.title"></span>
-                    <span class="grid-col" ng-click="player.play($index)" ng-bind="track.artist.label"></span>
-                    <span class="grid-col" ng-click="player.play($index)" ng-bind="track.album.label"></span>
-                    <span class="grid-col"><button class="button-icon remove" ng-click="playlist.remove(track)"><i class="fa fa-trash"></i></button></span>
+                    <span class="grid-cell" ng-click="player.play($index)" ng-bind="track.title"></span>
+                    <span class="grid-cell" ng-click="player.play($index)" ng-bind="track.artist.label"></span>
+                    <span class="grid-cell" ng-click="player.play($index)" ng-bind="track.album.label"></span>
+                    <span class="grid-cell"><button class="button-icon remove" ng-click="playlist.remove(track)"><i class="fa fa-trash"></i></button></span>
+                </li>
+                <li class="grid-row" ng-if="playlist.tracks.length === 0">
+                    <span class="grid-cell">No track in playlist, add some from library</span>
                 </li>
             </ul>
             <section class="library">
-                <h1>Music Library</h1>
-                <ul class="grid">
+                <h1 ng-click="library.toggleDisplay()" class="clickable"><i class="fa fa-archive"></i>Music Library</h1>
+                <ul class="grid" ng-show="library.display" ng-cloak>
                     <li class="grid-header">
-                        <span class="grid-col">Title</span>
-                        <span class="grid-col">Artist</span>
-                        <span class="grid-col">Album</span>
-                    </li>
-                    <li class="grid-row">
-                        <span class="grid-col"><input ng-model="library.search.title"  placeholder="Title"  ng-change="library.search.query()"></span>
-                        <span class="grid-col"><input ng-model="library.search.artist" placeholder="Artist" ng-change="library.search.query()"></span>
-                        <span class="grid-col"><input ng-model="library.search.album"  placeholder="Album"  ng-change="library.search.query()"></span>
+                        <span class="grid-cell">
+                            Title<button class="button-icon" ng-click="library.search.displayFilter.title = !library.search.displayFilter.title"><i class="fa fa-search"></i></button>
+                            <input ng-show="library.search.displayFilter.title" ng-model="library.search.title" placeholder="Title" ng-change="library.search.query()" ng-model-options="{ debounce: 1000 }">
+                        </span>
+                        <span class="grid-cell">
+                            Artist<button class="button-icon" ng-click="library.search.displayFilter.artist = !library.search.displayFilter.artist"><i class="fa fa-search"></i></button>
+                            <input ng-show="library.search.displayFilter.artist" ng-model="library.search.artist" placeholder="Artist" ng-change="library.search.query()" ng-model-options="{ debounce: 1000 }">
+                        </span>
+                        <span class="grid-cell">
+                            Album<button class="button-icon" ng-click="library.search.displayFilter.album = !library.search.displayFilter.album"><i class="fa fa-search"></i></button>
+                            <input ng-show="library.search.displayFilter.album" ng-model="library.search.album" placeholder="Album" ng-change="library.search.query()" ng-model-options="{ debounce: 1000 }">
+                        </span>
                     </li>
                     <li class="grid-row clickable" ng-repeat="track in library.tracks | orderBy:library.order" ng-click="playlist.add(track)">
-                        <span class="grid-col" ng-bind="::track.title"></span>
-                        <span class="grid-col" ng-bind="::track.artist.label"></span>
-                        <span class="grid-col" ng-bind="::track.album.label"></span>
+                        <span class="grid-cell" ng-bind="::track.title"></span>
+                        <span class="grid-cell" ng-bind="::track.artist.label"></span>
+                        <span class="grid-cell" ng-bind="::track.album.label"></span>
+                    </li>
+                    <li class="grid-row" ng-if="library.tracks.length === 0">
+                        <span class="grid-cell">No results found</span>
                     </li>
                 </ul>
             </section>

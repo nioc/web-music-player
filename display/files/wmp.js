@@ -95,7 +95,7 @@ wmpApp.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Aud
     //automatic update seeker max range
     audio.ondurationchange=function() {
         $scope.$apply($scope.player.duration = this.duration);
-    }
+    };
     //get playlist tracks
     $scope.playlist = {
         tracks : PlaylistItem.query({userId:1}),
@@ -129,6 +129,9 @@ wmpApp.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Aud
                     if ($scope.player.isPlaying && currentTrack === trackRemovedIndex) {
                         $scope.player.next();
                     }
+                    if ($scope.playlist.currentTrack < 0) {
+                        $scope.playlist.currentTrack = 0;
+                    }
                 }
             }, function(error) {
                 //error, alert user
@@ -137,25 +140,33 @@ wmpApp.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Aud
         }
     };
     //get library
-    $scope.library = {};
-    $scope.library.order = ['title','artist'];
-    $scope.library.search = {
-        artist : null,
-        album : null,
-        title : null,
-        query() {
-            $scope.library.tracks = Library.query({
-                title  : $scope.library.search.title,
-                album  : $scope.library.search.title,
-                artist : $scope.library.search.artist
-            });
+    $scope.library = {
+        tracks : [],
+        order : ['title','artist'],
+        display : false,
+        toggleDisplay() {
+            this.display = !this.display;
+            if (this.display && $scope.library.tracks.length === 0)
+                this.search.query();
+        },
+        search : {
+            artist : null,
+            album : null,
+            title : null,
+            displayFilter : {
+                artist : false,
+                album : false,
+                title : false
+            },
+            query() {
+                $scope.library.tracks = Library.query({
+                    title  : this.title,
+                    album  : this.album,
+                    artist : this.artist
+                });
+            }
         }
     };
-    $scope.library.tracks = Library.query({
-        title  : $scope.library.search.title,
-        album  : $scope.library.search.title,
-        artist : $scope.library.search.artist
-    });
 }]);
 //return a PlaylistItem object
 wmpApp.factory('PlaylistItem', function($resource) {

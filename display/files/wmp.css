@@ -18,28 +18,36 @@ body {
     max-width: 100%;
     display: table;
     overflow-x: scroll;
+    border: #222222 1px solid;
 }
 .grid-row {
     display: table-row;
 }
+.grid-row:nth-child(2n+1) {
+    background-color: #333333;
+}
 .grid-header {
     display: table-header-group;
+    background-image: linear-gradient(#333333, #222222);
     font-weight: bold;
 }
-.grid-col {
+.grid-cell {
     display: table-cell;
+    padding: 4px 6px;
 }
 .grid input{
-    width: 90%;
+    width: 100%;
     color: #383838;
+    display: block;
+}
+.grid-header .grid-cell {
+    white-space: nowrap;
 }
 .current{
-    font-weight: bold;
-    background-color: white;
-    color: #383838;
+    color: #F50057;
 }
 .current .button-icon{
-    color: #383838 !important;
+    color: #F50057;
 }
 .cover{
     height: 200px;
@@ -84,7 +92,7 @@ body {
     height: 16px;
     width: 16px;
     background: white;
-    box-shadow: 0px 0px 16px rgba(0,0,0,.6);
+    box-shadow: 0 0 16px rgba(0,0,0,.6);
 }
 .fa{
     padding: 0 0.5rem;
@@ -96,5 +104,9 @@ body {
     }
     .seek {
         margin: 15px auto 0;
+    }
+    .grid {
+        width: 100%;
+        border: none;
     }
 }
