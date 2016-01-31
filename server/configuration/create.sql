@@ -32,7 +32,7 @@ CREATE TABLE `wmp`.`album` (
   `name` varchar(255) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Name',
   `mbid` varchar(36) CHARACTER SET utf8 DEFAULT NULL COMMENT 'MusicBrainz release identifier',
   `artist` int(11) unsigned NOT NULL COMMENT 'Album artist',
-  `year` int(4) unsigned NOT NULL DEFAULT '0000' COMMENT 'Year when the album was released',
+  `year` int(4) unsigned DEFAULT NULL COMMENT 'Year when the album was released',
   `disk` smallint(5) unsigned DEFAULT NULL COMMENT 'Disk number',
   `country` varchar(64) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Country where the album is released',
   `mbidGroup` varchar(36) CHARACTER SET utf8 DEFAULT NULL COMMENT 'MusicBrainz release group identifier',
