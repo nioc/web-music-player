@@ -5,7 +5,7 @@
 'use strict';
 var wmpApp = angular.module('wmpApp', ['ngResource']);
 
-//declare controller
+//declare player controller
 wmpApp.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Audio', function($scope, PlaylistItem, Library, Audio) {
     //create user profile
     //@TODO call profile after signin
@@ -169,14 +169,47 @@ wmpApp.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Aud
         }
     };
 }]);
+
+//declare catalog controller
+wmpApp.controller('catalogCtrl', ['$scope', 'Library', 'Folder', function($scope, Library, Folder) {
+    $scope.folder = '';
+    $scope.catalog = {
+        folders : Folder.query(),
+        expandFolder(folder) {
+            folder.show=!folder.show;
+        },
+        addFolder(folder) {
+            if (folder.path != '') {
+                Library.save({'folder':folder.path}, function(data) {
+                    //success, apply display change
+                    //@TODO
+                }, function(error) {
+                    //error, alert user
+                    alert(error.data.message);
+                });
+            }
+        }
+    }
+}]);
+
 //return a PlaylistItem object
 wmpApp.factory('PlaylistItem', function($resource) {
     return $resource('/server/api/users/:userId/playlist/tracks/:sequence', {userId:'@userId', sequence:'@sequence'});
 });
+
 //return a Library object
 wmpApp.factory('Library', function($resource) {
-    return $resource('/server/api/library/tracks:id');
+    return $resource('/server/api/library/tracks:id', null,
+    {
+      'save': { method:'POST', isArray:true }
+    });
 });
+
+//return a Folder object
+wmpApp.factory('Folder', function($resource) {
+    return $resource('/server/api/library/folders:id');
+});
+
 // return an HTML audio object
 wmpApp.factory('Audio', function($document) {
     return $document[0].createElement('audio');

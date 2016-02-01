@@ -67,6 +67,32 @@ class Api
     }
 
     /**
+     * Checks if a specific parameter was provided in the request (query string or body) and returns it by reference.
+     *
+     * @param string $parameter The searched parameter
+     * @param string $value     The returned value of the parameter
+     */
+    public function checkParameterExists($parameter, &$value)
+    {
+        $value = null;
+        if (array_key_exists($parameter, $this->query)) {
+            //parameter found in the query string
+            $value = $this->query[$parameter];
+            //returns requested parameter has been found in the query string
+            return true;
+        } else {
+            //try in the body request, if it exists
+            if (array_key_exists('body', $this->query) && property_exists($this->query['body'], $parameter)) {
+                $value = $this->query['body']->$parameter;
+                //returns requested parameter has been found in the body
+                return true;
+            }
+        }
+        //returns requested parameter has not been not found
+        return false;
+    }
+
+    /**
      * Check the if the user have a correct authentication and authorization.
      *
      * @param string $message Message that the consumer see in case of authentication or authorization issue

@@ -10,16 +10,43 @@
  * @api
  */
 include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Api.php';
-$api = new Api('json', ['GET']);
+$api = new Api('json', ['GET', 'POST']);
 include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
 switch ($api->method) {
     case 'GET':
         //returns the library
         $library = new Tracks();
-        if ($library->get()) {
-            $api->output(200, $library->tracks);
-        } else {
-            $api->output(500, 'SQL error');
+        $parameter = array();
+        //checks parameters
+        $api->checkParameterExists('title', $parameter['trackTitle']);
+        $api->checkParameterExists('artist', $parameter['artistName']);
+        $api->checkParameterExists('album', $parameter['albumName']);
+        //querying the library
+        if (!$library->populateTracks($parameter)) {
+            $api->output(500, 'Querying error');
+            //SQL error
+            return;
         }
+        if (count($library->tracks) == 0) {
+            $api->output(204, null);
+            //no data to provides
+            return;
+        }
+        $api->output(200, $library->tracks);
+        break;
+    case 'POST':
+        //scan folder and add tracks
+        if (!$api->checkParameterExists('folder', $folder)) {
+            $api->output(400, 'Folder not provided');
+            //folder was not provided, return an error
+            return;
+        }
+        $library = new Tracks();
+        if (count($tracks = $library->addFiles($folder)) == 0) {
+            $api->output(500, 'No track was added');
+            //no track was added...
+            return;
+        }
+        $api->output(201, $tracks);
         break;
 }

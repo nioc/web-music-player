@@ -24,7 +24,7 @@ $gDbHost = 'localhost';
 $gDns = 'music.domain.com';
 
 /* @var string  Path for music files */
-$gFilesPath = '/var/www/wmp/';
+$gFilesPath = '/home/user/music/';
 
 //override with local values
 if (is_file($_SERVER['DOCUMENT_ROOT'].'/server/configuration/local.php')) {

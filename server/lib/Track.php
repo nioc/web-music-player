@@ -156,6 +156,26 @@ class Track
         //return structured track
         return $track;
     }
+    /**
+     * Read ID3 tags from a file.
+     *
+     * @return array Result of reading
+     */
+    public function readId3()
+    {
+        if ($this->file != null) {
+            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/vendor/getid3/getid3/getid3.php';
+            // Initialize getID3 engine
+            $getID3 = new getID3();
+            $getID3->setOption(array('encoding' => 'UTF-8'));
+            $trackInfo = $getID3->analyze($this->file);
+            getid3_lib::CopyTagsToComments($trackInfo);
+            //return informations array
+            return $trackInfo;
+        }
+        //return false indicating filename was not provided
+        return false;
+    }
 }
 
 /**
@@ -173,6 +193,18 @@ class Tracks
      * @var array Tracks included in the library
      */
     public $tracks;
+    /**
+     * @var array Folders stored in server
+     */
+    public $folders = array();
+    /**
+     * @var array Files stored in server
+     */
+    public $files = array();
+    /**
+     * @var string File extensions handled by server
+     */
+    const EXTENSIONS = 'mp3|m4a';
 
     /**
      * Populates tracks collection with all library tracks matching criteria.
@@ -231,5 +263,104 @@ class Tracks
         } else {
             return false;
         }
+    }
+    /**
+     * Scans folder and subfolders and stores files found.
+     *
+     * @param string $folderPath       Folder to analyse
+     * @param array  $parentSubfolders Returned list of subfolders
+     */
+    private function scanFolders($folderPath, &$parentSubfolders)
+    {
+        $slash = '/';
+        if (is_dir($folderPath)) {
+            if ($folderResource = opendir($folderPath)) {
+                //initialize variables
+                $folder = new stdClass();
+                $folder->path = $folderPath;
+                $folder->subfolders = array();
+                $folder->files = array();
+                $subfolders = array();
+                while (false !== ($file = readdir($folderResource))) {
+                    if ($file != '.' && $file != '..') {
+                        $fullFilename = $folderPath.$file;
+                        if (is_dir($fullFilename)) {
+                            //found a directory, add to list for parsing later
+                            $subfolders[] = $fullFilename;
+                        } else {
+                            //found a file, store it
+                            if (preg_match('/^.+\.('.$this::EXTENSIONS.')$/i', $file)) {
+                                array_push($this->files, $fullFilename);
+                                array_push($folder->files, $file);
+                            }
+                        }
+                    }
+                }
+                closedir($folderResource);
+                sort($folder->files);
+                //browse subfolders
+                sort($subfolders);
+                foreach ($subfolders as $subfolder) {
+                    $this->scanFolders($subfolder.$slash, $folder->subfolders);
+                }
+                //add current folder and his childs to main array
+                array_push($parentSubfolders, $folder);
+            }
+        }
+    }
+
+    /**
+     * Scan the specified folder and subfolders.
+     *
+     * @param string $folder Root folder to scan
+     */
+    public function getFolders($folder)
+    {
+        $this->scanFolders($folder, $this->folders);
+    }
+
+    /**
+     * Scan the specified folder and subfolders, insert in the library the files found.
+     *
+     * @param string $folder Root folder to scan
+     *
+     * @return array Tracks inserted
+     */
+    public function addFiles($folder)
+    {
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Artist.php';
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Album.php';
+        $result = array();
+        $this->scanFolders($folder, $this->folders);
+        foreach ($this->files as $file) {
+            $track = new Track();
+            $track->file = $file;
+            $trackInfo = $track->readId3();
+            if (key_exists('comments_html', $trackInfo)) {
+                //ID3 has been found, we can use it
+                $track->title = $trackInfo['comments_html']['title'][0];
+                $track->albumName = $trackInfo['comments_html']['album'][0];
+                $track->artistName = $trackInfo['comments_html']['artist'][0];
+            } else {
+                //We use the filesystem pattern /path/artistName/albumName/title.ext
+                $elements = explode('/', $file);
+                $track->title = str_replace('-', ' ', str_replace('_', ' ', end($elements)));
+                $track->albumName = str_replace('-', ' ', str_replace('_', ' ', prev($elements)));
+                $track->artistName = str_replace('-', ' ', str_replace('_', ' ', prev($elements)));
+            }
+            //insert/update artist
+            $artist = new Artist();
+            $track->artist = $artist->insertIfRequired($track->artistName, null);
+            //insert/update album
+            $album = new Album();
+            $track->album = $album->insertIfRequired($track->albumName, null, $track->artist);
+            //insert track
+            if ($track->insert()) {
+                //add to the returned array
+                array_push($result, $track);
+            }
+        }
+        //return inserted files
+        return $result;
     }
 }

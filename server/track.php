@@ -13,8 +13,7 @@ $trackId = filter_input(INPUT_GET, 'track', FILTER_SANITIZE_NUMBER_INT);
 include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
 $track = new Track();
-global $gFilesPath;
-$filename = $gFilesPath.$track->getFile($trackId);
+$filename = $track->getFile($trackId);
 //open file
 $fp = @fopen($filename, 'rb');
 $size = filesize($filename);    //File size

@@ -56,3 +56,4 @@ This project includes the following:
 - [Font Awesome](https://github.com/FortAwesome/Font-Awesome/)
 - [AngularJS](https://github.com/angular/angular.js)
 - [normalize.css](https://github.com/necolas/normalize.css)
+- [getID3()](http://getid3.sourceforge.net)
