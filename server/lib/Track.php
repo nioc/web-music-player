@@ -98,7 +98,7 @@ class Track
             //returns file path
             return $this->file;
         }
-        //return false indicating file was not found
+        //return false to indicate file was not found
         return false;
     }
     /**
@@ -126,11 +126,11 @@ class Track
         $query->bindValue(':composer', $this->composer, PDO::PARAM_STR);
         if ($query->execute()) {
             $this->id = $connection->lastInsertId();
-
+            //return true to indicate a successful track insertion
             return true;
-        } else {
-            return false;
         }
+        //return false to indicate an error during track insertion
+        return false;
     }
     /**
      * Returns a track object with artist and album structures.
@@ -173,7 +173,7 @@ class Track
             //return informations array
             return $trackInfo;
         }
-        //return false indicating filename was not provided
+        //return false to indicate ID3 was not read
         return false;
     }
 }
@@ -258,11 +258,11 @@ class Tracks
                 $trackStructured = new Track();
                 $track = $trackStructured->structureData($track);
             }
-
+            //return true to indicate tracks was successfully read
             return true;
-        } else {
-            return false;
         }
+        //return false to indicate an error occurred while reading tracks
+        return false;
     }
     /**
      * Scans folder and subfolders and stores files found.

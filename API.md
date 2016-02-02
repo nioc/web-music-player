@@ -108,10 +108,78 @@ Handle the server library (tracks).
 }
 ````
 
-#### Get all tracks from the server
+#### Get all tracks from the library
 ````
 GET /server/api/library/tracks
 ````
 The API returns:
 - 200 with an array of tracks,
+- 204 if there is no track in library,
 - 500 in case of error.
+
+#### Add tracks to the library from a server folder
+````
+POST /server/api/library/tracks
+{"folder":"/home/user/music/PIXIES/Doolittle/"}
+````
+The API returns:
+- 201 with an array of the added tracks,
+- 400 if folder attribute is omitted,
+- 500 in case of error.
+
+### 1.3 Folders
+
+Handle the server library folders and files.
+
+"Folder" ressource is recursive and structured as the following:
+
+| Name       | Type          | Description                      |
+|------------|---------------|----------------------------------|
+| path       | string        | Path of the current folder       |
+| subfolders | array(Folder) | Subfolders in the current folder |
+| files      | array(string) | Files in the current folder      |
+
+```` json
+[
+   {
+      "path":"/home/user/music/",
+      "subfolders":[
+         {
+            "path":"/home/user/music/PIXIES/",
+            "subfolders":[
+               {
+                  "path":"/home/user/music/PIXIES/Doolittle/",
+                  "subfolders":[
+                  ],
+                  "files":[
+                     "01 Debaser.mp3",
+                     "02 Fame.mp3",
+                     "03 Wave of mutilation.mp3",
+                     "04 I bleed.mp3",
+                     "05 Here comes your man.mp3",
+                     "06 Dead.mp3",
+                     "07 Monkey gone to heaven.mp3",
+                     "08 Mr Grieves.mp3",
+                     "09 Crackity Jones.mp3",
+                     "10 La la love you.mp3",
+                     "11 N° 13 baby.mp3",
+                     "12 There goes my gun.mp3",
+                     "13 Hey.mp3",
+                     "14 Silver.mp3",
+                     "15 Gounge away.mp3"
+                  ]
+               }
+            ]
+         }
+      ]
+   }
+]
+````
+
+#### Get all files from the server
+````
+GET /server/api/library/folders
+````
+The API returns:
+- 200 with an array of folders,
+- 204 if current folder contains neither subfolders nor files.

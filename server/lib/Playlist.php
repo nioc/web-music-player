@@ -87,7 +87,7 @@ class PlaylistItem
             //returns structured track
             return $trackStructured->structureData($this);
         }
-        //returns false indicating there is no such a track for this user
+        //returns false to indicate there is no such a track for this user
         return false;
     }
     /**
@@ -112,12 +112,12 @@ class PlaylistItem
             if ($query->execute()) {
                 //populate data for returning
                 return $this->get();
-            } else {
-                return false;
             }
-        } else {
+            //return false to indicate an error occurred while inserting track in user's playlist
             return false;
         }
+        //return false to indicate an error occurred while reading current sequence user's playlist
+        return false;
     }
     /**
      * Deletes a specific user's track.
@@ -132,10 +132,10 @@ class PlaylistItem
             $query = $connection->prepare('DELETE FROM `playlist` WHERE `userId`=:userId AND `sequence`=:sequence LIMIT 1;');
             $query->bindValue(':userId',   $this->userId,   PDO::PARAM_INT);
             $query->bindValue(':sequence', $this->sequence, PDO::PARAM_INT);
-
+            //return true to indicate a successful track deletion
             return ($query->execute() && $query->rowCount() > 0);
-        } else {
-            return false;
         }
+        //return false to indicate an error occurred while deleting track from user's playlist
+        return false;
     }
 }

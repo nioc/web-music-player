@@ -80,13 +80,12 @@ class Api
             $value = $this->query[$parameter];
             //returns requested parameter has been found in the query string
             return true;
-        } else {
-            //try in the body request, if it exists
-            if (array_key_exists('body', $this->query) && property_exists($this->query['body'], $parameter)) {
-                $value = $this->query['body']->$parameter;
-                //returns requested parameter has been found in the body
-                return true;
-            }
+        }
+        //try in the body request, if it exists
+        if (array_key_exists('body', $this->query) && property_exists($this->query['body'], $parameter)) {
+            $value = $this->query['body']->$parameter;
+            //returns requested parameter has been found in the body
+            return true;
         }
         //returns requested parameter has not been not found
         return false;
