@@ -2,6 +2,18 @@
 
 Web Music Player is a simple way to play music on the web.
 
+## Installation and usage
+
+Following example is based on Linux distribution with Apache :
+
+1. Download the latest version [here](https://github.com/nioc/web-music-player/archive/master.tar.gz)
+2. Untar the archive : `tar -xvzf web-music-player-master.tar.gz`
+3. Move the files into you web server directory `mv web-music-player-master /var/www/wmp`
+4. Fix file permissions `chown www-data:www-data /var/www/wmp -R`
+5. Create database stuff using with the [database setup page](http://localhost/server/configuration/setup.php)
+6. Set you library folder
+7. Enjoy :musical_note:
+
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/nioc/web-music-player/tags).
