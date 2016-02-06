@@ -1,9 +1,4 @@
-CREATE SCHEMA IF NOT EXISTS `wmp` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
-
-DROP USER 'wmp'@'localhost';
-CREATE USER 'wmp'@'localhost' IDENTIFIED BY 'wmp';
-
-GRANT SELECT, INSERT, UPDATE, DELETE ON wmp.* TO 'wmp'@'localhost';
+USE `wmp`;
 
 CREATE TABLE `wmp`.`user` (
   `id` smallint(6) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Identifier',
