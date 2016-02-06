@@ -57,7 +57,7 @@ class Album
     {
         global $connection;
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
-        $query = $connection->prepare('INSERT INTO `wmp`.`album` (`name`, `mbid`, `artist`, `year`, `disk`, `country`, `mbidGroup`) VALUES ( :name, :mbid, :artist, :year, :disk, :country, :mbidGroup);');
+        $query = $connection->prepare('INSERT INTO `album` (`name`, `mbid`, `artist`, `year`, `disk`, `country`, `mbidGroup`) VALUES ( :name, :mbid, :artist, :year, :disk, :country, :mbidGroup);');
         $query->bindValue(':name',      $this->name,      PDO::PARAM_STR);
         $query->bindValue(':mbid',      $this->mbid,      PDO::PARAM_STR);
         $query->bindValue(':artist',    $this->artist,    PDO::PARAM_INT);

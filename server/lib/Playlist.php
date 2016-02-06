@@ -105,7 +105,7 @@ class PlaylistItem
         if ($query->execute()) {
             $this->sequence = (string) ($query->fetchColumn() + 1);
             //then insert new playlist items
-            $query = $connection->prepare('INSERT INTO `wmp`.`playlist` (`userId`, `sequence`, `id`) VALUES (:userId, :sequence, :id);');
+            $query = $connection->prepare('INSERT INTO `playlist` (`userId`, `sequence`, `id`) VALUES (:userId, :sequence, :id);');
             $query->bindValue(':userId',   $this->userId,   PDO::PARAM_INT);
             $query->bindValue(':sequence', $this->sequence, PDO::PARAM_INT);
             $query->bindValue(':id',  $this->id,  PDO::PARAM_INT);

@@ -110,7 +110,7 @@ class Track
     {
         global $connection;
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
-        $query = $connection->prepare('INSERT INTO `wmp`.`track` (`file`, `album`, `year`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `mbid`, `updateTime`, `additionTime`, `composer`) VALUES (:file, :album, :year, :artist, :title, :bitrate, :rate, :mode, :size, :time, :track, :mbid, unix_timestamp(), unix_timestamp(), :composer);');
+        $query = $connection->prepare('INSERT INTO `track` (`file`, `album`, `year`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `mbid`, `updateTime`, `additionTime`, `composer`) VALUES (:file, :album, :year, :artist, :title, :bitrate, :rate, :mode, :size, :time, :track, :mbid, unix_timestamp(), unix_timestamp(), :composer);');
         $query->bindValue(':file',     $this->file,     PDO::PARAM_STR);
         $query->bindValue(':album',    $this->album,    PDO::PARAM_INT);
         $query->bindValue(':year',     $this->year,     PDO::PARAM_INT);

@@ -41,7 +41,7 @@ class Artist
     {
         global $connection;
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
-        $query = $connection->prepare('INSERT INTO `wmp`.`artist` (`name`, `mbid`, `summary`, `country`) VALUES (:name, :mbid, :summary, :country);');
+        $query = $connection->prepare('INSERT INTO `artist` (`name`, `mbid`, `summary`, `country`) VALUES (:name, :mbid, :summary, :country);');
         $query->bindValue(':name',    $this->name,    PDO::PARAM_STR);
         $query->bindValue(':mbid',    $this->mbid,    PDO::PARAM_STR);
         $query->bindValue(':summary', $this->summary, PDO::PARAM_STR);
