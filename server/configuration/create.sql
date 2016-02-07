@@ -5,7 +5,6 @@ CREATE TABLE `wmp`.`user` (
   `login` varchar(128) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Login',
   `name` varchar(128) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Full name',
   `email` varchar(128) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Email',
-  `website` varchar(255) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Website',
   `password` varchar(64) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Crypted password ',
   `status` boolean NOT NULL DEFAULT '0' COMMENT 'Status 0/1',
   PRIMARY KEY (`id`),

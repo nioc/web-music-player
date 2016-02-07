@@ -130,10 +130,12 @@ class Api
                 //add the error in webserver log
                 error_log('client denied by server configuration: '.$_SERVER['SCRIPT_NAME']);
             }
-            if (isset($this->responseBody) && is_string($this->responseBody)) {
-                $this->responseBody = new ErrorModel($this->httpCode, $this->responseBody);
-            } else {
-                $this->responseBody = new ErrorModel($this->httpCode);
+            if ($this->outputFormat !== 'html') {
+                if (isset($this->responseBody) && is_string($this->responseBody)) {
+                    $this->responseBody = new ErrorModel($this->httpCode, $this->responseBody);
+                } else {
+                    $this->responseBody = new ErrorModel($this->httpCode);
+                }
             }
         }
         //return correct content-type header and output
