@@ -10,48 +10,90 @@
  * @api
  */
 include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Api.php';
-$api = new Api('json', ['POST', 'GET', 'DELETE']);
+$api = new Api('json', ['POST', 'GET', 'DELETE', 'PUT']);
 include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Playlist.php';
 switch ($api->method) {
     case 'GET':
         //querying a user playlist
-        if (!array_key_exists('userId', $api->query)) {
-            $api->output(404, 'User identifier must be provided');
-            exit();
+        if (!$api->checkParameterExists('userId', $userId)) {
+            $api->output(400, 'User identifier must be provided');
+            //user was not provided, return an error
+            return;
         }
-        $playlist = new Playlist();
-        $playlist->populate($api->query['userId']);
+        $playlist = new Playlist($userId);
+        $playlist->populate();
         if (count($playlist->tracks) == 0) {
             $api->output(204, null);
-        } else {
-            $api->output(200, $playlist->tracks);
+            //user's playlist is empty
+            return;
         }
-        exit();
+        $api->output(200, $playlist->tracks);
         break;
     case 'POST':
-        /* @TODO
-        if (!array_key_exists('userId', $api->query)){
-            exit();
+        if (!$api->checkParameterExists('userId', $userId)) {
+            $api->output(400, 'User identifier must be provided');
+            //user was not provided, return an error
+            return;
         }
-        */
-        $playlistItem = new PlaylistItem($api->query['userId'], null, $api->query['body']->id);
+        if (!$api->checkParameterExists('id', $trackId)) {
+            $api->output(400, 'Track identifier must be provided');
+            //track identifier was not provided, return an error
+            return;
+        }
+        $playlistItem = new PlaylistItem($userId, null, $trackId);
         $response = $playlistItem->insert();
-        if ($response) {
-            $api->output(201, $response);
-        } else {
-            $api->output(500, 'Update error');
+        if (!$response) {
+            $api->output(500, 'Add error');
+            //something happened during track insertion, return internal error
+            return;
         }
-        exit();
+        $api->output(201, $response);
         break;
     case 'DELETE':
-        $playlistItem = new PlaylistItem($api->query['userId'], $api->query['sequence'], null);
-        if ($playlistItem->delete()) {
-            $api->output(204, null);
-        } else {
-            $api->output(404, 'No such track in playlist');
+        if (!$api->checkParameterExists('userId', $userId)) {
+            $api->output(400, 'User identifier must be provided');
+            //user was not provided, return an error
+            return;
         }
+        if (!$api->checkParameterExists('sequence', $sequence)) {
+            $api->output(400, 'Track sequence must be provided');
+            //$sequence was not provided, return an error
+            return;
+        }
+        $playlistItem = new PlaylistItem($userId, $sequence, null);
+        if (!$playlistItem->delete()) {
+            $api->output(404, 'No such track in playlist');
+            //something happened during track deletion (probably sequence was not existing), return not found error
+            return;
+        }
+        $api->output(204, null);
+        break;
+    case 'PUT':
+        if (!$api->checkParameterExists('newSequence', $newSequence)) {
+            $api->output(400, 'New sequence not provided');
+            //new sequence was not provided, return an error
+            return;
+        }
+        if (!$api->checkParameterExists('sequence', $oldSequence)) {
+            $api->output(400, 'Current sequence not provided');
+            //old sequence was not provided, return an error
+            return;
+        }
+        if (!$api->checkParameterExists('userId', $userId)) {
+            $api->output(400, 'User identifier not provided');
+            //user was not provided, return an error
+            return;
+        }
+        $playlist = new Playlist($userId);
+        if (!$playlist->reorder($oldSequence, $newSequence)) {
+            $api->output(500, 'Internal error');
+            //something gone wrong :(
+            return;
+        }
+        $playlistItem = new PlaylistItem($userId, $newSequence, null);
+        $playlistItem->get();
+        $api->output(200, $playlistItem);
         break;
     default:
         $api->output(501, $this->method.' method is not supported for this ressource');
-        exit();
 }

@@ -12,27 +12,100 @@
 class Playlist
 {
     /**
+     * @var int Owner of the playlist
+     */
+    public $userId;
+    /**
      * @var array List of tracks included in a playlist
      */
     public $tracks = array();
+    /**
+     * @param int $userId Owner of the playlist
+     */
+    public function __construct($userId)
+    {
+        $this->userId = $userId;
+    }
 
     /**
      * Populate a specific user's playlist (tracks arrays).
-     *
-     * @param int $userId the user's identifier for who the playlist is requested
      */
-    public function populate($userId)
+    public function populate()
     {
         global $connection;
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
         $query = $connection->prepare('SELECT `track`.`id`, `track`.`title`, `track`.`artist`, `artist`.`name` AS `artistName`, `track`.`album`, `album`.`name` AS `albumName`, CONCAT(\'/stream/\',`track`.`id`) AS `file`, `playlist`.`userId` , `playlist`.`sequence` FROM `track`, `album`, `artist`, `playlist` WHERE `track`.`artist`=`artist`.`id` AND `track`.`album`=`album`.`id` AND `track`.`id`=`playlist`.`id` AND `playlist`.`userId`=:userId ORDER BY `sequence` ASC;');
-        $query->bindValue(':userId', $userId, PDO::PARAM_INT);
+        $query->bindValue(':userId', $this->userId, PDO::PARAM_INT);
         $query->execute();
         $this->tracks = $query->fetchAll(PDO::FETCH_CLASS);
         foreach ($this->tracks as $track) {
             $trackStructured = new Track();
             $track = $trackStructured->structureData($track);
+            $track->sequence = (int) $track->sequence;
+        }
+    }
+
+    /**
+     * Return the maximum sequence used for user.
+     *
+     * @return int|bool The max sequence for the user or false on error.
+     */
+    private function getSequenceMax()
+    {
+        global $connection;
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        $query = $connection->prepare('SELECT MAX(`sequence`) FROM `playlist` WHERE `userId`=:userId;');
+        $query->bindValue(':userId', $this->userId, PDO::PARAM_INT);
+        if ($query->execute()) {
+            //return max sequence from user's playlist
+            return (int) $query->fetchColumn();
+        }
+        //return false to indicate an error occurred while reading the max sequence from user's playlist
+        return false;
+    }
+
+    /**
+     * Change order of a track in the user's playlist.
+     *
+     * @param int $oldSequence Current sequence of the updated track
+     * @param int $newSequence Requested sequence of the updated track
+     */
+    public function reorder($oldSequence, $newSequence)
+    {
+        if ($oldSequence !== $newSequence) {
+            global $connection;
+            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
+            //get sequence max
+            $max = $this->getSequenceMax();
+            //move to the end the track
+            $query = $connection->prepare('UPDATE `playlist` SET `sequence`=:maxSequence WHERE `userId`=:userId AND `sequence`=:oldSequence LIMIT 1;');
+            $query->bindValue(':userId', $this->userId, PDO::PARAM_INT);
+            $query->bindValue(':oldSequence', $oldSequence, PDO::PARAM_INT);
+            $query->bindValue(':maxSequence', $max + 1, PDO::PARAM_INT);
+            if ($query->execute()) {
+                //move other tracks
+                if ($oldSequence < $newSequence) {
+                    $query = $connection->prepare('UPDATE `playlist` SET `sequence`=`sequence`-1 WHERE `userId`=:userId AND `sequence`>:oldSequence AND `sequence`<=:newSequence;');
+                } else {
+                    $query = $connection->prepare('UPDATE `playlist` SET `sequence`=`sequence`+1 WHERE `userId`=:userId AND `sequence`<:oldSequence AND `sequence`>=:newSequence;');
+                }
+                $query->bindValue(':userId', $this->userId, PDO::PARAM_INT);
+                $query->bindValue(':oldSequence', $oldSequence, PDO::PARAM_INT);
+                $query->bindValue(':newSequence', $newSequence, PDO::PARAM_INT);
+                if ($query->execute()) {
+                    //set requested sequence for the track
+                    $query = $connection->prepare('UPDATE `playlist` SET `sequence`=:newSequence WHERE `userId`=:userId AND `sequence`=:maxSequence LIMIT 1;');
+                    $query->bindValue(':userId', $this->userId, PDO::PARAM_INT);
+                    $query->bindValue(':newSequence', $newSequence, PDO::PARAM_INT);
+                    $query->bindValue(':maxSequence', $max + 1, PDO::PARAM_INT);
+                    //return the result of the last operation
+                    return $query->execute();
+                }
+            }
+            //return false if there was error
+            return false;
         }
     }
 }

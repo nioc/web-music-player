@@ -3,7 +3,7 @@
  * version 1.0.0
  */
 'use strict';
-var wmpApp = angular.module('wmpApp', ['ngResource']);
+var wmpApp = angular.module('wmpApp', ['ngResource', 'ng-sortable']);
 
 //declare player controller
 wmpApp.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Audio', function($scope, PlaylistItem, Library, Audio) {
@@ -168,6 +168,30 @@ wmpApp.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Aud
             }
         }
     };
+    //sort playlist
+    $scope.playlistSort = {
+        draggable: '.track',
+        filter: '.grid-header',
+        sort: true,
+        animation: 1000,
+        onUpdate(evt) {
+            //apply local change
+            if (evt.oldIndex < $scope.playlist.currentTrack && evt.newIndex >= $scope.playlist.currentTrack) {
+                $scope.playlist.currentTrack--;
+            } else if (evt.oldIndex > $scope.playlist.currentTrack && evt.newIndex <= $scope.playlist.currentTrack) {
+                $scope.playlist.currentTrack++;
+            } else if (evt.oldIndex === $scope.playlist.currentTrack) {
+                $scope.playlist.currentTrack = evt.newIndex;
+            }
+            //update playlist on server
+            if (evt.newIndex > evt.oldIndex) {
+                evt.model.newSequence=$scope.playlist.tracks[evt.newIndex-1].sequence;
+            } else if (evt.newIndex < evt.oldIndex) {
+                evt.model.newSequence=$scope.playlist.tracks[evt.newIndex+1].sequence;
+            }
+            evt.model.$update(function(){});
+        }
+    };
 }]);
 
 //declare catalog controller
@@ -194,7 +218,10 @@ wmpApp.controller('catalogCtrl', ['$scope', 'Library', 'Folder', function($scope
 
 //return a PlaylistItem object
 wmpApp.factory('PlaylistItem', function($resource) {
-    return $resource('/server/api/users/:userId/playlist/tracks/:sequence', {userId:'@userId', sequence:'@sequence'});
+    return $resource('/server/api/users/:userId/playlist/tracks/:sequence', {userId:'@userId', sequence:'@sequence'},
+    {
+        'update': { method:'PUT' }
+    });
 });
 
 //return a Library object

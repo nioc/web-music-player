@@ -21,14 +21,14 @@
                 <button class="button-icon control pause" ng-click="player.pause()" ng-show="player.isPlaying" title="Pause"><i class="fa fa-pause"></i></button>
                 <button class="button-icon control next" ng-click="player.next()"><i class="fa fa-fast-forward" title="Next"></i></button>
             </nav>
-            <ul class="grid" ng-cloak>
+            <ul class="grid" ng-cloak ng-sortable="playlistSort">
                 <li class="grid-header">
                     <span class="grid-cell">Title</span>
                     <span class="grid-cell">Artist</span>
                     <span class="grid-cell">Album</span>
                     <span class="grid-cell"/>
                 </li>
-                <li class="grid-row" ng-repeat="track in playlist.tracks" ng-class="{current: playlist.currentTrack == $index}">
+                <li class="grid-row track" ng-repeat="track in playlist.tracks" ng-class="{current: playlist.currentTrack == $index}">
                     <span class="grid-cell" ng-click="player.play($index)" ng-bind="track.title"></span>
                     <span class="grid-cell" ng-click="player.play($index)" ng-bind="track.artist.label"></span>
                     <span class="grid-cell" ng-click="player.play($index)" ng-bind="track.album.label"></span>
@@ -68,6 +68,8 @@
         </div>
         <script src="/display/files/vendor/angularjs/angular.min.js"></script>
         <script src="/display/files/vendor/angularjs/angular-resource.min.js"></script>
+        <script src="/display/files/vendor/Sortable/Sortable.js"></script>
+        <script src="/display/files/vendor/Sortable/ng-sortable.js"></script>
         <script src="/display/files/wmp.js"></script>
     </body>
 </html>

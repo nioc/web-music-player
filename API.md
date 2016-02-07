@@ -24,15 +24,15 @@ Handle a user's playlist (tracks to play).
 
 "Playlist track" ressource is structured as the following:
 
-| Name     | Type   | Description                          |
-|----------|--------|--------------------------------------|
-| id       | string | Track identifier                     |
-| title    | string | Title                                |
-| file     | string | Source of the track                  |
-| userId   | string | Owner (user) identifiant             |
-| sequence | string | Track position in the playlist       |
-| album    | object | Album object (identifier and label)  |
-| artist   | object | Artist object (identifier and label) |
+| Name     | Type    | Description                          |
+|----------|---------|--------------------------------------|
+| id       | string  | Track identifier                     |
+| title    | string  | Title                                |
+| file     | string  | Source of the track                  |
+| userId   | string  | Owner (user) identifiant             |
+| sequence | integer | Track position in the playlist       |
+| album    | object  | Album object (identifier and label)  |
+| artist   | object  | Artist object (identifier and label) |
 
 ```` json
 {
@@ -40,7 +40,7 @@ Handle a user's playlist (tracks to play).
   "title": "Monkey gone to heaven",
   "file": "/stream/123",
   "userId": "1",
-  "sequence": "6",
+  "sequence": 6,
   "album": {
     "id": "27",
     "label": "Doolittle"
@@ -68,6 +68,7 @@ POST /server/api/users/:userId/playlist/tracks
 The body request must include the track identifier in a json attribute (like this `{"id":"1"}`).
 The API returns:
 - 201 if the track is successfully added to the user's playlist (body contains the tracks sequence),
+- 400 if a mandatory parameter is missing (user identifier, track identifier),
 - 500 in case of error.
 
 #### Remove a track from a user's playlist
@@ -76,7 +77,18 @@ DELETE /server/api/users/:userId/playlist/tracks/:sequence
 ````
 The API returns:
 - 204 if the track is successfully removed from user's playlist,
+- 400 if a mandatory parameter is missing (user identifier, sequence of the track),
 - 404 if the track was not in the user's playlist.
+
+#### Reorder a track into a user's playlist
+````
+PUT /server/api/users/:userId/playlist/tracks/:sequence
+````
+The body request must include the new sequence in a json attribute (like this `{"newSequence":1}`).
+The API returns:
+- 200 if the user's playlist has been successfully reordered,
+- 400 if a mandatory parameter is missing (user identifier, old and new sequence of the track),
+- 500 in case of error.
 
 ### 1.2 Tracks
 
