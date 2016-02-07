@@ -189,7 +189,14 @@ wmpApp.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Aud
             } else if (evt.newIndex < evt.oldIndex) {
                 evt.model.newSequence=$scope.playlist.tracks[evt.newIndex+1].sequence;
             }
-            evt.model.$update(function(){});
+            var playlistItem = new PlaylistItem(evt.model);
+            PlaylistItem.update(playlistItem, function(data) {
+                //success, apply display change
+                $scope.playlist.tracks=data;
+            }, function(error) {
+                //error, alert user
+                alert(error.data.message);
+            });
         }
     };
 }]);
@@ -220,7 +227,7 @@ wmpApp.controller('catalogCtrl', ['$scope', 'Library', 'Folder', function($scope
 wmpApp.factory('PlaylistItem', function($resource) {
     return $resource('/server/api/users/:userId/playlist/tracks/:sequence', {userId:'@userId', sequence:'@sequence'},
     {
-        'update': { method:'PUT' }
+        'update': { method:'PUT', isArray:true }
     });
 });
 

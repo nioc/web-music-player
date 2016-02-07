@@ -86,7 +86,8 @@ PUT /server/api/users/:userId/playlist/tracks/:sequence
 ````
 The body request must include the new sequence in a json attribute (like this `{"newSequence":1}`).
 The API returns:
-- 200 if the user's playlist has been successfully reordered,
+- 200 if user's playlist has been successfully reordered with all tracks in playlist for synchronizing with GUI,
+- 204 if there is no track in user's playlist,
 - 400 if a mandatory parameter is missing (user identifier, old and new sequence of the track),
 - 500 in case of error.
 

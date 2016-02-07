@@ -22,7 +22,7 @@ switch ($api->method) {
         }
         $playlist = new Playlist($userId);
         $playlist->populate();
-        if (count($playlist->tracks) == 0) {
+        if (count($playlist->tracks) === 0) {
             $api->output(204, null);
             //user's playlist is empty
             return;
@@ -90,9 +90,14 @@ switch ($api->method) {
             //something gone wrong :(
             return;
         }
-        $playlistItem = new PlaylistItem($userId, $newSequence, null);
-        $playlistItem->get();
-        $api->output(200, $playlistItem);
+        $playlist->populate();
+        if (count($playlist->tracks) === 0) {
+            $api->output(204, null);
+            //user's playlist is empty (should not happens but we handle it)
+            return;
+        }
+        //return all the user's playlist tracks for synchronizing with GUI
+        $api->output(200, $playlist->tracks);
         break;
     default:
         $api->output(501, $this->method.' method is not supported for this ressource');

@@ -87,9 +87,9 @@ class Playlist
             if ($query->execute()) {
                 //move other tracks
                 if ($oldSequence < $newSequence) {
-                    $query = $connection->prepare('UPDATE `playlist` SET `sequence`=`sequence`-1 WHERE `userId`=:userId AND `sequence`>:oldSequence AND `sequence`<=:newSequence;');
+                    $query = $connection->prepare('UPDATE `playlist` SET `sequence`=`sequence`-1 WHERE `userId`=:userId AND `sequence`>:oldSequence AND `sequence`<=:newSequence ORDER BY `sequence` ASC;');
                 } else {
-                    $query = $connection->prepare('UPDATE `playlist` SET `sequence`=`sequence`+1 WHERE `userId`=:userId AND `sequence`<:oldSequence AND `sequence`>=:newSequence;');
+                    $query = $connection->prepare('UPDATE `playlist` SET `sequence`=`sequence`+1 WHERE `userId`=:userId AND `sequence`<:oldSequence AND `sequence`>=:newSequence ORDER BY `sequence` DESC;');
                 }
                 $query->bindValue(':userId', $this->userId, PDO::PARAM_INT);
                 $query->bindValue(':oldSequence', $oldSequence, PDO::PARAM_INT);
