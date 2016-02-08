@@ -94,16 +94,50 @@ class Api
     /**
      * Check the if the user have a correct authentication and authorization.
      *
-     * @param string $message Message that the consumer see in case of authentication or authorization issue
-     *
-     * @todo
+     * @return int|bool User identifier or false if user do not have a valid authentication/authorization
      */
-    public function checkAuth($message = 'You need authentication and authorization')
+    public function checkAuth()
     {
-        if (false) {
-            $this->output(401, $message);
-            exit();
+        if (!function_exists('apache_request_headers')) {
+            /**
+             * Fetches all HTTP request headers from the current request.
+             *
+             * @return array|bool An associative array of all the HTTP headers in the current request, or FALSE on failure.
+             */
+            function apache_request_headers()
+            {
+                $headers = [];
+                foreach ($_SERVER as $key => $value) {
+                    if (substr($name, 0, 5) == 'HTTP_') {
+                        $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($key, 5)))))] = $value;
+                    }
+                }
+                //return headers array
+                return $headers;
+            }
         }
+        $headers = apache_request_headers();
+        if (!array_key_exists('Authorization', $headers)) {
+            //Authorization header not provided return false
+            return false;
+        }
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Token.php';
+        $token = new Token();
+        list($scheme, $token->value) = explode(' ', $headers['Authorization'], 2);
+        if ($scheme !== 'Bearer') {
+            //Not using Bearer scheme, return false
+            return false;
+        }
+        if (!$token->decode()) {
+            //Token is not valid
+            return false;
+        }
+        if (!property_exists($token->payload, 'sub')) {
+            //Token do not includes user profile
+            return false;
+        }
+        //Token is valid, returns the user identifier
+        return $token->payload->sub;
     }
 
     /**
@@ -153,6 +187,23 @@ class Api
                 header('Content-type: application/json; charset=UTF-8');
                 echo json_encode($this->responseBody);
         }
+    }
+
+    /**
+     * Generate a token for API usage.
+     *
+     * @return string Token generated
+     */
+    public function generateToken($payload)
+    {
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Token.php';
+        $token = new Token();
+        $token->payload = $payload;
+        $token->encode();
+        $result = new stdClass();
+        $result->token = $token->value;
+        //return the token
+        return $result;
     }
 }
 

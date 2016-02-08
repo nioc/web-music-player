@@ -56,4 +56,20 @@ class User
         //return false to indicate an error occurred while reading the user
         return false;
     }
+
+    /**
+     * Return public profile.
+     *
+     * @return object A public version of user profile
+     */
+    public function getProfile()
+    {
+        $user = new stdClass();
+        $user->sub = (int) $this->id;
+        $user->login = $this->login;
+        $user->name = $this->name;
+        $user->email = $this->email;
+        //returns the user public profile
+        return $user;
+    }
 }
