@@ -210,7 +210,7 @@ wmpApp.controller('catalogCtrl', ['$scope', 'Library', 'Folder', function($scope
             folder.show=!folder.show;
         },
         addFolder(folder) {
-            if (folder.path != '') {
+            if (folder.path !== '') {
                 Library.save({'folder':folder.path}, function(data) {
                     //success, apply display change
                     //@TODO
@@ -220,7 +220,7 @@ wmpApp.controller('catalogCtrl', ['$scope', 'Library', 'Folder', function($scope
                 });
             }
         }
-    }
+    };
 }]);
 
 //return a PlaylistItem object
