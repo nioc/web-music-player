@@ -3,6 +3,8 @@
 /**
  * JSON Web Token wrapper.
  *
+ *  Token are signed using HMAC-SHA256 algorithm
+ *
  * @version 1.0.0
  *
  * @internal
@@ -12,9 +14,9 @@
 class Token
 {
     /**
-     * @var string Default key for Token
+     * @var string Default key for Token (please note that for security reasons, you HAVE TO provide a value in constructor)
      */
-    private $key = '123456';
+    private $key = 'ab§CDef12*34-';
     /**
      * @var object Raw data contained in the token
      */
@@ -25,12 +27,23 @@ class Token
     public $value;
 
     /**
+     * Initializes a token with the provided hash key.
+     *
+     * @param string $key Optional hash key
+     */
+    public function __construct($key = null)
+    {
+        if ($key !== null) {
+            $this->key = $key;
+        }
+    }
+
+    /**
      * Encodes data and returns a JSON Web Token.
      *
-     * @param int    $duration Optionnal duration of the token in hours (default is 7 days)
-     * @param string $key      Optionnal hash key
+     * @param int $duration Optional duration of the token in hours (default is 7 days)
      */
-    public function encode($duration = 168, $key = null)
+    public function encode($duration = 168)
     {
         //header part
         $header = array(
@@ -41,7 +54,7 @@ class Token
         //payload part
         $payload = array(
                 'iss' => 'wmp',
-                'exp' => time() + (7 * 24 * 60 * 60),
+                'exp' => time() + ($duration * 60 * 60),
         );
         $payload = array_merge($payload, get_object_vars($this->payload));
         $b64Payload = base64_encode(json_encode($payload));
@@ -54,11 +67,9 @@ class Token
     /**
      * Decodes JSON Web Token and set data in payload attribute.
      *
-     * @param string $key Optionnal hash key
-     *
      * @return bool Indicate if token is valid
      */
-    public function decode($key = null)
+    public function decode()
     {
         $elements = explode('.', $this->value);
         if (count($elements) !== 3) {
@@ -69,9 +80,14 @@ class Token
         $headers = json_decode(base64_decode($b64Header));
         $payload = json_decode(base64_decode($b64Payload));
         $signature = base64_decode($b64Signature);
+        //check header
+        if (!property_exists($headers, 'alg') || $headers->alg !== 'HS256' || !property_exists($headers, 'typ') || $headers->typ !== 'JWT') {
+            //invalid header
+            return false;
+        }
         //check signature
         if (!hash_equals($signature, hash_hmac('sha256', $b64Header.'.'.$b64Payload, $this->key, true))) {
-            //signature invalid
+            //invalid signature
             return false;
         }
         if ($payload->exp < time()) {

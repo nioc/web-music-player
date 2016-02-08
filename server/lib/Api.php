@@ -108,7 +108,7 @@ class Api
             {
                 $headers = [];
                 foreach ($_SERVER as $key => $value) {
-                    if (substr($name, 0, 5) == 'HTTP_') {
+                    if (substr($key, 0, 5) == 'HTTP_') {
                         $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($key, 5)))))] = $value;
                     }
                 }
@@ -122,7 +122,8 @@ class Api
             return false;
         }
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Token.php';
-        $token = new Token();
+        include $_SERVER['DOCUMENT_ROOT'].'/server/configuration/configuration.php';
+        $token = new Token($gHashKey);
         list($scheme, $token->value) = explode(' ', $headers['Authorization'], 2);
         if ($scheme !== 'Bearer') {
             //Not using Bearer scheme, return false
@@ -197,7 +198,8 @@ class Api
     public function generateToken($payload)
     {
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Token.php';
-        $token = new Token();
+        include $_SERVER['DOCUMENT_ROOT'].'/server/configuration/configuration.php';
+        $token = new Token($gHashKey);
         $token->payload = $payload;
         $token->encode();
         $result = new stdClass();

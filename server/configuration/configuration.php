@@ -26,6 +26,9 @@ $gDns = 'music.domain.com';
 /* @var string  Path for music files */
 $gFilesPath = '/home/user/music/';
 
+/* @var string  Key for signing token */
+$gHashKey = 'ab§CDyz12*89-';
+
 //override with local values
 if (is_file($_SERVER['DOCUMENT_ROOT'].'/server/configuration/local.php')) {
     include_once $_SERVER['DOCUMENT_ROOT'].'/server/configuration/local.php';
