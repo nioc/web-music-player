@@ -8,12 +8,13 @@
  */
 
 //get posted parameters and set default value
-include_once $_SERVER['DOCUMENT_ROOT'].'/server/configuration/configuration.php';
+include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
+$configuration = new Configuration();
 $rootDbLogin = isset($_POST['rootDbLogin']) ?      filter_input(INPUT_POST, 'rootDbLogin',     FILTER_SANITIZE_STRING) : 'root';
 $rootDbPassword = filter_input(INPUT_POST, 'rootDbPassword',  FILTER_SANITIZE_STRING);
-$wmpDbLogin = isset($_POST['wmpDbLogin']) ?       filter_input(INPUT_POST, 'wmpDbLogin',      FILTER_SANITIZE_STRING) : $gDbUser;
-$wmpDbPassword = isset($_POST['wmpDbPassword']) ?    filter_input(INPUT_POST, 'wmpDbPassword',   FILTER_SANITIZE_STRING) : $gDbPwd;
-$wmpDbName = isset($_POST['wmpDbName']) ?        filter_input(INPUT_POST, 'wmpDbName',       FILTER_SANITIZE_STRING) : $gDbName;
+$wmpDbLogin = isset($_POST['wmpDbLogin']) ?       filter_input(INPUT_POST, 'wmpDbLogin',      FILTER_SANITIZE_STRING) : $configuration->get('dbUser');
+$wmpDbPassword = isset($_POST['wmpDbPassword']) ?    filter_input(INPUT_POST, 'wmpDbPassword',   FILTER_SANITIZE_STRING) : $configuration->get('dbPwd');
+$wmpDbName = isset($_POST['wmpDbName']) ?        filter_input(INPUT_POST, 'wmpDbName',       FILTER_SANITIZE_STRING) : $configuration->get('dbName');
 $process = filter_input(INPUT_POST, 'process',         FILTER_SANITIZE_STRING);
 $wmpDbDrop = isset($_POST['wmpDbDrop']) ?        filter_input(INPUT_POST, 'wmpDbDrop',       FILTER_SANITIZE_STRING) : 0;
 
@@ -32,8 +33,8 @@ if (isset($process) &&
     $DbName = $wmpDbName;
     $DbUser = $rootDbLogin;
     $DbPwd = $rootDbPassword;
-    $localConfigFile = fopen('local.php', 'w');
-    fwrite($localConfigFile, "<?php\n");
+    $localConfigFile = fopen('local.ini', 'w');
+    fwrite($localConfigFile, "; This your local configuration file\n");
     try {
         //connect to database with provided informations
         $connection = new PDO('mysql:host=localhost;port=3306;', $DbUser, $DbPwd, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
@@ -45,8 +46,8 @@ if (isset($process) &&
         $query->bindValue(':user', $wmpDbLogin);
         $query->bindValue(':password', $wmpDbPassword);
         if ($query->execute()) {
-            fwrite($localConfigFile, "\$gDbUser = '$wmpDbLogin';\n");
-            fwrite($localConfigFile, "\$gDbPwd = '$wmpDbPassword';\n");
+            fwrite($localConfigFile, "dbUser = $wmpDbLogin\n");
+            fwrite($localConfigFile, "dbPwd = $wmpDbPassword\n");
             $results['user']['Database user'] = '<span class="valid"> Ok </span>User `'.$wmpDbLogin.'` is set';
             //create schema
             if ($wmpDbDrop) {
@@ -57,7 +58,7 @@ if (isset($process) &&
             $queryString = "CREATE SCHEMA IF NOT EXISTS $wmpDbName DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;";
             $query = $connection->prepare($queryString);
             if ($query->execute()) {
-                fwrite($localConfigFile, "\$gDbName = '$wmpDbName';\n");
+                fwrite($localConfigFile, "dbName = $wmpDbName\n");
                 $results['schema']['Database schema'] = '<span class="valid"> Ok </span>Schema `'.$wmpDbName.'` is set';
                 //grant user on schema
                 $queryString = "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE ON $wmpDbName.* TO :user@'localhost';";
@@ -93,7 +94,7 @@ if (isset($process) &&
     } catch (Exception $exception) {
         $results['user']['Database access'] = '<span class="error"> Failed </span>'.$exception->getMessage();
     }
-    fwrite($localConfigFile, "?>\n");
+    fwrite($localConfigFile, "\n");
     fclose($localConfigFile);
 }
 

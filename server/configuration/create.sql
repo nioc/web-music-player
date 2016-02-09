@@ -75,4 +75,4 @@ CREATE TABLE `wmp`.`playlist` (
   CONSTRAINT `playlist_fk_2` FOREIGN KEY (`id`) REFERENCES `track` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT 'User\'s current playlist';
 
-INSERT INTO `wmp`.`user` (`id`, `login`, `name`, `email`, `website`, `password`, `status`) VALUES (1, 'admin', NULL, NULL, NULL, md5('nimda'), 1);
+INSERT INTO `wmp`.`user` (`id`, `login`, `name`, `email`, `password`, `status`) VALUES (1, 'admin', 'Admin', NULL, md5('nimda'), 1);

@@ -9,7 +9,7 @@
  *
  * @api
  */
-include_once $_SERVER['DOCUMENT_ROOT'].'/server/configuration/configuration.php';
+include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Api.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
 $api = new Api('json', ['GET']);
@@ -17,7 +17,8 @@ switch ($api->method) {
     case 'GET':
         //returns the folders
         $library = new Tracks();
-        $library->getFolders($gFilesPath);
+        $configuration = new Configuration();
+        $library->getFolders($configuration->get('filesPath'));
         if (count($library->folders) == 0) {
             $api->output(204);
             //end the process

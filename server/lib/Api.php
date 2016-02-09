@@ -122,8 +122,9 @@ class Api
             return false;
         }
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Token.php';
-        include $_SERVER['DOCUMENT_ROOT'].'/server/configuration/configuration.php';
-        $token = new Token($gHashKey);
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
+        $configuration = new Configuration();
+        $token = new Token($configuration->get('hashKey'));
         list($scheme, $token->value) = explode(' ', $headers['Authorization'], 2);
         if ($scheme !== 'Bearer') {
             //Not using Bearer scheme, return false
@@ -198,8 +199,9 @@ class Api
     public function generateToken($payload)
     {
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Token.php';
-        include $_SERVER['DOCUMENT_ROOT'].'/server/configuration/configuration.php';
-        $token = new Token($gHashKey);
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
+        $configuration = new Configuration();
+        $token = new Token($configuration->get('hashKey'));
         $token->payload = $payload;
         $token->encode();
         $result = new stdClass();
