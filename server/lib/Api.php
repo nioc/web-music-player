@@ -118,7 +118,9 @@ class Api
         }
         $headers = apache_request_headers();
         if (!array_key_exists('Authorization', $headers)) {
-            //Authorization header not provided return false
+            $this->output(401, 'Authorization header not found');
+            header('WWW-Authenticate: Bearer realm="WMP"');
+            //Authorization header not provided
             return false;
         }
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Token.php';
@@ -127,14 +129,20 @@ class Api
         $token = new Token($configuration->get('hashKey'));
         list($scheme, $token->value) = explode(' ', $headers['Authorization'], 2);
         if ($scheme !== 'Bearer') {
-            //Not using Bearer scheme, return false
+            $this->output(401, 'Token scheme must be bearer');
+            header('WWW-Authenticate: Bearer realm="WMP"');
+            //Not using Bearer scheme
             return false;
         }
         if (!$token->decode()) {
+            $this->output(401, 'Token is not valid');
+            header('WWW-Authenticate: Bearer realm="WMP"');
             //Token is not valid
             return false;
         }
         if (!property_exists($token->payload, 'sub')) {
+            $this->output(401, 'Subject not found');
+            header('WWW-Authenticate: Bearer realm="WMP"');
             //Token do not includes user profile
             return false;
         }
@@ -153,10 +161,9 @@ class Api
     public function output($httpCode = 500, $responseBody = null)
     {
         //check http code format
+        $this->httpCode = 500;
         if (preg_match('/^\d\d\d$/', $httpCode)) {
             $this->httpCode = $httpCode;
-        } else {
-            $this->httpCode = 500;
         }
         //return http status
         http_response_code($this->httpCode);
@@ -167,11 +174,13 @@ class Api
                 error_log('client denied by server configuration: '.$_SERVER['SCRIPT_NAME']);
             }
             if ($this->outputFormat !== 'html') {
+                $responseBody = new stdClass();
+                $responseBody->code = $this->httpCode;
+                $responseBody->message = '';
                 if (isset($this->responseBody) && is_string($this->responseBody)) {
-                    $this->responseBody = new ErrorModel($this->httpCode, $this->responseBody);
-                } else {
-                    $this->responseBody = new ErrorModel($this->httpCode);
+                    $responseBody->message = $this->responseBody;
                 }
+                $this->responseBody = $responseBody;
             }
         }
         //return correct content-type header and output
@@ -208,27 +217,5 @@ class Api
         $result->token = $token->value;
         //return the token
         return $result;
-    }
-}
-
-/**
- * Error model returned in Api.
- *
- * @version 1.0.0
- *
- * @internal
- */
-class ErrorModel
-{
-    /**
-     * Initializes an error with the given informations.
-     *
-     * @param int    $code    Error code used by the consumer to handle it
-     * @param string $message Description of the error for human understanding
-     */
-    public function __construct($code = 500, $message = '')
-    {
-        $this->code = $code;
-        $this->message = $message;
     }
 }
