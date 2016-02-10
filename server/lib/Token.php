@@ -81,16 +81,16 @@ class Token
         $payload = json_decode(base64_decode($b64Payload));
         $signature = base64_decode($b64Signature);
         //check header
-        if (!property_exists($headers, 'alg') || $headers->alg !== 'HS256' || !property_exists($headers, 'typ') || $headers->typ !== 'JWT') {
+        if (!$headers || !property_exists($headers, 'alg') || $headers->alg !== 'HS256' || !property_exists($headers, 'typ') || $headers->typ !== 'JWT') {
             //invalid header
             return false;
         }
         //check signature
-        if (!hash_equals($signature, hash_hmac('sha256', $b64Header.'.'.$b64Payload, $this->key, true))) {
+        if (!$signature || !hash_equals($signature, hash_hmac('sha256', $b64Header.'.'.$b64Payload, $this->key, true))) {
             //invalid signature
             return false;
         }
-        if ($payload->exp < time()) {
+        if (!$payload || !property_exists($payload, 'exp') || $payload->exp < time()) {
             //token expired
             return false;
         }
