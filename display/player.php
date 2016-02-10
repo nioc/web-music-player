@@ -70,6 +70,11 @@
         <script src="/display/files/vendor/angularjs/angular-resource.min.js"></script>
         <script src="/display/files/vendor/Sortable/Sortable.js"></script>
         <script src="/display/files/vendor/Sortable/ng-sortable.js"></script>
+        <script src="/display/files/wmp.module.js"></script>
+        <script src="/display/files/playlistItem.factory.js"></script>
+        <script src="/display/files/audio.factory.js"></script>
+        <script src="/display/files/folder.factory.js"></script>
+        <script src="/display/files/library.factory.js"></script>
         <script src="/display/files/wmp.js"></script>
     </body>
 </html>

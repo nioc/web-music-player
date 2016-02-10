@@ -3,10 +3,10 @@
  * version 1.0.0
  */
 'use strict';
-var wmpApp = angular.module('wmpApp', ['ngResource', 'ng-sortable']);
-
+angular.
+module('wmpApp').
 //declare player controller
-wmpApp.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Audio', function($scope, PlaylistItem, Library, Audio) {
+controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Audio', function($scope, PlaylistItem, Library, Audio) {
     //create user profile
     //@TODO call profile after signin
     $scope.user = {id:'1'};
@@ -199,10 +199,9 @@ wmpApp.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Aud
             });
         }
     };
-}]);
-
+}]).
 //declare catalog controller
-wmpApp.controller('catalogCtrl', ['$scope', 'Library', 'Folder', function($scope, Library, Folder) {
+controller('catalogCtrl', ['$scope', 'Library', 'Folder', function($scope, Library, Folder) {
     $scope.folder = '';
     $scope.catalog = {
         folders : Folder.query(),
@@ -222,29 +221,3 @@ wmpApp.controller('catalogCtrl', ['$scope', 'Library', 'Folder', function($scope
         }
     };
 }]);
-
-//return a PlaylistItem object
-wmpApp.factory('PlaylistItem', function($resource) {
-    return $resource('/server/api/users/:userId/playlist/tracks/:sequence', {userId:'@userId', sequence:'@sequence'},
-    {
-        'update': { method:'PUT', isArray:true }
-    });
-});
-
-//return a Library object
-wmpApp.factory('Library', function($resource) {
-    return $resource('/server/api/library/tracks:id', null,
-    {
-      'save': { method:'POST', isArray:true }
-    });
-});
-
-//return a Folder object
-wmpApp.factory('Folder', function($resource) {
-    return $resource('/server/api/library/folders:id');
-});
-
-// return an HTML audio object
-wmpApp.factory('Audio', function($document) {
-    return $document[0].createElement('audio');
-});
