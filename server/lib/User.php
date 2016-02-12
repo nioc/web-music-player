@@ -69,6 +69,8 @@ class User
         $user->login = $this->login;
         $user->name = $this->name;
         $user->email = $this->email;
+        //@TODO get user roles and populate scope array
+        $user->scope = ['user'];
         //returns the user public profile
         return $user;
     }
