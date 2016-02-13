@@ -15,6 +15,10 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Playlist.php';
 switch ($api->method) {
     case 'GET':
         //querying a user playlist
+        if (!$api->checkAuth()) {
+            //User not authentified/authorized
+            return false;
+        }
         if (!$api->checkParameterExists('userId', $userId)) {
             $api->output(400, 'User identifier must be provided');
             //user was not provided, return an error
@@ -30,6 +34,10 @@ switch ($api->method) {
         $api->output(200, $playlist->tracks);
         break;
     case 'POST':
+        if (!$api->checkAuth()) {
+            //User not authentified/authorized
+            return false;
+        }
         if (!$api->checkParameterExists('userId', $userId)) {
             $api->output(400, 'User identifier must be provided');
             //user was not provided, return an error
@@ -50,6 +58,10 @@ switch ($api->method) {
         $api->output(201, $response);
         break;
     case 'DELETE':
+        if (!$api->checkAuth()) {
+            //User not authentified/authorized
+            return false;
+        }
         if (!$api->checkParameterExists('userId', $userId)) {
             $api->output(400, 'User identifier must be provided');
             //user was not provided, return an error
@@ -69,6 +81,10 @@ switch ($api->method) {
         $api->output(204, null);
         break;
     case 'PUT':
+        if (!$api->checkAuth()) {
+            //User not authentified/authorized
+            return false;
+        }
         if (!$api->checkParameterExists('newSequence', $newSequence)) {
             $api->output(400, 'New sequence not provided');
             //new sequence was not provided, return an error
@@ -99,6 +115,4 @@ switch ($api->method) {
         //return all the user's playlist tracks for synchronizing with GUI
         $api->output(200, $playlist->tracks);
         break;
-    default:
-        $api->output(501, $this->method.' method is not supported for this ressource');
 }

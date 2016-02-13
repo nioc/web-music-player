@@ -16,6 +16,10 @@ $api = new Api('json', ['GET']);
 switch ($api->method) {
     case 'GET':
         //returns the folders
+        if (!$api->checkAuth()) {
+            //User not authentified/authorized
+            return false;
+        }
         $library = new Tracks();
         $configuration = new Configuration();
         $library->getFolders($configuration->get('filesPath'));

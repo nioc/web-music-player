@@ -15,6 +15,10 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
 switch ($api->method) {
     case 'GET':
         //returns the library
+        if (!$api->checkAuth()) {
+            //User not authentified/authorized
+            return false;
+        }
         $library = new Tracks();
         $parameter = array();
         //checks parameters
@@ -36,6 +40,10 @@ switch ($api->method) {
         break;
     case 'POST':
         //scan folder and add tracks
+        if (!$api->checkAuth()) {
+            //User not authentified/authorized
+            return false;
+        }
         if (!$api->checkParameterExists('folder', $folder)) {
             $api->output(400, 'Folder not provided');
             //folder was not provided, return an error
