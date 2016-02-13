@@ -3,13 +3,17 @@
  * version 1.0.0
  */
 'use strict';
-angular.
-module('wmpApp').
+angular
+.module('wmpApp', ['ngResource', 'ng-sortable'])
 //declare player controller
-controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Audio', function($scope, PlaylistItem, Library, Audio) {
-    //create user profile
-    //@TODO call profile after signin
-    $scope.user = {id:'1'};
+.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Audio', 'User', '$window', function($scope, PlaylistItem, Library, Audio, User, $window) {
+    //check user profile
+    $scope.user = User;
+    if (!$scope.user.getProfile() || !Number.isInteger($scope.user.id)) {
+        $window.location = '/sign';
+        //redirect to sign in page
+        return false;
+    }
     //create player
     var audio = Audio;
     $scope.player = {
@@ -98,7 +102,7 @@ controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Audio', fu
     };
     //get playlist tracks
     $scope.playlist = {
-        tracks : PlaylistItem.query({userId:1}),
+        tracks : PlaylistItem.query({userId:$scope.user.id}),
         currentTrack : 0,
         //declare function to add a track to the user playlist
         add(track) {

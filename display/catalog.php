@@ -20,12 +20,13 @@
     <script src="/display/files/vendor/angularjs/angular-resource.min.js"></script>
     <script src="/display/files/vendor/Sortable/Sortable.min.js"></script>
     <script src="/display/files/vendor/Sortable/ng-sortable.js"></script>
-    <script src="/display/files/wmp.module.js"></script>
+    <script src="/display/files/wmp.js"></script>
     <script src="/display/files/playlistItem.factory.js"></script>
     <script src="/display/files/audio.factory.js"></script>
     <script src="/display/files/folder.factory.js"></script>
     <script src="/display/files/library.factory.js"></script>
-    <script src="/display/files/wmp.js"></script>
+    <script src="/display/files/user.factory.js"></script>
+    <script src="/display/files/authInterceptor.factory.js"></script>
     <script type="text/ng-template" id="folder.html">
     <button class="button-icon" title="Expand folder" ng-click="catalog.expandFolder(folder)"><i style="width:18px;" class="fa folder-icn" ng-class="{'fa-folder-open': folder.show, 'fa-folder': !folder.show}"></i>{{::folder.path}}</button>
     <button class="button-icon" title="Add/sync folder to library" ng-click="catalog.addFolder(folder)"><i style="width:18px;" class="fa fa-plus-circle"></i></button></span>

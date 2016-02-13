@@ -10,7 +10,7 @@
     </head>
     <body>
         <div ng-controller="PlayerController">
-            <h1 class="current-title" ng-bind="playlist.tracks[playlist.currentTrack].title"></h1>
+            <h2 class="current-title" ng-bind="playlist.tracks[playlist.currentTrack].title"></h2>
             <div class="cover">
                 <img class="cover" src="/display/files/images/default_cover.png" alt="cover"/>
             </div>
@@ -39,7 +39,7 @@
                 </li>
             </ul>
             <section class="library">
-                <h1 ng-click="library.toggleDisplay()" class="clickable"><i class="fa fa-archive"></i>Music Library</h1>
+                <h2 ng-click="library.toggleDisplay()" class="clickable"><i class="fa fa-archive"></i>Music Library</h2>
                 <ul class="grid" ng-show="library.display" ng-cloak>
                     <li class="grid-header">
                         <span class="grid-cell">
@@ -70,11 +70,12 @@
         <script src="/display/files/vendor/angularjs/angular-resource.min.js"></script>
         <script src="/display/files/vendor/Sortable/Sortable.js"></script>
         <script src="/display/files/vendor/Sortable/ng-sortable.js"></script>
-        <script src="/display/files/wmp.module.js"></script>
+        <script src="/display/files/wmp.js"></script>
         <script src="/display/files/playlistItem.factory.js"></script>
         <script src="/display/files/audio.factory.js"></script>
         <script src="/display/files/folder.factory.js"></script>
         <script src="/display/files/library.factory.js"></script>
-        <script src="/display/files/wmp.js"></script>
+        <script src="/display/files/user.factory.js"></script>
+        <script src="/display/files/authInterceptor.factory.js"></script>
     </body>
 </html>
