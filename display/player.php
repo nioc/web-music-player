@@ -23,15 +23,17 @@
             </nav>
             <ul class="grid" ng-cloak ng-sortable="playlistSort">
                 <li class="grid-header">
+                    <span class="grid-cell"></span>
                     <span class="grid-cell">Title</span>
                     <span class="grid-cell">Artist</span>
                     <span class="grid-cell">Album</span>
-                    <span class="grid-cell"/>
+                    <span class="grid-cell"></span>
                 </li>
                 <li class="grid-row track" ng-repeat="track in playlist.tracks" ng-class="{current: playlist.currentTrack == $index}">
-                    <span class="grid-cell" ng-click="player.play($index)" ng-bind="track.title"></span>
-                    <span class="grid-cell" ng-click="player.play($index)" ng-bind="track.artist.label"></span>
-                    <span class="grid-cell" ng-click="player.play($index)" ng-bind="track.album.label"></span>
+                    <span class="grid-cell track-handle"><i class="fa fa-ellipsis-v sortable-v" title="Drag and drop to reorder tracks"></i></span>
+                    <span class="grid-cell clickable" ng-click="player.play($index)" ng-bind="track.title"></span>
+                    <span class="grid-cell clickable" ng-click="player.play($index)" ng-bind="track.artist.label"></span>
+                    <span class="grid-cell clickable" ng-click="player.play($index)" ng-bind="track.album.label"></span>
                     <span class="grid-cell"><button class="button-icon remove" ng-click="playlist.remove(track)"><i class="fa fa-trash"></i></button></span>
                 </li>
                 <li class="grid-row" ng-if="playlist.tracks.length === 0">

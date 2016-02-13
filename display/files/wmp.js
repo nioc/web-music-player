@@ -175,6 +175,7 @@ angular
     //sort playlist
     $scope.playlistSort = {
         draggable: '.track',
+        handle: '.track-handle',
         filter: '.grid-header',
         sort: true,
         animation: 1000,

@@ -47,6 +47,9 @@ h1 {
 .clickable {
     cursor: pointer;
 }
+.sortable-v {
+    cursor: row-resize;
+}
 .current-title {
     overflow-x: auto;
     height: 1.1em;
