@@ -225,4 +225,10 @@ controller('catalogCtrl', ['$scope', 'Library', 'Folder', function($scope, Libra
             }
         }
     };
-}]);
+}])
+//declare filter converting duration in seconds into a datetime
+.filter('duration', function() {
+   return function(seconds) {
+       return new Date(1970, 0, 1).setSeconds(seconds);
+   };
+});

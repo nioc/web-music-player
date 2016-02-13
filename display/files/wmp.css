@@ -50,7 +50,7 @@ h1 {
 .sortable-v {
     cursor: row-resize;
 }
-.current-title {
+.player-current-title {
     overflow-x: auto;
     height: 1.1em;
 }
@@ -110,13 +110,13 @@ h1 {
 .music-file-icn {
     padding: 0 0.5em;
 }
-.current{
+.player-current{
     color: #F50057;
 }
-.current .button-icon{
+.player-current .button-icon{
     color: #F50057;
 }
-.cover{
+.player-cover{
     height: 200px;
     width: 200px;
 }
@@ -126,12 +126,12 @@ h1 {
     color: white;
     padding: 0 0.3em;
 }
-.control{
+.player-control{
     padding: 1rem;
     cursor: pointer;
     font-size: 2rem;
 }
-.seek {
+.player-seek {
     -webkit-appearance: none;
     -moz-appearance:none;
     display: block;
@@ -143,7 +143,7 @@ h1 {
     background-color: #242323;
     box-shadow: inset 0 4px 4px rgba(0,0,0,.6);
 }
-.seek::-webkit-slider-thumb {
+.player-seek::-webkit-slider-thumb {
     -webkit-appearance: none;
     border: none;
     height: 16px;
@@ -152,23 +152,40 @@ h1 {
     background: white;
     box-shadow: 0 0 16px rgba(0,0,0,.6);
 }
-.seek::-moz-range-track {
+.player-seek::-moz-range-track {
     height: 0;
 }
-.seek::-moz-range-thumb {
+.player-seek::-moz-range-thumb {
     border: none;
     height: 16px;
     width: 16px;
     background: white;
     box-shadow: 0 0 16px rgba(0,0,0,.6);
 }
+.player-times {
+    width: 200px;
+    font-size: 0.8rem;
+    padding: 2px 6px;
+    box-sizing: border-box;
+    text-align: left;
+}
+.player-currentTime {
+}
+.player-duration {
+    float: right;
+}
 @media screen and (max-width:1000px) {
-    .controls, .cover{
+    .player-controls, .player-cover{
         text-align: center;
         margin: auto;
     }
-    .seek {
+    .player-seek {
         margin: 15px auto 0;
+        width: 90%;
+    }
+    .player-times {
+        margin: auto;
+        width: 90%;
     }
     .grid {
         width: 100%;

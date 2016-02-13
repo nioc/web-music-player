@@ -10,16 +10,20 @@
     </head>
     <body>
         <div ng-controller="PlayerController">
-            <h2 class="current-title" ng-bind="playlist.tracks[playlist.currentTrack].title"></h2>
-            <div class="cover">
-                <img class="cover" src="/display/files/images/default_cover.png" alt="cover"/>
+            <h2 class="player-current-title" ng-bind="playlist.tracks[playlist.currentTrack].title"></h2>
+            <div class="player-cover">
+                <img class="player-cover" src="/display/files/images/default_cover.png" alt="cover"/>
             </div>
-            <nav class="controls">
-                <input type="range" id="seek" class="seek" value="0" max="{{player.duration}}" ng-model="player.currentTime" ng-change="player.seek()"/>
-                <button class="button-icon control prev" ng-click="player.previous()"><i class="fa fa-fast-backward" title="Previous"></i></button>
-                <button class="button-icon control play" ng-click="player.play()" ng-hide="player.isPlaying" title="Play"><i class="fa fa-play"></i></button>
-                <button class="button-icon control pause" ng-click="player.pause()" ng-show="player.isPlaying" title="Pause"><i class="fa fa-pause"></i></button>
-                <button class="button-icon control next" ng-click="player.next()"><i class="fa fa-fast-forward" title="Next"></i></button>
+            <nav class="player-controls">
+                <input type="range" id="seek" class="player-seek" value="0" max="{{player.duration}}" ng-model="player.currentTime" ng-change="player.seek()"/>
+                <div class="player-times">
+                    <span class="player-currentTime" ng-bind="player.currentTime | duration | date:'m:ss'">0:00</span>
+                    <span class="player-duration" ng-bind="player.duration | duration | date:'m:ss'">0:00</span>
+                </div>
+                <button class="button-icon player-control prev" ng-click="player.previous()"><i class="fa fa-fast-backward" title="Previous"></i></button>
+                <button class="button-icon player-control play" ng-click="player.play()" ng-hide="player.isPlaying" title="Play"><i class="fa fa-play"></i></button>
+                <button class="button-icon player-control pause" ng-click="player.pause()" ng-show="player.isPlaying" title="Pause"><i class="fa fa-pause"></i></button>
+                <button class="button-icon player-control next" ng-click="player.next()"><i class="fa fa-fast-forward" title="Next"></i></button>
             </nav>
             <ul class="grid" ng-cloak ng-sortable="playlistSort">
                 <li class="grid-header">
@@ -29,7 +33,7 @@
                     <span class="grid-cell">Album</span>
                     <span class="grid-cell"></span>
                 </li>
-                <li class="grid-row track" ng-repeat="track in playlist.tracks" ng-class="{current: playlist.currentTrack == $index}">
+                <li class="grid-row track" ng-repeat="track in playlist.tracks" ng-class="{'player-current': playlist.currentTrack == $index}">
                     <span class="grid-cell track-handle"><i class="fa fa-ellipsis-v sortable-v" title="Drag and drop to reorder tracks"></i></span>
                     <span class="grid-cell clickable" ng-click="player.play($index)" ng-bind="track.title"></span>
                     <span class="grid-cell clickable" ng-click="player.play($index)" ng-bind="track.artist.label"></span>
