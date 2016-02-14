@@ -9,7 +9,7 @@
         <link type="text/css" href="/display/files/wmp.css" rel="stylesheet"/>
     </head>
     <body>
-        <div ng-controller="catalogCtrl">
+        <div ng-controller="CatalogController as catalog">
             <ul class="tree">
                 <li ng-repeat="folder in catalog.folders" ng-include="'folder.html'"></li>
             </ul>
