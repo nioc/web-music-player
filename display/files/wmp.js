@@ -212,6 +212,37 @@ angular
         }
     };
 }]).
+//declare menu controller
+controller('MenuController', ['User', '$window', function(User, $window) {
+    var menu = this;
+    menu.visible = false;
+    menu.items = [];
+    var existingItems = [
+       { require: 'user', label: 'Library', icon: 'fa-archive', link: '/library' },
+       { require: 'admin', label: 'Catalog', icon: 'fa-folder-open', link: '/catalog' },
+       { require: 'user', label: 'Profile', icon: 'fa-user', link: '/profile' },
+       { require: 'admin', label: 'Admin', icon: 'fa-sliders', link: '/admin' },
+       { require: 'user', label: 'Sign out', icon: 'fa-sign-out', link: '/sign-out' },
+       { require: 'user', label: 'Find an issue ?', icon: 'fa-bug', link: 'https://github.com/nioc/web-music-player/issues/new' },
+       { require: 'user', label: 'Contribute', icon: 'fa-code-fork', link: 'https://github.com/nioc/web-music-player#contributing' }
+   ];
+    menu.toggle = function() {
+        this.visible = !this.visible;
+    };
+    //check user profile
+    var user = User;
+    if (!user.getProfile() || !Number.isInteger(user.id)) {
+        $window.location = '/sign';
+        //no valid token found, redirect to sign in page
+        return false;
+    }
+    //add links according to user scope
+    angular.forEach(existingItems, function(item) {
+        if (user.scope.indexOf(item.require) !== -1) {
+            menu.items.push(item);
+        }
+    });
+}]).
 //declare catalog controller
 controller('CatalogController', ['Library', 'Folder', function(Library, Folder) {
     var catalog = this;
