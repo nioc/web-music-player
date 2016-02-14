@@ -32,7 +32,13 @@ angular
                     if (angular.isDefined(trackIndex)) {
                         $scope.playlist.currentTrack = trackIndex;
                     }
-                    audio.src=$scope.playlist.tracks[$scope.playlist.currentTrack].file;
+                    //get token and send it in query string
+                    var token = $scope.user.getToken();
+                    var queryParameter = '';
+                    if (token) {
+                        queryParameter = '?token=' + encodeURIComponent(token);
+                    }
+                    audio.src = $scope.playlist.tracks[$scope.playlist.currentTrack].file + queryParameter;
                     audio.play();
                     this.currentTime = 0;
                 }

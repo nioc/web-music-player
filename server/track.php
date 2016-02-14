@@ -9,6 +9,27 @@
  */
 //get id parameter
 $trackId = filter_input(INPUT_GET, 'track', FILTER_SANITIZE_NUMBER_INT);
+//get token parameter
+$tokenProvided = filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING);
+//check authorization
+if (!isset($tokenProvided)) {
+    header('HTTP/1.1 401 Unauthorized');
+    header('WWW-Authenticate: Bearer realm="WMP"');
+    //User not authentified/authorized
+    return;
+}
+include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Token.php';
+include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
+$configuration = new Configuration();
+$token = new Token($configuration->get('hashKey'));
+$token->value = $tokenProvided;
+echo $configuration->get('hashKey');
+if (!$token->decode() || !property_exists($token->payload, 'sub')) {
+    header('HTTP/1.1 401 Unauthorized');
+    header('WWW-Authenticate: Bearer realm="WMP"');
+    //User not authentified/authorized
+    return;
+}
 //get filename
 include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';

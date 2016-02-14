@@ -3,4 +3,4 @@ RewriteEngine on
 RewriteRule ^$ /display/index.html [L]
 RewriteRule ^sign$ /display/index.html [L]
 RewriteRule ^main$ /display/player.html [L]
-RewriteRule ^stream/([0-9]+)$ /server/track.php?track=$1 [L]
+RewriteRule ^stream/([0-9]+)$ /server/track.php?track=$1 [QSA,L]
