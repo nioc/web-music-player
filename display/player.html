@@ -7,6 +7,7 @@
         <link type="text/css" href="/display/files/vendor/normalize.css/normalize.css" rel="stylesheet"/>
         <link type="text/css" href="/display/files/vendor/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
         <link type="text/css" href="/display/files/wmp.css" rel="stylesheet"/>
+        <base href="/">
     </head>
     <body>
         <div ng-controller="MenuController as menu">
@@ -82,8 +83,10 @@
                 </ul>
             </section>
         </div>
+        <div ng-view></div>
         <script src="/display/files/vendor/angularjs/angular.min.js"></script>
         <script src="/display/files/vendor/angularjs/angular-resource.min.js"></script>
+        <script src="/display/files/vendor/angularjs/angular-route.min.js"></script>
         <script src="/display/files/vendor/Sortable/Sortable.js"></script>
         <script src="/display/files/vendor/Sortable/ng-sortable.js"></script>
         <script src="/display/files/wmp.js"></script>

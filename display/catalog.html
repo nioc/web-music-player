@@ -1,32 +1,9 @@
-<!doctype html>
-<html ng-app="wmpApp">
-    <head>
-        <meta charset="utf-8">
-        <title>Web Music Player</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-        <link type="text/css" href="/display/files/vendor/normalize.css/normalize.css" rel="stylesheet"/>
-        <link type="text/css" href="/display/files/vendor/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
-        <link type="text/css" href="/display/files/wmp.css" rel="stylesheet"/>
-    </head>
-    <body>
         <div ng-controller="CatalogController as catalog">
             <ul class="tree">
                 <li ng-repeat="folder in catalog.folders" ng-include="'folder.html'"></li>
             </ul>
             <span ng-bind="catalog.result"></span>
         </div>
-    </body>
-    <script src="/display/files/vendor/angularjs/angular.min.js"></script>
-    <script src="/display/files/vendor/angularjs/angular-resource.min.js"></script>
-    <script src="/display/files/vendor/Sortable/Sortable.min.js"></script>
-    <script src="/display/files/vendor/Sortable/ng-sortable.js"></script>
-    <script src="/display/files/wmp.js"></script>
-    <script src="/display/files/playlistItem.factory.js"></script>
-    <script src="/display/files/audio.factory.js"></script>
-    <script src="/display/files/folder.factory.js"></script>
-    <script src="/display/files/library.factory.js"></script>
-    <script src="/display/files/user.factory.js"></script>
-    <script src="/display/files/authInterceptor.factory.js"></script>
     <script type="text/ng-template" id="folder.html">
     <button class="button-icon" title="Expand folder" ng-click="catalog.expandFolder(folder)"><i style="width:18px;" class="fa folder-icn" ng-class="{'fa-folder-open': folder.show, 'fa-folder': !folder.show}"></i>{{::folder.path}}</button>
     <button class="button-icon" title="Add/sync folder to library" ng-click="catalog.addFolder(folder)"><i style="width:18px;" class="fa fa-plus-circle"></i></button></span>
@@ -35,4 +12,3 @@
         <li ng-repeat="folder in folder.subfolders" ng-include="'folder.html'"></li>
     </ul>
     </script>
-</html>

@@ -4,7 +4,8 @@
  */
 'use strict';
 angular
-.module('wmpApp', ['ngResource', 'ng-sortable'])
+.module('wmpApp', ['ngResource', 'ngRoute', 'ng-sortable'])
+.config(config)
 //declare player controller
 .controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Audio', 'User', '$window', function($scope, PlaylistItem, Library, Audio, User, $window) {
     var playerCtr = this;
@@ -273,3 +274,18 @@ controller('CatalogController', ['Library', 'Folder', function(Library, Folder) 
         return new Date(1970, 0, 1).setSeconds(seconds);
     };
 });
+
+function config($routeProvider, $locationProvider) {
+    $routeProvider
+    .when('/main', {
+    })
+    .when('/catalog', {
+        templateUrl: '/catalog',
+        controller: 'CatalogController',
+        controllerAs: 'catalog'
+    })
+    .otherwise({
+        redirectTo: '/main'
+    });
+    $locationProvider.html5Mode(true);
+}
