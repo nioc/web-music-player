@@ -9,15 +9,17 @@ angular
 //declare configuration
 .config(config)
 //declare player controller
-.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Audio', 'User', '$window', PlayerController])
+.controller('PlayerController', ['$scope', 'PlaylistItem', 'Audio', 'User', '$window', PlayerController])
 //declare menu controller
 .controller('MenuController', ['User', '$window', MenuController])
+//declare library controller
+.controller('LibraryController', ['Library', LibraryController])
 //declare catalog controller
 .controller('CatalogController', ['Library', 'Folder', CatalogController])
 //declare filter converting duration in seconds into a datetime
 .filter('duration', duration);
 //PlayerController function
-function PlayerController($scope, PlaylistItem, Library, Audio, User, $window) {
+function PlayerController($scope, PlaylistItem, Audio, User, $window) {
     var playerCtr = this;
     //check user profile
     playerCtr.user = User;
@@ -161,35 +163,6 @@ function PlayerController($scope, PlaylistItem, Library, Audio, User, $window) {
             });
         }
     };
-    //get library
-    playerCtr.library = {
-        tracks: [],
-        order: ['title','artist'],
-        display: false,
-        toggleDisplay() {
-            this.display = !this.display;
-            if (this.display && this.tracks.length === 0) {
-                this.search.query();
-            }
-        },
-        search: {
-            artist: null,
-            album: null,
-            title: null,
-            displayFilter: {
-                artist: false,
-                album: false,
-                title: false
-            },
-            query() {
-                playerCtr.library.tracks = Library.query({
-                    title: this.title,
-                    album: this.album,
-                    artist: this.artist
-                });
-            }
-        }
-    };
     //sort playlist
     playerCtr.playlistSort = {
         draggable: '.track',
@@ -222,6 +195,37 @@ function PlayerController($scope, PlaylistItem, Library, Audio, User, $window) {
             });
         }
     };
+}
+//LibraryController function
+function LibraryController(Library) {
+    var librarys = this;
+    //get library
+    librarys.tracks = [];
+    librarys.order = ['title','artist'];
+    librarys.display = false;
+    librarys.toggleDisplay = function() {
+            this.display = !this.display;
+            if (this.display && this.tracks.length === 0) {
+                this.search.query();
+            }
+        };
+    librarys.search = {
+        artist: null,
+        album: null,
+        title: null,
+        displayFilter: {
+            artist: false,
+            album: false,
+            title: false
+        },
+        query() {
+            librarys.tracks = Library.query({
+                title: this.title,
+                album: this.album,
+                artist: this.artist
+            });
+        }
+    }
 }
 //MenuController function
 function MenuController(User, $window) {
