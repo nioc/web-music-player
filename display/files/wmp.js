@@ -228,6 +228,11 @@ controller('MenuController', ['User', '$window', function(User, $window) {
    ];
     menu.toggle = function() {
         this.visible = !this.visible;
+        if (this.visible) {
+            document.querySelector('.player').style.display = 'none';
+        } else {
+            document.querySelector('.player').style.display = null;
+        }
     };
     //check user profile
     var user = User;
