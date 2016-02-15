@@ -4,10 +4,20 @@
  */
 'use strict';
 angular
+//declare module and dependencies
 .module('wmpApp', ['ngResource', 'ngRoute', 'ng-sortable'])
+//declare configuration
 .config(config)
 //declare player controller
-.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Audio', 'User', '$window', function($scope, PlaylistItem, Library, Audio, User, $window) {
+.controller('PlayerController', ['$scope', 'PlaylistItem', 'Library', 'Audio', 'User', '$window', PlayerController])
+//declare menu controller
+.controller('MenuController', ['User', '$window', MenuController])
+//declare catalog controller
+.controller('CatalogController', ['Library', 'Folder', CatalogController])
+//declare filter converting duration in seconds into a datetime
+.filter('duration', duration);
+//PlayerController function
+function PlayerController($scope, PlaylistItem, Library, Audio, User, $window) {
     var playerCtr = this;
     //check user profile
     playerCtr.user = User;
@@ -212,9 +222,9 @@ angular
             });
         }
     };
-}]).
-//declare menu controller
-controller('MenuController', ['User', '$window', function(User, $window) {
+}
+//MenuController function
+function MenuController(User, $window) {
     var menu = this;
     menu.visible = false;
     menu.items = [];
@@ -248,9 +258,9 @@ controller('MenuController', ['User', '$window', function(User, $window) {
             menu.items.push(item);
         }
     });
-}]).
-//declare catalog controller
-controller('CatalogController', ['Library', 'Folder', function(Library, Folder) {
+}
+//CatalogController function
+function CatalogController(Library, Folder) {
     var catalog = this;
     catalog.folders = Folder.query();
     catalog.expandFolder = function (folder) {
@@ -267,14 +277,14 @@ controller('CatalogController', ['Library', 'Folder', function(Library, Folder) 
             });
         }
     };
-}])
-//declare filter converting duration in seconds into a datetime
-.filter('duration', function() {
+}
+//duration filter function
+function duration() {
     return function(seconds) {
         return new Date(1970, 0, 1).setSeconds(seconds);
     };
-});
-
+}
+//Configuration function
 function config($routeProvider, $locationProvider) {
     $routeProvider
     .when('/main', {

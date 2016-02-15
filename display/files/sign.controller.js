@@ -5,11 +5,16 @@
 (function () {
     'use strict';
     angular
+    //declare module
     .module('wmpApp', [])
-    .controller('SignController', function ($scope, $http, $window, User) {
+    //declare sign controller
+    .controller('SignController', SignController);
+    //SignController function
+    function SignController ($scope, $http, $window, User) {
         $scope.user = { login : null, password : null };
         $scope.result = { text : '', class : '' };
-        $scope.submit = function() {
+        $scope.submit = submit;
+        function submit() {
             var user = User;
             $http
             .post('/server/api/users/tokens', $scope.user)
@@ -32,5 +37,5 @@
                 }
             }
         }
-    });
+    }
 })();
