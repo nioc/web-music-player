@@ -20,151 +20,40 @@ angular
 .filter('duration', duration);
 //PlayerController function
 function PlayerController($scope, PlaylistItem, Audio, User, $window) {
-    var playerCtr = this;
+    var player = this;
     //check user profile
-    playerCtr.user = User;
-    if (!playerCtr.user.getProfile() || !Number.isInteger(playerCtr.user.id)) {
+    player.user = User;
+    if (!player.user.getProfile() || !Number.isInteger(player.user.id)) {
         $window.location = '/sign';
         //redirect to sign in page
         return false;
     }
     //create player
     var audio = Audio;
-    playerCtr.player = {
-        isPlaying: false,
-        isPaused: false,
-        currentTime: 0,
-        duration: 0,
-        //declare function for playing current track in playlist
-        play(trackIndex) {
-            if (playerCtr.playlist.tracks.length > 0 && playerCtr.playlist.tracks.length > playerCtr.playlist.currentTrack) {
-                if (this.isPaused && !angular.isDefined(trackIndex)) {
-                    //resume the playing (only if there is no specific track asked)
-                    audio.play();
-                } else {
-                    //load new track and play it
-                    if (angular.isDefined(trackIndex)) {
-                        playerCtr.playlist.currentTrack = trackIndex;
-                    }
-                    //get token and send it in query string
-                    var token = playerCtr.user.getToken();
-                    var queryParameter = '';
-                    if (token) {
-                        queryParameter = '?token=' + encodeURIComponent(token);
-                    }
-                    audio.src = playerCtr.playlist.tracks[playerCtr.playlist.currentTrack].file + queryParameter;
-                    audio.play();
-                    this.currentTime = 0;
-                }
-                this.isPlaying = true;
-                this.isPaused = false;
-            }
-        },
-        //declare function to pause the playing
-        pause() {
-            if (this.isPlaying) {
-                audio.pause();
-                this.isPaused = true;
-                this.isPlaying = false;
-            }
-        },
-        //declare function for playing previous track in playlist
-        previous() {
-            if (!playerCtr.playlist.tracks.length) {
-                return;
-            }
-            this.isPaused=false;
-            if (playerCtr.playlist.currentTrack > 0) {
-                //go to previous track
-                playerCtr.playlist.currentTrack--;
-            } else {
-                //go to the last track
-                playerCtr.playlist.currentTrack = playerCtr.playlist.tracks.length - 1;
-            }
-            this.play();
-        },
-        //declare function for playing next track in playlist
-        next() {
-            if (!playerCtr.playlist.tracks.length) {
-                //there is no track to play, stop the playing
-                audio.pause();
-                this.isPaused = true;
-                this.isPlaying = false;
-                return;
-            }
-            this.isPaused = false;
-            this.isPlaying = true;
-            if (playerCtr.playlist.tracks.length > (playerCtr.playlist.currentTrack + 1)) {
-                //go to next track
-                playerCtr.playlist.currentTrack++;
-            } else {
-                //come back to the first track
-                playerCtr.playlist.currentTrack = 0;
-            }
-            this.play(playerCtr.playlist.currentTrack);
-        },
-        //declare function for seeking in track
-        seek() {
-            audio.currentTime = this.currentTime;
-        }
-    };
-    //automatic call to the next function when track is ended
-    audio.onended = function() {
-        $scope.$apply(playerCtr.player.next());
-    };
-    //automatic update seeker
-    audio.ontimeupdate = function() {
-        $scope.$apply(playerCtr.player.currentTime = this.currentTime);
-    };
-    //automatic update seeker max range
-    audio.ondurationchange = function() {
-        $scope.$apply(playerCtr.player.duration = this.duration);
-    };
+    player.isPlaying = false;
+    player.isPaused = false;
+    player.currentTime = 0;
+    player.duration = 0;
+    //declare functions for controlling player
+    player.play = play;
+    player.pause = pause;
+    player.previous = previous;
+    player.next = next;
+    player.seek = seek;
+    //automatic handlers
+    audio.onended = onEnded;
+    audio.ontimeupdate = onTimeUpdate;
+    audio.ondurationchange = onDurationChange;
     //get playlist tracks
-    playerCtr.playlist = {
-        tracks: PlaylistItem.query({ userId: playerCtr.user.id }),
+    player.playlist = {
+        tracks: PlaylistItem.query({ userId: player.user.id }),
         currentTrack : 0,
-        //declare function to add a track to the user playlist
-        add(track) {
-            var playlistItem = new PlaylistItem(track);
-            playlistItem.userId = playerCtr.user.id;
-            PlaylistItem.save(playlistItem, function(data) {
-                    //success, apply display change
-                playerCtr.playlist.tracks.push(data);
-                }, function(error) {
-                    //error, alert user
-                    alert(error.data.message);
-                });
-        },
-        //declare function to remove a track from the user playlist
-        remove(track) {
-            track.$delete(function() {
-                //success, apply display change
-                var trackRemovedIndex = playerCtr.playlist.tracks.indexOf(track);
-                var currentTrack = playerCtr.playlist.currentTrack;
-                //remove track from the playlist
-                playerCtr.playlist.tracks.splice(trackRemovedIndex, 1);
-                //update currentTrack index
-                if (currentTrack >= trackRemovedIndex) {
-                    if (currentTrack >= 0) {
-                        playerCtr.playlist.currentTrack--;
-                    }
-                    //go to next track if the removed track was playing
-                    if (playerCtr.player.isPlaying && currentTrack === trackRemovedIndex) {
-                        playerCtr.player.next();
-                    }
-                    if (playerCtr.playlist.currentTrack < 0) {
-                        playerCtr.playlist.currentTrack = 0;
-                    }
-                }
-            }, function(error) {
-                //error, alert user
-                alert(error.data.message);
-            });
-        }
+        //declare function for interacting with playlist
+        add: add,
+        remove: remove
     };
     //sort playlist
-    playerCtr.playlistSort = {
+    player.playlistSort = {
         draggable: '.track',
         handle: '.track-handle',
         filter: '.grid-header',
@@ -172,28 +61,150 @@ function PlayerController($scope, PlaylistItem, Audio, User, $window) {
         animation: 1000,
         onUpdate(evt) {
             //apply local change
-            if (evt.oldIndex < playerCtr.playlist.currentTrack && evt.newIndex >= playerCtr.playlist.currentTrack) {
-                playerCtr.playlist.currentTrack--;
-            } else if (evt.oldIndex > playerCtr.playlist.currentTrack && evt.newIndex <= playerCtr.playlist.currentTrack) {
-                playerCtr.playlist.currentTrack++;
-            } else if (evt.oldIndex === playerCtr.playlist.currentTrack) {
-                playerCtr.playlist.currentTrack = evt.newIndex;
+            if (evt.oldIndex < player.playlist.currentTrack && evt.newIndex >= player.playlist.currentTrack) {
+                player.playlist.currentTrack--;
+            } else if (evt.oldIndex > player.playlist.currentTrack && evt.newIndex <= player.playlist.currentTrack) {
+                player.playlist.currentTrack++;
+            } else if (evt.oldIndex === player.playlist.currentTrack) {
+                player.playlist.currentTrack = evt.newIndex;
             }
             //update playlist on server
             if (evt.newIndex > evt.oldIndex) {
-                evt.model.newSequence = playerCtr.playlist.tracks[evt.newIndex-1].sequence;
+                evt.model.newSequence = player.playlist.tracks[evt.newIndex-1].sequence;
             } else if (evt.newIndex < evt.oldIndex) {
-                evt.model.newSequence = playerCtr.playlist.tracks[evt.newIndex+1].sequence;
+                evt.model.newSequence = player.playlist.tracks[evt.newIndex+1].sequence;
             }
             var playlistItem = new PlaylistItem(evt.model);
             PlaylistItem.update(playlistItem, function(data) {
                 //success, apply display change
-                playerCtr.playlist.tracks = data;
+                player.playlist.tracks = data;
             }, function(error) {
                 //error, alert user
                 alert(error.data.message);
             });
         }
+    };
+    //function for playing current track in playlist
+    function play(trackIndex) {
+        if (this.playlist.tracks.length > 0 && this.playlist.tracks.length > this.playlist.currentTrack) {
+            if (this.isPaused && !angular.isDefined(trackIndex)) {
+                //resume the playing (only if there is no specific track asked)
+                audio.play();
+            } else {
+                //load new track and play it
+                if (angular.isDefined(trackIndex)) {
+                    this.playlist.currentTrack = trackIndex;
+                }
+                //get token and send it in query string
+                var token = this.user.getToken();
+                var queryParameter = '';
+                if (token) {
+                    queryParameter = '?token=' + encodeURIComponent(token);
+                }
+                audio.src = this.playlist.tracks[this.playlist.currentTrack].file + queryParameter;
+                audio.play();
+                this.currentTime = 0;
+            }
+            this.isPlaying = true;
+            this.isPaused = false;
+        }
+    }
+    //function to pause the playing
+    function pause() {
+        if (this.isPlaying) {
+            audio.pause();
+            this.isPaused = true;
+            this.isPlaying = false;
+        }
+    }
+    //function for playing previous track in playlist
+    function previous() {
+        if (!this.playlist.tracks.length) {
+            return;
+        }
+        this.isPaused=false;
+        if (this.playlist.currentTrack > 0) {
+            //go to previous track
+            this.playlist.currentTrack--;
+        } else {
+            //go to the last track
+            this.playlist.currentTrack = this.playlist.tracks.length - 1;
+        }
+        this.play();
+    }
+    //function for playing next track in playlist
+    function next() {
+        if (!this.playlist.tracks.length) {
+            //there is no track to play, stop the playing
+            audio.pause();
+            this.isPaused = true;
+            this.isPlaying = false;
+            return;
+        }
+        this.isPaused = false;
+        this.isPlaying = true;
+        if (this.playlist.tracks.length > (this.playlist.currentTrack + 1)) {
+            //go to next track
+            this.playlist.currentTrack++;
+        } else {
+            //come back to the first track
+            this.playlist.currentTrack = 0;
+        }
+        this.play(this.playlist.currentTrack);
+    }
+    //function for seeking in track
+    function seek() {
+        audio.currentTime = this.currentTime;
+    }
+    //function to add a track to the user playlist
+    function add(track) {
+        var playlistItem = new PlaylistItem(track);
+        playlistItem.userId = player.user.id;
+        PlaylistItem.save(playlistItem, function(data) {
+                //success, apply display change
+            player.playlist.tracks.push(data);
+            }, function(error) {
+                //error, alert user
+                alert(error.data.message);
+            });
+    }
+    //function to remove a track from the user playlist
+    function remove(track) {
+        track.$delete(function() {
+            //success, apply display change
+            var trackRemovedIndex = player.playlist.tracks.indexOf(track);
+            var currentTrack = player.playlist.currentTrack;
+            //remove track from the playlist
+            player.playlist.tracks.splice(trackRemovedIndex, 1);
+            //update currentTrack index
+            if (currentTrack >= trackRemovedIndex) {
+                if (currentTrack >= 0) {
+                    player.playlist.currentTrack--;
+                }
+                //go to next track if the removed track was playing
+                if (player.isPlaying && currentTrack === trackRemovedIndex) {
+                    player.next();
+                }
+                if (player.playlist.currentTrack < 0) {
+                    player.playlist.currentTrack = 0;
+                }
+            }
+        }, function(error) {
+            //error, alert user
+            alert(error.data.message);
+        });
+    }
+    //automatic call to the next function when track is ended
+    function onEnded() {
+        $scope.$apply(player.next());
+    };
+    //automatic update seeker
+    function onTimeUpdate() {
+        $scope.$apply(player.currentTime = this.currentTime);
+    };
+    //automatic update seeker max range
+    function onDurationChange() {
+        $scope.$apply(player.duration = this.duration);
     };
 }
 //LibraryController function
