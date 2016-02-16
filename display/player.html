@@ -55,33 +55,6 @@
                     <span class="grid-cell">No track in playlist, add some from library</span>
                 </li>
             </ul>
-            <section class="library" ng-controller="LibraryController as library">
-                <h2 ng-click="library.toggleDisplay()" class="clickable"><i class="fa fa-archive"></i>Music Library</h2>
-                <ul class="grid" ng-show="library.display" ng-cloak>
-                    <li class="grid-header">
-                        <span class="grid-cell">
-                            <span>Title</span><button class="button-icon" ng-click="library.search.displayFilter.title = !library.search.displayFilter.title"><i class="fa fa-search"></i></button>
-                            <input ng-show="library.search.displayFilter.title" ng-model="library.search.title" placeholder="Title" ng-change="library.search.query()" ng-model-options="{ debounce: 1000 }">
-                        </span>
-                        <span class="grid-cell">
-                            <span>Artist</span><button class="button-icon" ng-click="library.search.displayFilter.artist = !library.search.displayFilter.artist"><i class="fa fa-search"></i></button>
-                            <input ng-show="library.search.displayFilter.artist" ng-model="library.search.artist" placeholder="Artist" ng-change="library.search.query()" ng-model-options="{ debounce: 1000 }">
-                        </span>
-                        <span class="grid-cell">
-                            <span>Album</span><button class="button-icon" ng-click="library.search.displayFilter.album = !library.search.displayFilter.album"><i class="fa fa-search"></i></button>
-                            <input ng-show="library.search.displayFilter.album" ng-model="library.search.album" placeholder="Album" ng-change="library.search.query()" ng-model-options="{ debounce: 1000 }">
-                        </span>
-                    </li>
-                    <li class="grid-row clickable" ng-repeat="track in library.tracks | orderBy:library.order" ng-click="player.playlist.add(track)">
-                        <span class="grid-cell" ng-bind="::track.title"></span>
-                        <span class="grid-cell" ng-bind="::track.artist.label"></span>
-                        <span class="grid-cell" ng-bind="::track.album.label"></span>
-                    </li>
-                    <li class="grid-row" ng-if="library.tracks.length === 0">
-                        <span class="grid-cell">No results found</span>
-                    </li>
-                </ul>
-            </section>
         </div>
         <div ng-view></div>
         <script src="/display/files/vendor/angularjs/angular.min.js"></script>

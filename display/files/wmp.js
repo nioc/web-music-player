@@ -8,18 +8,42 @@ angular
 .module('wmpApp', ['ngResource', 'ngRoute', 'ng-sortable'])
 //declare configuration
 .config(config)
+//declare playlist service
+.service('Playlist', ['User', 'PlaylistItem', Playlist])
 //declare player controller
-.controller('PlayerController', ['$scope', 'PlaylistItem', 'Audio', 'User', '$window', PlayerController])
+.controller('PlayerController', ['$scope', 'Playlist', 'Audio', 'User', '$window', PlayerController])
 //declare menu controller
 .controller('MenuController', ['User', '$window', MenuController])
 //declare library controller
-.controller('LibraryController', ['Library', LibraryController])
+.controller('LibraryController', ['Library', 'Playlist', LibraryController])
 //declare catalog controller
 .controller('CatalogController', ['Library', 'Folder', CatalogController])
 //declare filter converting duration in seconds into a datetime
 .filter('duration', duration);
+//playlist function
+function Playlist(User, PlaylistItem) {
+    var playlist = this;
+    //get tracks
+    playlist.tracks = PlaylistItem.query({userId: User.id});
+    //initialize current track
+    playlist.currentTrack = 0;
+    //declare function for add track in playlist
+    playlist.add = add;
+    //function to add a track to the user playlist
+    function add(track) {
+        var playlistItem = new PlaylistItem(track);
+        playlistItem.userId = User.id;
+        PlaylistItem.save(playlistItem, function(data) {
+            //success, add to playlist
+            playlist.tracks.push(data);
+        }, function(error) {
+            //error, alert user
+            alert(error.data.message);
+        });
+    }
+}
 //PlayerController function
-function PlayerController($scope, PlaylistItem, Audio, User, $window) {
+function PlayerController($scope, Playlist, Audio, User, $window) {
     var player = this;
     //check user profile
     player.user = User;
@@ -44,14 +68,10 @@ function PlayerController($scope, PlaylistItem, Audio, User, $window) {
     audio.onended = onEnded;
     audio.ontimeupdate = onTimeUpdate;
     audio.ondurationchange = onDurationChange;
-    //get playlist tracks
-    player.playlist = {
-        tracks: PlaylistItem.query({userId: player.user.id}),
-        currentTrack: 0,
-        //declare function for interacting with playlist
-        add: add,
-        remove: remove
-    };
+    //link playlist to Playlist service
+    player.playlist = Playlist;
+    //add to PLaylist service the removing track function
+    player.playlist.remove = remove;
     //sort playlist
     player.playlistSort = {
         draggable: '.track',
@@ -156,18 +176,6 @@ function PlayerController($scope, PlaylistItem, Audio, User, $window) {
     function seek() {
         audio.currentTime = this.currentTime;
     }
-    //function to add a track to the user playlist
-    function add(track) {
-        var playlistItem = new PlaylistItem(track);
-        playlistItem.userId = player.user.id;
-        PlaylistItem.save(playlistItem, function(data) {
-                //success, apply display change
-                player.playlist.tracks.push(data);
-            }, function(error) {
-                //error, alert user
-                alert(error.data.message);
-            });
-    }
     //function to remove a track from the user playlist
     function remove(track) {
         track.$delete(function() {
@@ -208,18 +216,13 @@ function PlayerController($scope, PlaylistItem, Audio, User, $window) {
     };
 }
 //LibraryController function
-function LibraryController(Library) {
+function LibraryController(Library, Playlist) {
     var librarys = this;
     //get library
     librarys.tracks = [];
     librarys.order = ['title','artist'];
     librarys.display = false;
-    librarys.toggleDisplay = function() {
-            this.display = !this.display;
-            if (this.display && this.tracks.length === 0) {
-                this.search.query();
-            }
-        };
+    librarys.toggleDisplay = toggleDisplay;
     librarys.search = {
         artist: null,
         album: null,
@@ -237,6 +240,15 @@ function LibraryController(Library) {
             });
         }
     };
+    //add link to Playlist service ("add track to playlist" function)
+    librarys.add = Playlist.add;
+    //function to toggle library display
+    function toggleDisplay() {
+        this.display = !this.display;
+        if (this.display && this.tracks.length === 0) {
+            this.search.query();
+        }
+    };
 }
 //MenuController function
 function MenuController(User, $window) {
@@ -244,13 +256,15 @@ function MenuController(User, $window) {
     menu.visible = false;
     menu.items = [];
     var existingItems = [
-       {require: 'user', label: 'Library', icon: 'fa-archive', link: '/library'},
-       {require: 'admin', label: 'Catalog', icon: 'fa-folder-open', link: '/catalog'},
-       {require: 'user', label: 'Profile', icon: 'fa-user', link: '/profile'},
-       {require: 'admin', label: 'Admin', icon: 'fa-sliders', link: '/admin'},
-       {require: 'user', label: 'Sign out', icon: 'fa-sign-out', link: '/sign-out'},
-       {require: 'user', label: 'Find an issue ?', icon: 'fa-bug', link: 'https://github.com/nioc/web-music-player/issues/new'},
-       {require: 'user', label: 'Contribute', icon: 'fa-code-fork', link: 'https://github.com/nioc/web-music-player#contributing'}
+        {require: 'user', label: 'Player', icon: 'fa-headphones', link: '/main'},
+        {require: 'user', label: 'Library', icon: 'fa-archive', link: '/library'},
+        {require: 'user', label: 'Library', icon: 'fa-archive', link: '/library'},
+        {require: 'admin', label: 'Catalog', icon: 'fa-folder-open', link: '/catalog'},
+        {require: 'user', label: 'Profile', icon: 'fa-user', link: '/profile'},
+        {require: 'admin', label: 'Admin', icon: 'fa-sliders', link: '/admin'},
+        {require: 'user', label: 'Sign out', icon: 'fa-sign-out', link: '/sign-out'},
+        {require: 'user', label: 'Find an issue ?', icon: 'fa-bug', link: 'https://github.com/nioc/web-music-player/issues/new'},
+        {require: 'user', label: 'Contribute', icon: 'fa-code-fork', link: 'https://github.com/nioc/web-music-player#contributing'}
    ];
     menu.toggle = function() {
         this.visible = !this.visible;
@@ -303,6 +317,11 @@ function duration() {
 function config($routeProvider, $locationProvider) {
     $routeProvider
     .when('/main', {
+    })
+    .when('/library', {
+        templateUrl: '/library',
+        controller: 'LibraryController',
+        controllerAs: 'library'
     })
     .when('/catalog', {
         templateUrl: '/catalog',
