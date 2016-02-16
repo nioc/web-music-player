@@ -46,8 +46,8 @@ function PlayerController($scope, PlaylistItem, Audio, User, $window) {
     audio.ondurationchange = onDurationChange;
     //get playlist tracks
     player.playlist = {
-        tracks: PlaylistItem.query({ userId: player.user.id }),
-        currentTrack : 0,
+        tracks: PlaylistItem.query({userId: player.user.id}),
+        currentTrack: 0,
         //declare function for interacting with playlist
         add: add,
         remove: remove
@@ -70,9 +70,9 @@ function PlayerController($scope, PlaylistItem, Audio, User, $window) {
             }
             //update playlist on server
             if (evt.newIndex > evt.oldIndex) {
-                evt.model.newSequence = player.playlist.tracks[evt.newIndex-1].sequence;
+                evt.model.newSequence = player.playlist.tracks[evt.newIndex - 1].sequence;
             } else if (evt.newIndex < evt.oldIndex) {
-                evt.model.newSequence = player.playlist.tracks[evt.newIndex+1].sequence;
+                evt.model.newSequence = player.playlist.tracks[evt.newIndex + 1].sequence;
             }
             var playlistItem = new PlaylistItem(evt.model);
             PlaylistItem.update(playlistItem, function(data) {
@@ -122,7 +122,7 @@ function PlayerController($scope, PlaylistItem, Audio, User, $window) {
         if (!this.playlist.tracks.length) {
             return;
         }
-        this.isPaused=false;
+        this.isPaused = false;
         if (this.playlist.currentTrack > 0) {
             //go to previous track
             this.playlist.currentTrack--;
@@ -162,7 +162,7 @@ function PlayerController($scope, PlaylistItem, Audio, User, $window) {
         playlistItem.userId = player.user.id;
         PlaylistItem.save(playlistItem, function(data) {
                 //success, apply display change
-            player.playlist.tracks.push(data);
+                player.playlist.tracks.push(data);
             }, function(error) {
                 //error, alert user
                 alert(error.data.message);
@@ -236,7 +236,7 @@ function LibraryController(Library) {
                 artist: this.artist
             });
         }
-    }
+    };
 }
 //MenuController function
 function MenuController(User, $window) {
@@ -244,13 +244,13 @@ function MenuController(User, $window) {
     menu.visible = false;
     menu.items = [];
     var existingItems = [
-       { require: 'user', label: 'Library', icon: 'fa-archive', link: '/library' },
-       { require: 'admin', label: 'Catalog', icon: 'fa-folder-open', link: '/catalog' },
-       { require: 'user', label: 'Profile', icon: 'fa-user', link: '/profile' },
-       { require: 'admin', label: 'Admin', icon: 'fa-sliders', link: '/admin' },
-       { require: 'user', label: 'Sign out', icon: 'fa-sign-out', link: '/sign-out' },
-       { require: 'user', label: 'Find an issue ?', icon: 'fa-bug', link: 'https://github.com/nioc/web-music-player/issues/new' },
-       { require: 'user', label: 'Contribute', icon: 'fa-code-fork', link: 'https://github.com/nioc/web-music-player#contributing' }
+       {require: 'user', label: 'Library', icon: 'fa-archive', link: '/library'},
+       {require: 'admin', label: 'Catalog', icon: 'fa-folder-open', link: '/catalog'},
+       {require: 'user', label: 'Profile', icon: 'fa-user', link: '/profile'},
+       {require: 'admin', label: 'Admin', icon: 'fa-sliders', link: '/admin'},
+       {require: 'user', label: 'Sign out', icon: 'fa-sign-out', link: '/sign-out'},
+       {require: 'user', label: 'Find an issue ?', icon: 'fa-bug', link: 'https://github.com/nioc/web-music-player/issues/new'},
+       {require: 'user', label: 'Contribute', icon: 'fa-code-fork', link: 'https://github.com/nioc/web-music-player#contributing'}
    ];
     menu.toggle = function() {
         this.visible = !this.visible;
@@ -278,12 +278,12 @@ function MenuController(User, $window) {
 function CatalogController(Library, Folder) {
     var catalog = this;
     catalog.folders = Folder.query();
-    catalog.expandFolder = function (folder) {
-        folder.show=!folder.show;
+    catalog.expandFolder = function(folder) {
+        folder.show = !folder.show;
     };
-    catalog.addFolder = function (folder) {
+    catalog.addFolder = function(folder) {
         if (folder.path !== '') {
-            Library.save({'folder':folder.path}, function(data) {
+            Library.save({'folder': folder.path}, function(data) {
                 //success, apply display change
                 //@TODO
             }, function(error) {

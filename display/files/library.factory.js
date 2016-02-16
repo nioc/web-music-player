@@ -10,6 +10,6 @@ angular
 function Library($resource) {
     return $resource('/server/api/library/tracks:id', null,
     {
-      'save': { method:'POST', isArray:true }
+        'save': {method: 'POST', isArray: true}
     });
 };

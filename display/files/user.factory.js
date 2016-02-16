@@ -5,7 +5,7 @@
 'use strict';
 angular
 .module('wmpApp')
-.factory('User', function ($window) {
+.factory('User', function($window) {
     var User = {
         //attributes
         token: null,
@@ -15,7 +15,7 @@ angular
         scope: [],
         exp: null,
         //populate attributes with a payload
-        populate(payload){
+        populate(payload) {
             this.token = payload.token;
             this.id = payload.id;
             this.login = payload.login;
@@ -24,7 +24,7 @@ angular
             this.exp = payload.exp;
         },
         //return user profile
-        getProfile(){
+        getProfile() {
             if (this.getToken()) {
                 var profile = JSON.parse(JSON.stringify(this));
                 return profile;
@@ -32,12 +32,12 @@ angular
             return false;
         },
         //return stored token
-        getToken(){
+        getToken() {
             try {
                 var payload = JSON.parse($window.localStorage.user);
                 this.populate(payload);
                 return this.token;
-            } catch(e) {
+            } catch (e) {
                 return false;
             }
         },
