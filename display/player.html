@@ -9,18 +9,19 @@
         <link type="text/css" href="/display/files/wmp.css" rel="stylesheet"/>
         <base href="/">
     </head>
-    <body>
-        <div ng-controller="MenuController as menu">
+    <body ng-controller="MenuController as menu">
+        <div>
             <header class="header">
                 <button class="button-icon" title="Menu" ng-click="menu.toggle()"><i class="fa fa-navicon fa-2x"></i></button>
                 <h1><i class="fa fa-headphones logo"></i>WMP</h1>
             </header>
             <nav>
                 <ul class="menu" ng-show="menu.visible" ng-cloak>
-                    <li ng-repeat="item in menu.items"><a href={{::item.link}}><i class="fa fa-fw" ng-class="::item.icon"></i>{{::item.label}}</li></a>
+                    <li ng-repeat="item in menu.items"><a href={{::item.link}} ng-click="menu.toggle()"><i class="fa fa-fw" ng-class="::item.icon"></i>{{::item.label}}</li></a>
                 </ul>
             </nav>
         </div>
+        <div class="container" ng-show="!menu.visible">
         <div class="player" ng-controller="PlayerController as player">
             <div class="player-cover">
                 <img class="player-cover" src="/display/files/images/default_cover.png" alt="cover"/>
@@ -56,12 +57,14 @@
                 </li>
             </ul>
         </div>
-        <div ng-view></div>
+        <div ng-view ng-show="!menu.visible"></div>
+        </div>
         <script src="/display/files/vendor/angularjs/angular.min.js"></script>
         <script src="/display/files/vendor/angularjs/angular-resource.min.js"></script>
         <script src="/display/files/vendor/angularjs/angular-route.min.js"></script>
         <script src="/display/files/vendor/Sortable/Sortable.js"></script>
         <script src="/display/files/vendor/Sortable/ng-sortable.js"></script>
+        <script src="/display/files/vendor/angularjs/angular-animate.min.js"></script>
         <script src="/display/files/wmp.js"></script>
         <script src="/display/files/playlistItem.factory.js"></script>
         <script src="/display/files/audio.factory.js"></script>

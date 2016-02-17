@@ -5,6 +5,9 @@ body {
     background-color: #383838;
     color: white;
 }
+a:visited {
+    color: inherit;
+}
 .header {
     background-image: linear-gradient(#333333, #222222);
     display: flex;
@@ -187,8 +190,9 @@ header * {
     font-weight: 900;
 }
 .menu {
-    position: absolute;
+    position: relative;
     width: 100%;
+    height: 100%;
     padding: 0;
     margin: 0;
     background-color: #383838;
@@ -206,6 +210,25 @@ header * {
 .menu a {
     color: white;
     text-decoration: none;
+}
+.menu.ng-hide-add, .menu.ng-hide-remove {
+    transition: all ease-in-out 0.5s;
+    left: 0;
+    width: 100%;
+}
+.menu.ng-hide {
+    left: -100%;
+    width: 50%;
+}
+.container.ng-hide-add {
+    transition: all step-start 0.5s;
+}
+.container.ng-hide-remove {
+    transition: all step-end  0.5s;
+    display: none !important;
+}
+.container.ng-hide {
+    display: none !important;
 }
 @media screen and (max-width:1000px) {
     .player-controls, .player-cover {

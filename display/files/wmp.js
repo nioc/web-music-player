@@ -5,7 +5,7 @@
 'use strict';
 angular
 //declare module and dependencies
-.module('wmpApp', ['ngResource', 'ngRoute', 'ng-sortable'])
+.module('wmpApp', ['ngResource', 'ngRoute', 'ng-sortable', 'ngAnimate'])
 //declare configuration
 .config(config)
 //declare playlist service
@@ -221,8 +221,6 @@ function LibraryController(Library, Playlist) {
     //get library
     librarys.tracks = [];
     librarys.order = ['title','artist'];
-    librarys.display = false;
-    librarys.toggleDisplay = toggleDisplay;
     librarys.search = {
         artist: null,
         album: null,
@@ -242,13 +240,7 @@ function LibraryController(Library, Playlist) {
     };
     //add link to Playlist service ("add track to playlist" function)
     librarys.add = Playlist.add;
-    //function to toggle library display
-    function toggleDisplay() {
-        this.display = !this.display;
-        if (this.display && this.tracks.length === 0) {
-            this.search.query();
-        }
-    };
+    librarys.search.query();
 }
 //MenuController function
 function MenuController(User, $window) {
@@ -257,7 +249,6 @@ function MenuController(User, $window) {
     menu.items = [];
     var existingItems = [
         {require: 'user', label: 'Player', icon: 'fa-headphones', link: '/main'},
-        {require: 'user', label: 'Library', icon: 'fa-archive', link: '/library'},
         {require: 'user', label: 'Library', icon: 'fa-archive', link: '/library'},
         {require: 'admin', label: 'Catalog', icon: 'fa-folder-open', link: '/catalog'},
         {require: 'user', label: 'Profile', icon: 'fa-user', link: '/profile'},
@@ -268,11 +259,6 @@ function MenuController(User, $window) {
    ];
     menu.toggle = function() {
         this.visible = !this.visible;
-        if (this.visible) {
-            document.querySelector('.player').style.display = 'none';
-        } else {
-            document.querySelector('.player').style.display = null;
-        }
     };
     //check user profile
     var user = User;
