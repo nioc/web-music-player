@@ -1,14 +1,14 @@
         <div ng-controller="CatalogController as catalog">
             <ul class="tree">
-                <li ng-repeat="folder in catalog.folders" ng-include="'folder.html'"></li>
+                <li ng-repeat="folder in catalog.folders track by folder.path" ng-include="'folder.html'"></li>
             </ul>
             <span ng-bind="catalog.result"></span>
         </div>
     <script type="text/ng-template" id="folder.html">
     <button class="button-icon" title="Expand folder" ng-click="catalog.expandFolder(folder)"><i style="width:18px;" class="fa folder-icn" ng-class="{'fa-folder-open': folder.show, 'fa-folder': !folder.show}"></i>{{::folder.path}}</button>
     <button class="button-icon" title="Add/sync folder to library" ng-click="catalog.addFolder(folder)"><i style="width:18px;" class="fa fa-plus-circle"></i></button></span>
-    <ul class="tree" ng-show="folder.show">
-        <li ng-repeat="file in folder.files"><i style="width:18px;" class="fa fa-music music-file-icn"></i>{{::file}}</li>
-        <li ng-repeat="folder in folder.subfolders" ng-include="'folder.html'"></li>
+    <ul class="tree" ng-if="folder.show">
+        <li ng-repeat="file in folder.files track by $index"><i style="width:18px;" class="fa fa-music music-file-icn"></i>{{::file}}</li>
+        <li ng-repeat="folder in folder.subfolders track by folder.path" ng-include="'folder.html'"></li>
     </ul>
     </script>

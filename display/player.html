@@ -16,8 +16,8 @@
                 <h1><i class="fa fa-headphones logo"></i>WMP</h1>
             </header>
             <nav>
-                <ul class="menu" ng-show="menu.visible" ng-cloak>
-                    <li ng-repeat="item in menu.items"><a href={{::item.link}} ng-click="menu.toggle()"><i class="fa fa-fw" ng-class="::item.icon"></i>{{::item.label}}</li></a>
+                <ul class="menu" ng-if="menu.visible" ng-cloak>
+                    <li ng-repeat="item in menu.items track by $index"><a href={{::item.link}} ng-click="menu.toggle()"><i class="fa fa-fw" ng-class="::item.icon"></i>{{::item.label}}</li></a>
                 </ul>
             </nav>
         </div>
@@ -33,8 +33,8 @@
                     <span class="player-duration" ng-bind="player.duration | duration | date:'m:ss'">0:00</span>
                 </div>
                 <button class="button-icon player-control prev" ng-click="player.previous()"><i class="fa fa-fast-backward" title="Previous"></i></button>
-                <button class="button-icon player-control play" ng-click="player.play()" ng-hide="player.isPlaying" title="Play"><i class="fa fa-play"></i></button>
-                <button class="button-icon player-control pause" ng-click="player.pause()" ng-show="player.isPlaying" title="Pause"><i class="fa fa-pause"></i></button>
+                <button class="button-icon player-control play" ng-click="player.play()" ng-if="!player.isPlaying" title="Play"><i class="fa fa-play"></i></button>
+                <button class="button-icon player-control pause" ng-click="player.pause()" ng-if="player.isPlaying" title="Pause"><i class="fa fa-pause"></i></button>
                 <button class="button-icon player-control next" ng-click="player.next()"><i class="fa fa-fast-forward" title="Next"></i></button>
             </nav>
             <ul class="grid" ng-cloak ng-sortable="player.playlistSort">
@@ -45,7 +45,7 @@
                     <span class="grid-cell">Album</span>
                     <span class="grid-cell"></span>
                 </li>
-                <li class="grid-row track" ng-repeat="track in player.playlist.tracks" ng-class="{'player-current': player.playlist.currentTrack == $index}">
+                <li class="grid-row track" ng-repeat="track in player.playlist.tracks track by track.sequence" ng-class="{'player-current': player.playlist.currentTrack == $index}">
                     <span class="grid-cell track-handle"><i class="fa fa-ellipsis-v sortable-v" title="Drag and drop to reorder tracks"></i></span>
                     <span class="grid-cell clickable" ng-click="player.play($index)" ng-bind="track.title"></span>
                     <span class="grid-cell clickable" ng-click="player.play($index)" ng-bind="track.artist.label"></span>
