@@ -23,7 +23,6 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
 $configuration = new Configuration();
 $token = new Token($configuration->get('hashKey'));
 $token->value = $tokenProvided;
-echo $configuration->get('hashKey');
 if (!$token->decode() || !property_exists($token->payload, 'sub')) {
     header('HTTP/1.1 401 Unauthorized');
     header('WWW-Authenticate: Bearer realm="WMP"');
