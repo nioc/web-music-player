@@ -11,13 +11,15 @@ angular
 //declare playlist service
 .service('Playlist', ['User', 'PlaylistItem', Playlist])
 //declare player controller
-.controller('PlayerController', ['$scope', 'Playlist', 'Audio', 'User', '$window', PlayerController])
+.controller('PlayerController', ['$scope', 'Playlist', 'PlaylistItem', 'Audio', 'User', '$window', PlayerController])
 //declare menu controller
 .controller('MenuController', ['User', '$window', MenuController])
 //declare library controller
 .controller('LibraryController', ['Library', 'Playlist', LibraryController])
 //declare catalog controller
 .controller('CatalogController', ['Library', 'Folder', CatalogController])
+//declare sign-out controller
+.controller('SignOutController', ['User', '$window', SignOutController])
 //declare filter converting duration in seconds into a datetime
 .filter('duration', duration);
 //playlist function
@@ -43,7 +45,7 @@ function Playlist(User, PlaylistItem) {
     }
 }
 //PlayerController function
-function PlayerController($scope, Playlist, Audio, User, $window) {
+function PlayerController($scope, Playlist, PlaylistItem, Audio, User, $window) {
     var player = this;
     //check user profile
     player.user = User;
@@ -248,7 +250,7 @@ function MenuController(User, $window) {
     menu.visible = false;
     menu.items = [];
     var existingItems = [
-        {require: 'user', label: 'Player', icon: 'fa-headphones', link: '/main'},
+        {require: 'user', label: 'Player', icon: 'fa-headphones', link: '/player'},
         {require: 'user', label: 'Library', icon: 'fa-archive', link: '/library'},
         {require: 'admin', label: 'Catalog', icon: 'fa-folder-open', link: '/catalog'},
         {require: 'user', label: 'Profile', icon: 'fa-user', link: '/profile'},
@@ -257,9 +259,8 @@ function MenuController(User, $window) {
         {require: 'user', label: 'Find an issue ?', icon: 'fa-bug', link: 'https://github.com/nioc/web-music-player/issues/new'},
         {require: 'user', label: 'Contribute', icon: 'fa-code-fork', link: 'https://github.com/nioc/web-music-player#contributing'}
    ];
-    menu.toggle = function() {
-        this.visible = !this.visible;
-    };
+    menu.currentPage = existingItems[0];
+    menu.toggle = toggle;
     //check user profile
     var user = User;
     if (!user.getProfile() || !Number.isInteger(user.id)) {
@@ -270,9 +271,24 @@ function MenuController(User, $window) {
     //add links according to user scope
     angular.forEach(existingItems, function(item) {
         if (user.scope.indexOf(item.require) !== -1) {
+            item.isCurrentPage = isCurrentPage;
+            item.setCurrentPage = setCurrentPage;
             menu.items.push(item);
         }
     });
+    //toggle menu display
+    function toggle() {
+        this.visible = !this.visible;
+    };
+    //highlight current page
+    function isCurrentPage() {
+        return this.link === $window.location.pathname;
+    }
+    //store the next page and hide menu
+    function setCurrentPage() {
+        menu.currentPage = this;
+        menu.toggle();
+    }
 }
 //CatalogController function
 function CatalogController(Library, Folder) {
@@ -293,6 +309,11 @@ function CatalogController(Library, Folder) {
         }
     };
 }
+//SignOutController function
+function SignOutController(User, $window) {
+    User.deleteToken();
+    $window.location = '/sign';
+}
 //duration filter function
 function duration() {
     return function(seconds) {
@@ -302,7 +323,7 @@ function duration() {
 //Configuration function
 function config($routeProvider, $locationProvider) {
     $routeProvider
-    .when('/main', {
+    .when('/player', {
     })
     .when('/library', {
         templateUrl: '/library',
@@ -314,8 +335,12 @@ function config($routeProvider, $locationProvider) {
         controller: 'CatalogController',
         controllerAs: 'catalog'
     })
+    .when('/sign-out', {
+        templateUrl: '/sign-out',
+        controller: 'SignOutController'
+    })
     .otherwise({
-        redirectTo: '/main'
+        redirectTo: '/player'
     });
     $locationProvider.html5Mode(true);
 }

@@ -212,6 +212,10 @@ header * {
 .menu a {
     color: white;
     text-decoration: none;
+    text-shadow: 0 0 0.2rem #000000;
+}
+.menu .menu-current a {
+    color: #F50057;
 }
 .menu.ng-enter, .menu.ng-leave {
     transition: all ease-in-out 0.3s;
