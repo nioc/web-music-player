@@ -9,24 +9,26 @@ angular
 //declare configuration
 .config(config)
 //declare playlist service
-.service('Playlist', ['User', 'PlaylistItem', Playlist])
+.service('Playlist', ['LocalUser', 'PlaylistItem', Playlist])
 //declare player controller
-.controller('PlayerController', ['$scope', 'Playlist', 'PlaylistItem', 'Audio', 'User', '$window', PlayerController])
+.controller('PlayerController', ['$scope', 'Playlist', 'PlaylistItem', 'Audio', 'LocalUser', '$window', PlayerController])
 //declare menu controller
-.controller('MenuController', ['User', '$window', MenuController])
+.controller('MenuController', ['LocalUser', '$window', MenuController])
 //declare library controller
 .controller('LibraryController', ['Library', 'Playlist', LibraryController])
 //declare catalog controller
 .controller('CatalogController', ['Library', 'Folder', CatalogController])
 //declare sign-out controller
-.controller('SignOutController', ['User', '$window', SignOutController])
+.controller('SignOutController', ['LocalUser', '$window', SignOutController])
+//declare profile controller
+.controller('UserController', ['LocalUser', 'User', UserController])
 //declare filter converting duration in seconds into a datetime
 .filter('duration', duration);
 //playlist function
-function Playlist(User, PlaylistItem) {
+function Playlist(LocalUser, PlaylistItem) {
     var playlist = this;
     //get tracks
-    playlist.tracks = PlaylistItem.query({userId: User.id});
+    playlist.tracks = PlaylistItem.query({userId: LocalUser.id});
     //initialize current track
     playlist.currentTrack = 0;
     //declare function for add track in playlist
@@ -34,7 +36,7 @@ function Playlist(User, PlaylistItem) {
     //function to add a track to the user playlist
     function add(track) {
         var playlistItem = new PlaylistItem(track);
-        playlistItem.userId = User.id;
+        playlistItem.userId = LocalUser.id;
         PlaylistItem.save(playlistItem, function(data) {
             //success, add to playlist
             playlist.tracks.push(data);
@@ -45,10 +47,10 @@ function Playlist(User, PlaylistItem) {
     }
 }
 //PlayerController function
-function PlayerController($scope, Playlist, PlaylistItem, Audio, User, $window) {
+function PlayerController($scope, Playlist, PlaylistItem, Audio, LocalUser, $window) {
     var player = this;
     //check user profile
-    player.user = User;
+    player.user = LocalUser;
     if (!player.user.getProfile() || !Number.isInteger(player.user.id)) {
         $window.location = '/sign';
         //redirect to sign in page
@@ -245,7 +247,7 @@ function LibraryController(Library, Playlist) {
     librarys.search.query();
 }
 //MenuController function
-function MenuController(User, $window) {
+function MenuController(LocalUser, $window) {
     var menu = this;
     menu.visible = false;
     menu.items = [];
@@ -262,7 +264,7 @@ function MenuController(User, $window) {
     menu.currentPage = existingItems[0];
     menu.toggle = toggle;
     //check user profile
-    var user = User;
+    var user = LocalUser;
     if (!user.getProfile() || !Number.isInteger(user.id)) {
         $window.location = '/sign';
         //no valid token found, redirect to sign in page
@@ -310,9 +312,31 @@ function CatalogController(Library, Folder) {
     };
 }
 //SignOutController function
-function SignOutController(User, $window) {
-    User.deleteToken();
+function SignOutController(LocalUser, $window) {
+    LocalUser.deleteToken();
     $window.location = '/sign';
+}
+//ProfileController function
+function UserController(LocalUser, User) {
+    var profile = this;
+    profile.result = {text: '', class: ''};
+    LocalUser.getProfile();
+    profile.user = User.get({id: LocalUser.id});
+    profile.submit = submit;
+    function submit() {
+        function successCallback(response) {
+            profile.result.text = 'Profile successfully updated';
+            profile.result.class = 'form-valid';
+        }
+        function errorCallback(response) {
+            profile.result.text = 'Error, profile not updated';
+            if (response.data && response.data.message) {
+                profile.result.text = response.data.message;
+            }
+            profile.result.class = 'form-error';
+        }
+        profile.user.$update(successCallback, errorCallback);
+    }
 }
 //duration filter function
 function duration() {
@@ -334,6 +358,11 @@ function config($routeProvider, $locationProvider) {
         templateUrl: '/catalog',
         controller: 'CatalogController',
         controllerAs: 'catalog'
+    })
+    .when('/profile', {
+        templateUrl: '/profile',
+        controller: 'UserController',
+        controllerAs: 'profile'
     })
     .when('/sign-out', {
         templateUrl: '/sign-out',

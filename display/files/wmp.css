@@ -57,6 +57,14 @@ header * {
     width: 100%;
     box-sizing: border-box;
 }
+.form-valid {
+    color: #4CAF50;
+    margin-top: 20px;
+    display: block;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
 .fa {
     padding: 0.1em;
 }
@@ -240,6 +248,9 @@ header * {
 }
 [ng-cloak], .ng-cloak {
     display: none;
+}
+h2 .fa {
+    padding: 0 10px;
 }
 @media screen and (max-width:1000px) {
     .player-controls, .player-cover {

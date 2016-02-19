@@ -35,7 +35,123 @@ class User
     public $status;
 
     /**
+     * Initializes a User object with his identifier.
+     *
+     * @param int $id User identifier
+     */
+    public function __construct($id = null)
+    {
+        if ($id !== null) {
+            $this->id = intval($id);
+        }
+    }
+
+    /**
+     * Populate user profile by querying on his identifier.
+     *
+     * @return bool True if the user is retrieved
+     */
+    public function populate()
+    {
+        if (is_int($this->id)) {
+            global $connection;
+            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+            $query = $connection->prepare('SELECT * FROM `user` WHERE `id`=:id LIMIT 1;');
+            $query->bindValue(':id', $this->id, PDO::PARAM_INT);
+            if ($query->execute() && $query->rowCount() > 0) {
+                $query->setFetchMode(PDO::FETCH_INTO, $this);
+                //return true if there is user fetched, false otherwise
+                return (bool) $query->fetch();
+            }
+        }
+        //return false to indicate an error occurred while reading the user
+        return false;
+    }
+
+    /**
+     * Validate a user object with provided informations.
+     *
+     * @param object $user  User object to validate
+     * @param string $error The returned error message
+     *
+     * @return bool True if the user object provided is correct
+     */
+    public function validateModel($user, &$error)
+    {
+        $error = '';
+        if ($user === null) {
+            $error = 'invalid resource';
+            //return false and detailed error message
+            return false;
+        }
+        if (property_exists($user, 'sub')) {
+            $user->id = $user->sub;
+        }
+        //iterate on each object attributes to set object
+        foreach ($this as $key => $value) {
+            if (property_exists($user, $key)) {
+                //get provided attribute
+                $this->$key = $user->$key;
+            }
+        }
+        //check mandatory attributes
+        if (!is_int($this->id)) {
+            $error = 'integer must be provided in sub attribute';
+            //return false and detailed error message
+            return false;
+        }
+        if (!is_string($this->login)) {
+            $error = 'string must be provided in login attribute';
+            //return false and detailed error message
+            return false;
+        }
+        if (!is_string($this->password)) {
+            $error = 'string must be provided in password attribute';
+            //return false and detailed error message
+            return false;
+        }
+        if (!is_int($this->status)) {
+            $error = 'integer must be provided in status attribute';
+            //return false and detailed error message
+            return false;
+        }
+        //User is valid
+        return true;
+    }
+
+    /**
+     * Update user with provided informations.
+     *
+     * @param object $user User with his new values attributes
+     *
+     * @return bool True if the user is updated
+     */
+    public function update($user)
+    {
+        if (is_int($user->id)) {
+            global $connection;
+            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+            $query = $connection->prepare('UPDATE `user` SET `login`=:login, `name`=:name, `email`=:email, `password`=:password, `status`=:status WHERE `id`=:id LIMIT 1;');
+            $query->bindValue(':id', $this->id, PDO::PARAM_INT);
+            $query->bindValue(':login', $this->login, PDO::PARAM_STR);
+            $query->bindValue(':name', $this->name, PDO::PARAM_STR);
+            $query->bindValue(':email', $this->email, PDO::PARAM_STR);
+            $query->bindValue(':password', md5($this->password), PDO::PARAM_STR);
+            $query->bindValue(':status', $this->status, PDO::PARAM_INT);
+            if ($query->execute() && $query->rowCount() > 0) {
+                //return true to indicate a successful user update
+                return true;
+            }
+        }
+        //return false to indicate an error occurred while reading the user
+        return false;
+    }
+
+    /**
      * Check credentials and populate user if they are valid.
+     *
+     * @param string $login    User login
+     * @param string $password User password
      *
      * @return bool True if the user credentials are valid, false otherwise
      */

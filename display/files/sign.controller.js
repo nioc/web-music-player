@@ -10,12 +10,12 @@
     //declare sign controller
     .controller('SignController', SignController);
     //SignController function
-    function SignController($scope, $http, $window, User) {
+    function SignController($scope, $http, $window, LocalUser) {
         $scope.user = {login: null, password: null};
         $scope.result = {text: '', class: ''};
         $scope.submit = submit;
         function submit() {
-            var user = User;
+            var user = LocalUser;
             $http
             .post('/server/api/users/tokens', $scope.user)
             .then(successCallback, errorCallback);

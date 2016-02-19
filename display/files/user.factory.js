@@ -3,10 +3,16 @@
  * @version 1.0.0
  */
 'use strict';
-angular
-.module('wmpApp')
-.factory('User', function($window) {
-    var User = {
+//User factory
+function User($resource) {
+    return $resource('/server/api/users/:id', {id: '@sub'},
+    {
+        'update': {method: 'PUT'}
+    });
+}
+//LocalUser factory
+function LocalUser($window) {
+    var LocalUser = {
         //attributes
         token: null,
         id: null,
@@ -73,5 +79,10 @@ angular
             delete $window.localStorage.user;
         }
     };
-    return User;
-});
+    return LocalUser;
+}
+
+angular
+.module('wmpApp')
+.factory('User', User)
+.factory('LocalUser', LocalUser);

@@ -3,3 +3,4 @@ RewriteRule ^users/([0-9]+)/playlist/tracks/?([0-9]*)$     playlist.php?userId=$
 RewriteRule ^library/tracks/?$                             library.php [L]
 RewriteRule ^library/folders/?$                            folder.php [L]
 RewriteRule ^users/tokens/?$                               token.php [L]
+RewriteRule ^users/([0-9]+)/?$                             user.php?id=$1 [L]
