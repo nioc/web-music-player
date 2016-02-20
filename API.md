@@ -196,3 +196,52 @@ GET /server/api/library/folders
 The API returns:
 - 200 with an array of folders,
 - 204 if current folder contains neither subfolders nor files.
+
+### 1.4 Users
+
+Handle user profile.
+
+"User" ressource is structured as the following:
+
+| Name  | Type          | Description            |
+|-------|---------------|------------------------|
+| sub   | integer       | Identifier             |
+| login | string        | Login                  |
+| name  | string        | User's full name       |
+| email | string        | User's email address   |
+| scope | array(string) | List of scopes granted |
+
+```` json
+{
+    "sub": 1,
+    "login": "john12",
+    "name": "John Doe",
+    "email": "john.doe@domain.com",
+    "scope":
+    [
+        "user"
+    ]
+}
+
+````
+
+#### Get user's profile
+````
+GET /server/api/users/:id
+````
+The API returns:
+- 200 with user's profile
+- 400 if user identifier is omitted,
+- 404 if user is unknown.
+
+#### Update user's profile
+````
+PUT /server/api/users/:id
+````
+The body request must include user in JSON.
+
+The API returns:
+- 200 with updated user's profile,
+- 400 if user identifier is omitted or if user in request body is not valid,
+- 404 if user is unknown,
+- 500 if there is an error during update process.
