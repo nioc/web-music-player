@@ -209,15 +209,15 @@ function PlayerController($scope, Playlist, PlaylistItem, Audio, LocalUser, $win
     //automatic call to the next function when track is ended
     function onEnded() {
         $scope.$apply(player.next());
-    };
+    }
     //automatic update seeker
     function onTimeUpdate() {
         $scope.$apply(player.currentTime = this.currentTime);
-    };
+    }
     //automatic update seeker max range
     function onDurationChange() {
         $scope.$apply(player.duration = this.duration);
-    };
+    }
 }
 //LibraryController function
 function LibraryController(Library, Playlist) {

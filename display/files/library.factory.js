@@ -12,4 +12,4 @@ function Library($resource) {
     {
         'save': {method: 'POST', isArray: true}
     });
-};
+}

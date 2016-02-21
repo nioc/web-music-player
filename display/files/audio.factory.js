@@ -9,4 +9,4 @@ angular
 
 function Audio($document) {
     return $document[0].createElement('audio');
-};
+}

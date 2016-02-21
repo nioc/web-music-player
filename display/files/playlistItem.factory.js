@@ -12,4 +12,4 @@ function PlaylistItem($resource) {
     {
         'update': {method: 'PUT', isArray: true}
     });
-};
+}

@@ -5,7 +5,11 @@
 'use strict';
 angular
 .module('wmpApp')
-.factory('AuthInterceptor', ['LocalUser', '$q', '$window', function(LocalUser, $q, $window) {
+.factory('AuthInterceptor', ['LocalUser', '$q', '$window', AuthInterceptor])
+.config(['$httpProvider', function($httpProvider) {
+    $httpProvider.interceptors.push('AuthInterceptor');
+}]);
+function AuthInterceptor(LocalUser, $q, $window) {
     var authInterceptor = {
         request: function(config) {
             //before each request, add token if it exists
@@ -25,7 +29,4 @@ angular
         }
     };
     return authInterceptor;
-}])
-.config(['$httpProvider', function($httpProvider) {
-    $httpProvider.interceptors.push('AuthInterceptor');
-}]);
+}

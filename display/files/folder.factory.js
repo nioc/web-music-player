@@ -9,4 +9,4 @@ angular
 
 function Folder($resource) {
     return $resource('/server/api/library/folders:id');
-};
+}
