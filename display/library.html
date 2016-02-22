@@ -3,22 +3,25 @@
                 <ul class="grid" ng-cloak>
                     <li class="grid-header">
                         <span class="grid-cell">
-                            <span>Title</span><button class="button-icon" ng-click="library.search.displayFilter.title = !library.search.displayFilter.title"><i class="fa fa-search"></i></button>
-                            <input ng-if="library.search.displayFilter.title" ng-model="library.search.title" placeholder="Title" ng-change="library.search.query()" ng-model-options="{ debounce: 1000 }">
+                            <span>Title</span><button class="button-icon" ng-click="library.search.displayFilter.title = !library.search.displayFilter.title" title="Search by title"><i class="fa fa-search"></i></button>
+                            <input ng-if="library.search.displayFilter.title" ng-model="library.search.title" placeholder="Title" autofocus="autofocus" ng-change="library.search.query()" ng-model-options="{ debounce: 1000 }">
                         </span>
                         <span class="grid-cell">
-                            <span>Artist</span><button class="button-icon" ng-click="library.search.displayFilter.artist = !library.search.displayFilter.artist"><i class="fa fa-search"></i></button>
-                            <input ng-if="library.search.displayFilter.artist" ng-model="library.search.artist" placeholder="Artist" ng-change="library.search.query()" ng-model-options="{ debounce: 1000 }">
+                            <span>Artist</span><button class="button-icon" ng-click="library.search.displayFilter.artist = !library.search.displayFilter.artist" title="Search by artist"><i class="fa fa-search"></i></button>
+                            <input ng-if="library.search.displayFilter.artist" ng-model="library.search.artist" placeholder="Artist" autofocus="autofocus" ng-change="library.search.query()" ng-model-options="{ debounce: 1000 }">
                         </span>
                         <span class="grid-cell">
-                            <span>Album</span><button class="button-icon" ng-click="library.search.displayFilter.album = !library.search.displayFilter.album"><i class="fa fa-search"></i></button>
-                            <input ng-if="library.search.displayFilter.album" ng-model="library.search.album" placeholder="Album" ng-change="library.search.query()" ng-model-options="{ debounce: 1000 }">
+                            <span>Album</span><button class="button-icon" ng-click="library.search.displayFilter.album = !library.search.displayFilter.album" title="Search by album"><i class="fa fa-search"></i></button>
+                            <input ng-if="library.search.displayFilter.album" ng-model="library.search.album" placeholder="Album" autofocus="autofocus" ng-change="library.search.query()" ng-model-options="{ debounce: 1000 }">
+                        </span>
+                        <span class="grid-cell">
                         </span>
                     </li>
-                    <li class="grid-row clickable" ng-repeat="track in library.tracks track by track.id | orderBy:library.order" ng-click="library.add(track)">
+                    <li class="grid-row" ng-repeat="track in library.tracks track by track.id | orderBy:library.order">
                         <span class="grid-cell" ng-bind="::track.title"></span>
-                        <span class="grid-cell" ng-bind="::track.artist.label"></span>
-                        <span class="grid-cell" ng-bind="::track.album.label"></span>
+                        <span class="grid-cell artist"><a ng-href="/#/artists/{{::track.artist.id}}" ng-bind="::track.artist.label"></a></span>
+                        <span class="grid-cell album"><a ng-href="/#/albums/{{::track.album.id}}" ng-bind="::track.album.label"></a></span>
+                        <span class="grid-cell"><button class="button-icon" ng-click="library.add(track)" title="Add to playlist"><i class="fa fa-plus-square-o"></i></button></span>
                     </li>
                     <li class="grid-row" ng-if="library.tracks.length === 0">
                         <span class="grid-cell">No results found</span>

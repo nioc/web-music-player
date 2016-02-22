@@ -5,7 +5,8 @@ body {
     background-color: #383838;
     color: white;
 }
-a:visited {
+a:visited,
+a {
     color: inherit;
 }
 .header {
@@ -99,6 +100,7 @@ header * {
 .grid-cell {
     display: table-cell;
     padding: 4px 6px;
+    vertical-align: middle;
 }
 .grid input{
     width: 100%;
@@ -265,6 +267,10 @@ header * {
 }
 [ng-cloak], .ng-cloak {
     display: none;
+}
+.artist a,
+.album a {
+    text-decoration: none;
 }
 h2 .fa {
     padding: 0 10px;
