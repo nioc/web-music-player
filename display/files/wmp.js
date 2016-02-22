@@ -22,6 +22,10 @@ angular
 .controller('SignOutController', ['LocalUser', '$window', SignOutController])
 //declare profile controller
 .controller('UserController', ['LocalUser', 'User', UserController])
+//declare album controller
+.controller('AlbumController', ['$routeParams', 'Album', AlbumController])
+//declare artist controller
+.controller('ArtistController', ['$routeParams', 'Artist', ArtistController])
 //declare filter converting duration in seconds into a datetime
 .filter('duration', duration);
 //playlist function
@@ -338,6 +342,16 @@ function UserController(LocalUser, User) {
         profile.user.$update(successCallback, errorCallback);
     }
 }
+//AlbumController function
+function AlbumController($routeParams, Album) {
+    var album = this;
+    album.album = Album.get({id: $routeParams.id});
+}
+//ArtistController function
+function ArtistController($routeParams, Artist) {
+    var artist = this;
+    artist.artist = Artist.get({id: $routeParams.id});
+}
 //duration filter function
 function duration() {
     return function(seconds) {
@@ -353,6 +367,16 @@ function config($routeProvider, $locationProvider) {
         templateUrl: '/library',
         controller: 'LibraryController',
         controllerAs: 'library'
+    })
+    .when('/albums/:id', {
+        templateUrl: '/albums',
+        controller: 'AlbumController',
+        controllerAs: 'album'
+    })
+    .when('/artists/:id', {
+        templateUrl: '/artists',
+        controller: 'ArtistController',
+        controllerAs: 'artist'
     })
     .when('/catalog', {
         templateUrl: '/catalog',

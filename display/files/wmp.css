@@ -113,6 +113,23 @@ header * {
 .grid-header .grid-cell {
     white-space: nowrap;
 }
+.table {
+    display: table;
+    padding: 0;
+    margin: 0;
+}
+.table-row {
+    display: table-row;
+}
+.table-row .label {
+    display: table-cell;
+    font-style: italic;
+    padding-right: 0.5rem;
+}
+.table-row .value {
+    display: table-cell;
+    font-weight: bold;
+}
 .tree {
     list-style-type: none;
     padding: 0 0 0 1em;

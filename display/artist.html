@@ -1,0 +1,17 @@
+            <article class="artist" ng-controller="ArtistController as artist">
+                <h2><i class="fa fa-user"></i>Artist</h2>
+                <ul class="table">
+                    <li class="table-row">
+                        <span class="label">Name</span>
+                        <span class="value" ng-bind="::artist.artist.name"></span>
+                    </li>
+                    <li class="table-row">
+                        <span class="label">Summary</span>
+                        <span class="value" ng-bind="::artist.artist.summary"></span>
+                    </li>
+                    <li class="table-row">
+                        <span class="label">Country</span>
+                        <span class="value" ng-bind="::artist.artist.country"></span>
+                    </li>
+                </ul>
+            </article>

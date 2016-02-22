@@ -1,0 +1,25 @@
+            <article class="album" ng-controller="AlbumController as album">
+                <h2><i class="fa fa-dot-circle-o"></i>Album</h2>
+                <ul class="table">
+                    <li class="table-row">
+                        <span class="label">Name</span>
+                        <span class="value" ng-bind="::album.album.name"></span>
+                    </li>
+                    <li class="table-row">
+                        <span class="label">Artist</span>
+                        <span class="value"><a ng-href="/#/artists/{{::album.album.artist.id}}" ng-bind="::album.album.artist.label"></a></span>
+                    </li>
+                    <li class="table-row">
+                        <span class="label">Year</span>
+                        <span class="value" ng-bind="::album.album.year"></span>
+                    </li>
+                    <li class="table-row">
+                        <span class="label">Disk</span>
+                        <span class="value" ng-bind="::album.album.disk"></span>
+                    </li>
+                    <li class="table-row">
+                        <span class="label">Country</span>
+                        <span class="value" ng-bind="::album.album.country"></span>
+                    </li>
+                </ul>
+            </article>
