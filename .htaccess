@@ -1,9 +1,8 @@
 #rewriting
 RewriteEngine on
-RewriteRule ^$ /display/index.html [L]
+RewriteRule ^$ /display/player.html [L]
 RewriteRule ^sign$ /display/index.html [L]
 RewriteRule ^sign-out$ /display/sign-out.html [L]
-RewriteRule ^player$ /display/player.html [L]
 RewriteRule ^catalog$ /display/catalog.html [L]
 RewriteRule ^library$ /display/library.html [L]
 RewriteRule ^profile$ /display/profile.html [L]

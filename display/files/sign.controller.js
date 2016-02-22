@@ -22,7 +22,7 @@
             function successCallback(response) {
                 if (user.handleToken(response.data)) {
                     //redirect user to the main page
-                    $window.location = '/player';
+                    $window.location = '/';
                 } else {
                     errorCallback(response);
                 }
