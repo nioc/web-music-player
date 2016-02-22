@@ -222,7 +222,6 @@ Handle user profile.
         "user"
     ]
 }
-
 ````
 
 #### Get user's profile
@@ -245,3 +244,79 @@ The API returns:
 - 400 if user identifier is omitted or if user in request body is not valid,
 - 404 if user is unknown,
 - 500 if there is an error during update process.
+
+### 1.5 Albums
+
+Handle album informations.
+
+"Album" ressource is structured as the following:
+
+| Name      | Type    | Description                          |
+|-----------|---------|--------------------------------------|
+| id        | integer | Identifier                           |
+| name      | string  | Album name                           |
+| mbid      | string  | MusicBrainz release identifier       |
+| artist    | object  | Artist object (identifier and label) |
+| year      | integer | Year when the album was released     |
+| disk      | integer | Disk number                          |
+| country   | string  | Country where the album is released  |
+| mbidGroup | string  | MusicBrainz release group identifier |
+
+```` json
+{
+    "id": 2,
+    "name": "Nevermind",
+    "mbid": "b52a8f31-b5ab-34e9-92f4-f5b7110220f0",
+    "artist":
+    {
+        "id": 1,
+        "label": "Nirvana"
+    },
+    "year": 1991,
+    "disk": null,
+    "country": "XE",
+    "mbidGroup": "5b11f4ce-a62d-471e-81fc-a69a8278c7da"
+}
+````
+
+#### Get album informations
+````
+GET /server/api/albums/:id
+````
+The API returns:
+- 200 with album information
+- 400 if album identifier is omitted,
+- 404 if album identifier is unknown.
+
+### 1.6 Artists
+
+Handle album informations.
+
+"Artist" ressource is structured as the following:
+
+| Name    | Type    | Description                        |
+|---------|---------|------------------------------------|
+| id      | integer | Identifier                         |
+| name    | string  | Artist name                        |
+| mbid    | string  | MusicBrainz artist identifier      |
+| summary | string  | Biography of the artist            |
+| country | string  | Country where the artist came from |
+
+```` json
+{
+    "id": 1,
+    "name": "Nirvana",
+    "mbid": "5b11f4ce-a62d-471e-81fc-a69a8278c7da",
+    "summary": null,
+    "country": "US"
+}
+````
+
+#### Get artist informations
+````
+GET /server/api/artists/:id
+````
+The API returns:
+- 200 with artist informations
+- 400 if artist identifier is omitted,
+- 404 if artist identifier is unknown.

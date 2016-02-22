@@ -157,4 +157,30 @@ class Album
         //returns the album is not known or database was not reachable
         return false;
     }
+
+    /**
+     * Return structured album.
+     *
+     * @return object A public version of album
+     */
+    public function structureData()
+    {
+        //create album structure
+        $album = $this;
+        $album->id = (int) $album->id;
+        if (isset($album->year)) {
+            $album->year = (int) $album->year;
+        }
+        if (isset($album->disk)) {
+            $album->disk = (int) $album->disk;
+        }
+        //create artist structure
+        $artist = new stdClass();
+        $artist->id = (int) $album->artist;
+        $artist->label = $album->artistName;
+        unset($album->artist, $album->artistName);
+        $album->artist = $artist;
+        //return structured album
+        return $album;
+    }
 }

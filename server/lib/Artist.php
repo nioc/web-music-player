@@ -136,4 +136,18 @@ class Artist
         //returns the artist is not known or database was not reachable
         return false;
     }
+
+    /**
+     * Return structured artist.
+     *
+     * @return object A public version of artist
+     */
+    public function structureData()
+    {
+        //create artist structure
+        $artist = $this;
+        $artist->id = (int) $artist->id;
+        //return structured artist
+        return $artist;
+    }
 }
