@@ -13,7 +13,7 @@ angular
 //declare player controller
 .controller('PlayerController', ['$scope', 'Playlist', 'PlaylistItem', 'Audio', 'LocalUser', '$window', PlayerController])
 //declare menu controller
-.controller('MenuController', ['LocalUser', '$window', MenuController])
+.controller('MenuController', ['LocalUser', '$window', '$scope', MenuController])
 //declare library controller
 .controller('LibraryController', ['Library', 'Playlist', LibraryController])
 //declare catalog controller
@@ -253,7 +253,7 @@ function LibraryController(Library, Playlist) {
     librarys.search.query();
 }
 //MenuController function
-function MenuController(LocalUser, $window) {
+function MenuController(LocalUser, $window, $scope) {
     var menu = this;
     menu.visible = false;
     menu.items = [];
@@ -286,10 +286,12 @@ function MenuController(LocalUser, $window) {
             menu.items.push(item);
         }
     });
+    //location listener
+    $scope.$on('$locationChangeSuccess', locationChangeSuccess);
     //toggle menu display
     function toggle() {
         this.visible = !this.visible;
-    };
+    }
     //highlight current page
     function isCurrentPage() {
         return this.link === $window.location.hash;
@@ -298,6 +300,26 @@ function MenuController(LocalUser, $window) {
     function setCurrentPage() {
         menu.currentPage = this;
         menu.toggle();
+    }
+    function locationChangeSuccess(event, newUrl, oldUrl) {
+        //browser location detected, check if menu is synchronized
+        if (menu.currentPage.link !== $window.location.hash) {
+            //try to found the active item
+            var i = 0;
+            var itemFound = false;
+            while (i < existingItems.length && !itemFound) {
+                if (existingItems[i].link === $window.location.hash) {
+                    //active item found, update menu.currentPage
+                    itemFound = true;
+                    menu.currentPage = existingItems[i];
+                }
+                i++;
+            }
+            if (!itemFound) {
+                //active item not found, apply default values
+                menu.currentPage = {require: 'user', label: 'WMP', icon: 'fa-headphones', link: $window.location.hash};
+            }
+        }
     }
 }
 //CatalogController function
