@@ -15,16 +15,34 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/User.php';
 $api = new Api('json', ['GET', 'PUT']);
 switch ($api->method) {
     case 'GET':
-        //returns the user profile
         if (!$api->checkAuth()) {
             //User not authentified/authorized
             return;
         }
         if (!$api->checkParameterExists('id', $id)) {
-            $api->output(400, 'User identifier must be provided');
-            //user was not provided, return an error
+            //without 'id' parameter, users list is requested, check if current user is granted
+            if (!$api->checkScope('admin')) {
+                $api->output(403, 'Admin scope is required for listing users');
+                //current user has no admin scope, return forbidden
+                return;
+            }
+            //returns all users
+            $user = new User();
+            $rawUsers = $user->getAllUsers();
+            if ($rawUsers === false) {
+                $api->output(500, 'Error while querying');
+                //return an internal error
+                return;
+            }
+            $users = array();
+            foreach ($rawUsers as $user) {
+                array_push($users, $user->getProfile());
+            }
+            $api->output(200, $users);
+            //return users list
             return;
         }
+        //returns the requested user profile
         $user = new User($id);
         if (!$user->populate()) {
             $api->output(404, 'User not found');

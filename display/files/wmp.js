@@ -21,7 +21,9 @@ angular
 //declare sign-out controller
 .controller('SignOutController', ['LocalUser', '$window', SignOutController])
 //declare profile controller
-.controller('UserController', ['LocalUser', 'User', UserController])
+.controller('UserController', ['LocalUser', 'User', '$routeParams', UserController])
+//declare users management controller
+.controller('UsersController', ['User', UsersController])
 //declare album controller
 .controller('AlbumController', ['$routeParams', 'Album', AlbumController])
 //declare artist controller
@@ -260,6 +262,7 @@ function MenuController(LocalUser, $window) {
         {require: 'user', label: 'Library', icon: 'fa-archive', link: '#/library'},
         {require: 'admin', label: 'Catalog', icon: 'fa-folder-open', link: '#/catalog'},
         {require: 'user', label: 'Profile', icon: 'fa-user', link: '#/profile'},
+        {require: 'admin', label: 'Users management', icon: 'fa-users', link: '#/users'},
         {require: 'admin', label: 'Admin', icon: 'fa-sliders', link: '#/admin'},
         {require: 'user', label: 'Sign out', icon: 'fa-sign-out', link: '#/sign-out'},
         {require: 'user', label: 'Find an issue ?', icon: 'fa-bug', link: 'https://github.com/nioc/web-music-player/issues/new'},
@@ -321,11 +324,17 @@ function SignOutController(LocalUser, $window) {
     $window.location = '/sign';
 }
 //ProfileController function
-function UserController(LocalUser, User) {
+function UserController(LocalUser, User, $routeParams) {
     var profile = this;
     profile.result = {text: '', class: ''};
-    LocalUser.getProfile();
-    profile.user = User.get({id: LocalUser.id});
+    if ($routeParams && $routeParams.id) {
+        //get user profile from url id parameter
+        profile.user = User.get({id: $routeParams.id});
+    } else {
+        //get local user profile
+        LocalUser.getProfile();
+        profile.user = User.get({id: LocalUser.id});
+    }
     profile.submit = submit;
     function submit() {
         function successCallback(response) {
@@ -341,6 +350,11 @@ function UserController(LocalUser, User) {
         }
         profile.user.$update(successCallback, errorCallback);
     }
+}
+//UsersController function
+function UsersController(User) {
+    var usersManagement = this;
+    usersManagement.users = User.query();
 }
 //AlbumController function
 function AlbumController($routeParams, Album) {
@@ -384,6 +398,16 @@ function config($routeProvider, $locationProvider) {
         controllerAs: 'catalog'
     })
     .when('/profile', {
+        templateUrl: '/profile',
+        controller: 'UserController',
+        controllerAs: 'profile'
+    })
+    .when('/users', {
+        templateUrl: '/users',
+        controller: 'UsersController',
+        controllerAs: 'usersManagement'
+    })
+    .when('/users/:id', {
         templateUrl: '/profile',
         controller: 'UserController',
         controllerAs: 'profile'

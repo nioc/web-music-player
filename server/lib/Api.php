@@ -33,6 +33,10 @@ class Api
      * @var string Returned data
      */
     private $responseBody;
+    /**
+     * @var int User identifier who is requesting API
+     */
+    private $requesterId;
 
     /**
      * Initializes an API object with the given informations.
@@ -44,6 +48,7 @@ class Api
     {
         $this->outputFormat = $outputFormat;
         $this->allowedMethods = $allowedMethods;
+        $this->requesterId = null;
         //check call method
         if (isset($_SERVER['REQUEST_METHOD'])) {
             $this->method = $_SERVER['REQUEST_METHOD'];
@@ -146,8 +151,29 @@ class Api
             //Token do not includes user profile
             return false;
         }
+        $this->requesterId = (int) $token->payload->sub;
         //Token is valid, returns the user identifier
-        return $token->payload->sub;
+        return $this->requesterId;
+    }
+
+    /**
+     * Check the if the user have a correct authentication and authorization.
+     *
+     * @param string $requiredScope Required user scope for processing the API
+     *
+     * @return bool Return if user has the required scope or not
+     */
+    public function checkScope($requiredScope)
+    {
+        if (is_int($this->requesterId)) {
+            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/User.php';
+            $requester = new User($this->requesterId);
+            $scope = $requester->getScope();
+            //return if required scope is found in user scope
+            return in_array($requiredScope, $scope);
+        }
+        //requester is not identified, return false
+        return false;
     }
 
     /**

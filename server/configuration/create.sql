@@ -11,6 +11,14 @@ CREATE TABLE `wmp`.`user` (
   UNIQUE KEY `login` (`login`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT 'Users';
 
+CREATE TABLE `wmp`.`scope` (
+  `userId` smallint(6) unsigned NOT NULL AUTO_INCREMENT COMMENT 'User identifier',
+  `scope` varchar(32) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Scope',
+  PRIMARY KEY (`userId`,`scope`),
+  KEY `userId` (`userId`),
+  CONSTRAINT `scope_fk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT 'Users scope';
+
 CREATE TABLE `wmp`.`artist` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Identifier',
   `name` varchar(255) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Artist name',
@@ -76,3 +84,5 @@ CREATE TABLE `wmp`.`playlist` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT 'User\'s current playlist';
 
 INSERT INTO `wmp`.`user` (`id`, `login`, `name`, `email`, `password`, `status`) VALUES (1, 'admin', 'Admin', NULL, md5('nimda'), 1);
+INSERT INTO `wmp`.`scope` (`userId`, `scope`) VALUES (1, 'admin'), (1, 'user');
+

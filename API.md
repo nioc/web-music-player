@@ -203,13 +203,13 @@ Handle user profile.
 
 "User" ressource is structured as the following:
 
-| Name  | Type          | Description            |
-|-------|---------------|------------------------|
-| sub   | integer       | Identifier             |
-| login | string        | Login                  |
-| name  | string        | User's full name       |
-| email | string        | User's email address   |
-| scope | array(string) | List of scopes granted |
+| Name  | Type    | Description                              |
+|-------|---------|------------------------------------------|
+| sub   | integer | Identifier                               |
+| login | string  | Login                                    |
+| name  | string  | User's full name                         |
+| email | string  | User's email address                     |
+| scope | string  | List of scopes granted (space separated) |
 
 ```` json
 {
@@ -217,20 +217,25 @@ Handle user profile.
     "login": "john12",
     "name": "John Doe",
     "email": "john.doe@domain.com",
-    "scope":
-    [
-        "user"
-    ]
+    "scope": "user admin"
 }
 ````
+
+#### Query all users
+````
+GET /server/api/users
+````
+The API returns:
+- 200 with profiles of all users,
+- 403 if user is not granted for retrieving all users,
+- 500 if there is an error during querying.
 
 #### Get user's profile
 ````
 GET /server/api/users/:id
 ````
 The API returns:
-- 200 with user's profile
-- 400 if user identifier is omitted,
+- 200 with user's profile,
 - 404 if user is unknown.
 
 #### Update user's profile

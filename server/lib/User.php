@@ -30,9 +30,13 @@ class User
      */
     public $password;
     /**
-     * @var bool USer status
+     * @var bool User status
      */
     public $status;
+    /**
+     * @var array User scope
+     */
+    public $scope;
 
     /**
      * Initializes a User object with his identifier.
@@ -174,6 +178,26 @@ class User
     }
 
     /**
+     * Return user scope.
+     *
+     * @return array User scope (list of granted scopes)
+     */
+    public function getScope()
+    {
+        global $connection;
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        $query = $connection->prepare('SELECT `scope` FROM `scope` WHERE `userId`=:userId;');
+        $query->bindValue(':userId', $this->id, PDO::PARAM_INT);
+        if ($query->execute()) {
+            $this->scope = $query->fetchAll(PDO::FETCH_COLUMN);
+            //return scope
+            return $this->scope;
+        }
+        //indicate there was an error during scope querying
+        return false;
+    }
+
+    /**
      * Return public profile.
      *
      * @return object A public version of user profile
@@ -185,9 +209,27 @@ class User
         $user->login = $this->login;
         $user->name = $this->name;
         $user->email = $this->email;
-        //@TODO get user roles and populate scope array
-        $user->scope = ['user'];
+        //get user scope as a list of space-delimited strings (see https://tools.ietf.org/html/rfc6749#section-3.3)
+        $user->scope = implode(' ', $this->getScope());
         //returns the user public profile
         return $user;
+    }
+
+    /**
+     * Return all users.
+     *
+     * @return array All users
+     */
+    public function getAllUsers()
+    {
+        global $connection;
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        $query = $connection->prepare('SELECT * FROM `user`;');
+        if ($query->execute() && $query->rowCount() > 0) {
+            //return array of users
+            return $query->fetchAll(PDO::FETCH_CLASS, 'User');
+        }
+        //indicate there is a problem during querying
+        return false;
     }
 }

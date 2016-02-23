@@ -1,0 +1,19 @@
+            <section>
+                <h2><i class="fa fa-users"></i>Users management</h2>
+                <ul class="grid" ng-cloak>
+                    <li class="grid-header">
+                        <span class="grid-cell">login</span>
+                        <span class="grid-cell">name</span>
+                        <span class="grid-cell">email</span>
+                        <span class="grid-cell">scope</span>
+                        <span class="grid-cell"></span>
+                    </li>
+                    <li class="grid-row" ng-repeat="user in usersManagement.users track by user.sub">
+                        <span class="grid-cell" ng-bind="::user.login"></span>
+                        <span class="grid-cell" ng-bind="::user.name"></span>
+                        <span class="grid-cell" ng-bind="::user.email"></span>
+                        <span class="grid-cell" ng-bind="::user.scope"></span>
+                        <span class="grid-cell"><a ng-href="/#/users/{{::user.sub}}" title="Edit user"><i class="fa fa-pencil"></i></a></span>
+                    </li>
+                </ul>
+            </section>
