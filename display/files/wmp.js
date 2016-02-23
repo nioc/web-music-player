@@ -278,7 +278,7 @@ function MenuController(LocalUser, $window) {
         return false;
     }
     //add links according to user scope
-    var scope = user.scope.split(" ");
+    var scope = user.scope.split(' ');
     angular.forEach(existingItems, function(item) {
         if (scope.indexOf(item.require) !== -1) {
             item.isCurrentPage = isCurrentPage;

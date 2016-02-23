@@ -44,6 +44,11 @@ switch ($api->method) {
             //User not authentified/authorized
             return false;
         }
+        if (!$api->checkScope('admin')) {
+            $api->output(403, 'Admin scope is required for creating new track on library');
+            //current user has no admin scope, return forbidden
+            return;
+        }
         if (!$api->checkParameterExists('folder', $folder)) {
             $api->output(400, 'Folder not provided');
             //folder was not provided, return an error

@@ -43,6 +43,12 @@ switch ($api->method) {
             return;
         }
         //returns the requested user profile
+        $id = intval($id);
+        if ($api->requesterId !== $id && !$api->checkScope('admin')) {
+            $api->output(403, 'Admin scope is required for getting another user');
+            //indicate the requester do not have the required scope for querying another user
+            return;
+        }
         $user = new User($id);
         if (!$user->populate()) {
             $api->output(404, 'User not found');
@@ -63,6 +69,12 @@ switch ($api->method) {
             return;
         }
         //get user
+        $id = intval($id);
+        if ($api->requesterId !== $id && !$api->checkScope('admin')) {
+            $api->output(403, 'Admin scope is required for updating another user');
+            //indicate the requester do not have the required scope for updating another user
+            return;
+        }
         $user = new User($id);
         if (!$user->populate()) {
             $api->output(404, 'User not found');

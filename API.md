@@ -4,6 +4,21 @@ Web Music Player provides and consumes some API.
 
 ## 1. API provided (and self consumed)
 
+Each API requires an authentication token provided in the `Authorization` header with the bearer scheme :
+````
+Authorization: Bearer fyJhbGciOiJIUzI1NiIsIcpoCEC475rvrvrF.feknaaojapoZjHaopzfjapozfazf46fefzZFZCPHKGRaEGE6rvwJrherhergerpgo5fzfzfznbrptob3prt5brojmzvzemvzIiwiZW1haWwiOiJhZG1pbkBuaW9jLmV1Iiwic2NvcGcezZEPHL3tg0d12dezAWx=.ifFZFzfZFzf86GdDJ41b0gzegzegzegZEGZEGezgze4=
+````
+
+This token is received by posting /users/tokens with user credentials :
+````
+POST /server/api/users/tokens
+{"login": "yourlogin", "password": "yourpassword"}
+````
+The response include the token in a JSON object:
+````
+{"token":"fyJhbGciOiJIUzI1NiIsIcpoCEC475rvrvrF.feknaaojapoZjHaopzfjapozfazf46fefzZFZCPHKGRaEGE6rvwJrherhergerpgo5fzfzfznbrptob3prt5brojmzvzemvzIiwiZW1haWwiOiJhZG1pbkBuaW9jLmV1Iiwic2NvcGcezZEPHL3tg0d12dezAWx=.ifFZFzfZFzf86GdDJ41b0gzegzegzegZEGZEGezgze4="}
+````
+
 In case of error, the following structure is returned in the body:
 
 | Name      | Type    | Description                                           |
@@ -59,6 +74,9 @@ GET /server/api/users/:userId/playlist/tracks
 The API returns:
 - 200 with an array of the tracks included in user's playlist,
 - 204 if there is no track in user's playlist,
+- 400 if user identifier `userId` is missing
+- 401 if authorization token is missing or invalid,
+- 403 if the requester is not the playlist owner,
 - 404 if the user is not known.
 
 #### Add a track in a user's playlist
@@ -66,9 +84,12 @@ The API returns:
 POST /server/api/users/:userId/playlist/tracks
 ````
 The body request must include the track identifier in a json attribute (like this `{"id":"1"}`).
+
 The API returns:
 - 201 if the track is successfully added to the user's playlist (body contains the tracks sequence),
-- 400 if a mandatory parameter is missing (user identifier, track identifier),
+- 400 if a mandatory parameter is missing (user identifier `userId`, track identifier),
+- 401 if authorization token is missing or invalid,
+- 403 if the requester is not the playlist owner,
 - 500 in case of error.
 
 #### Remove a track from a user's playlist
@@ -77,7 +98,9 @@ DELETE /server/api/users/:userId/playlist/tracks/:sequence
 ````
 The API returns:
 - 204 if the track is successfully removed from user's playlist,
-- 400 if a mandatory parameter is missing (user identifier, sequence of the track),
+- 400 if a mandatory parameter is missing (user identifier `userId`, sequence of the track `sequence`),
+- 401 if authorization token is missing or invalid,
+- 403 if the requester is not the playlist owner,
 - 404 if the track was not in the user's playlist.
 
 #### Reorder a track into a user's playlist
@@ -85,10 +108,13 @@ The API returns:
 PUT /server/api/users/:userId/playlist/tracks/:sequence
 ````
 The body request must include the new sequence in a json attribute (like this `{"newSequence":1}`).
+
 The API returns:
 - 200 if user's playlist has been successfully reordered with all tracks in playlist for synchronizing with GUI,
 - 204 if there is no track in user's playlist,
-- 400 if a mandatory parameter is missing (user identifier, old and new sequence of the track),
+- 400 if a mandatory parameter is missing (user identifier `userId`, old `sequence` and new sequence of the track `newSequence`),
+- 401 if authorization token is missing or invalid,
+- 403 if the requester is not the playlist owner,
 - 500 in case of error.
 
 ### 1.2 Tracks
@@ -128,6 +154,7 @@ GET /server/api/library/tracks
 The API returns:
 - 200 with an array of tracks,
 - 204 if there is no track in library,
+- 401 if authorization token is missing or invalid,
 - 500 in case of error.
 
 #### Add tracks to the library from a server folder
@@ -138,6 +165,8 @@ POST /server/api/library/tracks
 The API returns:
 - 201 with an array of the added tracks,
 - 400 if folder attribute is omitted,
+- 401 if authorization token is missing or invalid,
+- 403 if requester is not granted to manage library,
 - 500 in case of error.
 
 ### 1.3 Folders
@@ -195,7 +224,9 @@ GET /server/api/library/folders
 ````
 The API returns:
 - 200 with an array of folders,
-- 204 if current folder contains neither subfolders nor files.
+- 204 if current folder contains neither subfolders nor files,
+- 401 if authorization token is missing or invalid,
+- 403 if requester is not granted to manage library.
 
 ### 1.4 Users
 
@@ -226,8 +257,9 @@ Handle user profile.
 GET /server/api/users
 ````
 The API returns:
-- 200 with profiles of all users,
-- 403 if user is not granted for retrieving all users,
+- 200 with public profiles of all users,
+- 401 if authorization token is missing or invalid,
+- 403 if requester is not granted to manage users,
 - 500 if there is an error during querying.
 
 #### Get user's profile
@@ -235,18 +267,22 @@ The API returns:
 GET /server/api/users/:id
 ````
 The API returns:
-- 200 with user's profile,
+- 200 with user's public profile,
+- 401 if authorization token is missing or invalid,
+- 403 if requester is not granted to manage users and is requesting another user profile,
 - 404 if user is unknown.
 
 #### Update user's profile
 ````
 PUT /server/api/users/:id
 ````
-The body request must include user in JSON.
+The body request must include user public profile in JSON.
 
 The API returns:
-- 200 with updated user's profile,
+- 200 with updated user's public profile,
 - 400 if user identifier is omitted or if user in request body is not valid,
+- 401 if authorization token is missing or invalid,
+- 403 if requester is not granted to manage users and is updating another user profile,
 - 404 if user is unknown,
 - 500 if there is an error during update process.
 
@@ -291,6 +327,7 @@ GET /server/api/albums/:id
 The API returns:
 - 200 with album information
 - 400 if album identifier is omitted,
+- 401 if authorization token is missing or invalid,
 - 404 if album identifier is unknown.
 
 ### 1.6 Artists
@@ -324,4 +361,5 @@ GET /server/api/artists/:id
 The API returns:
 - 200 with artist informations
 - 400 if artist identifier is omitted,
+- 401 if authorization token is missing or invalid,
 - 404 if artist identifier is unknown.

@@ -36,7 +36,7 @@ class Api
     /**
      * @var int User identifier who is requesting API
      */
-    private $requesterId;
+    public $requesterId;
 
     /**
      * Initializes an API object with the given informations.

@@ -20,6 +20,11 @@ switch ($api->method) {
             //User not authentified/authorized
             return false;
         }
+        if (!$api->checkScope('admin')) {
+            $api->output(403, 'Admin scope is required for listing folders');
+            //current user has no admin scope, return forbidden
+            return;
+        }
         $library = new Tracks();
         $configuration = new Configuration();
         $library->getFolders($configuration->get('filesPath'));

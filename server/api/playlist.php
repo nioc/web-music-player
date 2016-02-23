@@ -24,6 +24,12 @@ switch ($api->method) {
             //user was not provided, return an error
             return;
         }
+        $userId = intval($userId);
+        if ($api->requesterId !== $userId) {
+            $api->output(403, 'Playlist can be queried by its owner only');
+            //indicate the requester is not the playlist owner and is not allowed to get it
+            return;
+        }
         $playlist = new Playlist($userId);
         $playlist->populate();
         if (count($playlist->tracks) === 0) {
@@ -41,6 +47,12 @@ switch ($api->method) {
         if (!$api->checkParameterExists('userId', $userId)) {
             $api->output(400, 'User identifier must be provided');
             //user was not provided, return an error
+            return;
+        }
+        $userId = intval($userId);
+        if ($api->requesterId !== $userId) {
+            $api->output(403, 'Playlist can be updated by its owner only');
+            //indicate the requester is not the playlist owner and is not allowed to update it
             return;
         }
         if (!$api->checkParameterExists('id', $trackId)) {
@@ -67,6 +79,12 @@ switch ($api->method) {
             //user was not provided, return an error
             return;
         }
+        $userId = intval($userId);
+        if ($api->requesterId !== $userId) {
+            $api->output(403, 'Playlist can be updated by its owner only');
+            //indicate the requester is not the playlist owner and is not allowed to update it
+            return;
+        }
         if (!$api->checkParameterExists('sequence', $sequence)) {
             $api->output(400, 'Track sequence must be provided');
             //$sequence was not provided, return an error
@@ -85,6 +103,17 @@ switch ($api->method) {
             //User not authentified/authorized
             return false;
         }
+        if (!$api->checkParameterExists('userId', $userId)) {
+            $api->output(400, 'User identifier not provided');
+            //user was not provided, return an error
+            return;
+        }
+        $userId = intval($userId);
+        if ($api->requesterId !== $userId) {
+            $api->output(403, 'Playlist can be updated by its owner only');
+            //indicate the requester is not the playlist owner and is not allowed to update it
+            return;
+        }
         if (!$api->checkParameterExists('newSequence', $newSequence)) {
             $api->output(400, 'New sequence not provided');
             //new sequence was not provided, return an error
@@ -93,11 +122,6 @@ switch ($api->method) {
         if (!$api->checkParameterExists('sequence', $oldSequence)) {
             $api->output(400, 'Current sequence not provided');
             //old sequence was not provided, return an error
-            return;
-        }
-        if (!$api->checkParameterExists('userId', $userId)) {
-            $api->output(400, 'User identifier not provided');
-            //user was not provided, return an error
             return;
         }
         $playlist = new Playlist($userId);
