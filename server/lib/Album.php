@@ -131,7 +131,7 @@ class Album
             }
         }
         //prepare query
-        $query = $connection->prepare('SELECT `album`.*, `artist`.`name` AS `artistName` FROM `album`, `artist` WHERE `album`.`artist`=`artist`.`id`'.$sqlCondition.' LIMIT 1;');
+        $query = $connection->prepare('SELECT `album`.*, `artist`.`name` AS `artistName`, `cover`.`id` AS `coverId` FROM `artist`, `album`LEFT JOIN `cover` ON `album`.`id`=`cover`.`albumId` AND `cover`.`status` = 1 WHERE `album`.`artist`=`artist`.`id`'.$sqlCondition.' LIMIT 1;');
         //add query criteria value
         foreach ($parameters as $parameter => $value) {
             if (isset($value)) {
@@ -173,6 +173,11 @@ class Album
         }
         if (isset($album->disk)) {
             $album->disk = (int) $album->disk;
+        }
+        //add path to cover
+        if (isset($album->coverId)) {
+            $album->coverPath = '/server/covers/'.$album->coverId.'.jpeg';
+            unset($album->coverId);
         }
         //create artist structure
         $artist = new stdClass();

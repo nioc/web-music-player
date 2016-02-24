@@ -22,4 +22,5 @@
                         <span class="value" ng-bind="::album.album.country"></span>
                     </li>
                 </ul>
+                <img ng-if="::album.album.coverPath" class="player-cover" ng-src="{{::album.album.coverPath}}" alt="cover"/>
             </article>

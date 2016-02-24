@@ -10,3 +10,4 @@ RewriteRule ^artists$            /display/artist.html [L]
 RewriteRule ^profile$            /display/profile.html [L]
 RewriteRule ^users$              /display/users.html [L]
 RewriteRule ^stream/([0-9]+)$    /server/track.php?track=$1 [QSA,L]
+RewriteRule ^server/covers/([0-9]+).jpeg$    /display/files/images/default_cover.png [QSA,L] #dummy line before develop #8

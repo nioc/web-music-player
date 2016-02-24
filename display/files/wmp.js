@@ -68,6 +68,7 @@ function PlayerController($scope, Playlist, PlaylistItem, Audio, LocalUser, $win
     player.isPaused = false;
     player.currentTime = 0;
     player.duration = 0;
+    player.coverPath = '/display/files/images/default_cover.png';
     //declare functions for controlling player
     player.play = play;
     player.pause = pause;
@@ -133,6 +134,11 @@ function PlayerController($scope, Playlist, PlaylistItem, Audio, LocalUser, $win
                 }
                 audio.src = this.playlist.tracks[this.playlist.currentTrack].file + queryParameter;
                 audio.play();
+                if (this.playlist.tracks[this.playlist.currentTrack].album.coverPath) {
+                    player.coverPath = this.playlist.tracks[this.playlist.currentTrack].album.coverPath;
+                } else {
+                    player.coverPath = '/display/files/images/default_cover.png';
+                }
                 this.currentTime = 0;
             }
             this.isPlaying = true;

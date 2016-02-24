@@ -83,6 +83,19 @@ CREATE TABLE `wmp`.`playlist` (
   CONSTRAINT `playlist_fk_2` FOREIGN KEY (`id`) REFERENCES `track` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT 'User\'s current playlist';
 
+CREATE TABLE `wmp`.`cover` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Identifier',
+  `albumId` int(11) unsigned NULL COMMENT 'Album',
+  `status` boolean DEFAULT '0' COMMENT 'Image status (only one active)',
+  `width` smallint(4) unsigned DEFAULT '0' COMMENT 'Image width in pixel',
+  `height` smallint(4) unsigned DEFAULT '0' COMMENT 'Image height in pixel',
+  `mime` varchar(64) CHARACTER SET utf8 DEFAULT NULL COMMENT 'MIME type (ex: image/jpeg)',
+  `image` mediumblob COMMENT 'Image stream',
+  PRIMARY KEY (`id`),
+  KEY `albumId` (`albumId`),
+  CONSTRAINT `cover_fk_1` FOREIGN KEY (`albumId`) REFERENCES `album` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT 'Album covers';
+
 INSERT INTO `wmp`.`user` (`id`, `login`, `name`, `email`, `password`, `status`) VALUES (1, 'admin', 'Admin', NULL, md5('nimda'), 1);
 INSERT INTO `wmp`.`scope` (`userId`, `scope`) VALUES (1, 'admin'), (1, 'user');
 

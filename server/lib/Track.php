@@ -145,7 +145,11 @@ class Track
         $album = new stdClass();
         $album->id = $track->album;
         $album->label = $track->albumName;
-        unset($track->album, $track->albumName);
+        //add path to cover
+        if (isset($track->coverId)) {
+            $album->coverPath = '/server/covers/'.$track->coverId.'.jpeg';
+        }
+        unset($track->album, $track->albumName, $track->coverId);
         $track->album = $album;
         //create artist structure
         $artist = new stdClass();
@@ -235,7 +239,7 @@ class Tracks
             }
         }
         //prepare query
-        $query = $connection->prepare('SELECT `track`.`id`, `track`.`title`, `track`.`artist`, `artist`.`name` AS `artistName`, `track`.`album`, `album`.`name` AS `albumName`, CONCAT(\'/stream/\',`track`.`id`) AS `file` FROM `track`, `album`, `artist` WHERE `track`.`artist`=`artist`.`id` AND `track`.`album`=`album`.`id`'.$sqlCondition.' ORDER BY `additionTime` DESC;');
+        $query = $connection->prepare('SELECT `track`.`id`, `track`.`title`, `track`.`artist`, `artist`.`name` AS `artistName`, `track`.`album`, `album`.`name` AS `albumName`, CONCAT(\'/stream/\',`track`.`id`) AS `file`, `cover`.`id` AS `coverId` FROM `track`, `artist` ,`album` LEFT JOIN `cover` ON `album`.`id`=`cover`.`albumId` AND `cover`.`status` = 1 WHERE `track`.`artist`=`artist`.`id` AND `track`.`album`=`album`.`id`'.$sqlCondition.' ORDER BY `additionTime` DESC;');
         //add query criteria value
         foreach ($parameters as $parameter => $value) {
             if (isset($value)) {
