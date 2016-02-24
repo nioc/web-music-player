@@ -47,6 +47,10 @@ class Album
      * @var string Album artist name
      */
     public $artistName;
+    /**
+     * @var array Tracks of the album
+     */
+    public $tracks;
 
     /**
      * Inserts an album in database.
@@ -155,6 +159,31 @@ class Album
             return true;
         }
         //returns the album is not known or database was not reachable
+        return false;
+    }
+
+    /**
+     * Get album tracks.
+     *
+     * @return mixed Array of album tracks or false on failure
+     */
+    public function getTracks()
+    {
+        global $connection;
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
+        $query = $connection->prepare('SELECT `track`.`track`,`track`.`title`,`track`.`time`, `track`.`artist`, `artist`.`name` AS `artistName` FROM `track` INNER JOIN `artist` ON `artist`.`id` = `track`.`artist` WHERE `track`.`album` = :albumId  ORDER BY `track`.`track` ASC;');
+        $query->bindValue(':albumId', $this->id, PDO::PARAM_INT);
+        if ($query->execute()) {
+            $this->tracks = $query->fetchAll(PDO::FETCH_CLASS);
+            foreach ($this->tracks as $track) {
+                $trackStructured = new Track();
+                $track = $trackStructured->structureData($track);
+            }
+            //return album tracks
+            return $this->tracks;
+        }
+        //returns database was not reachable
         return false;
     }
 

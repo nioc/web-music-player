@@ -30,6 +30,7 @@ switch ($api->method) {
             //indicate the album was not found
             return;
         }
+        $album->getTracks();
         $api->output(200, $album->structureData());
         break;
 }

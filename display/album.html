@@ -1,5 +1,6 @@
             <article class="album">
                 <h2><i class="fa fa-dot-circle-o"></i>Album</h2>
+                <img ng-if="::album.album.coverPath" class="player-cover" ng-src="{{::album.album.coverPath}}" alt="cover"/>
                 <ul class="table">
                     <li class="table-row">
                         <span class="label">Name</span>
@@ -22,5 +23,18 @@
                         <span class="value" ng-bind="::album.album.country"></span>
                     </li>
                 </ul>
-                <img ng-if="::album.album.coverPath" class="player-cover" ng-src="{{::album.album.coverPath}}" alt="cover"/>
+                <ul class="table">
+                    <li class="grid-header">
+                        <span class="grid-cell">N°</span>
+                        <span class="grid-cell">Title</span>
+                        <span class="grid-cell">Artist</span>
+                        <span class="grid-cell">Duration</span>
+                    </li>
+                    <li class="grid-row" ng-repeat="track in album.album.tracks track by $index">
+                        <span class="grid-cell" ng-bind="::track.track"></span>
+                        <span class="grid-cell" ng-bind="::track.title"></span>
+                        <span class="grid-cell"><a ng-href="/#/artists/{{::track.artist.id}}" ng-bind="::track.artist.label"></a></span>
+                        <span class="grid-cell" ng-bind="::track.time | duration | date:'m:ss'"></span>
+                    </li>
+                </ul>
             </article>

@@ -142,21 +142,25 @@ class Track
     public function structureData($track)
     {
         //create album structure
-        $album = new stdClass();
-        $album->id = $track->album;
-        $album->label = $track->albumName;
-        //add path to cover
-        if (isset($track->coverId)) {
-            $album->coverPath = '/server/covers/'.$track->coverId.'.jpeg';
+        if (property_exists($track, 'album') && property_exists($track, 'albumName')) {
+            $album = new stdClass();
+            $album->id = $track->album;
+            $album->label = $track->albumName;
+            //add path to cover
+            if (isset($track->coverId)) {
+                $album->coverPath = '/server/covers/'.$track->coverId.'.jpeg';
+            }
+            unset($track->album, $track->albumName, $track->coverId);
+            $track->album = $album;
         }
-        unset($track->album, $track->albumName, $track->coverId);
-        $track->album = $album;
         //create artist structure
-        $artist = new stdClass();
-        $artist->id = $track->artist;
-        $artist->label = $track->artistName;
-        unset($track->artist, $track->artistName);
-        $track->artist = $artist;
+        if (property_exists($track, 'artist') && property_exists($track, 'artistName')) {
+            $artist = new stdClass();
+            $artist->id = $track->artist;
+            $artist->label = $track->artistName;
+            unset($track->artist, $track->artistName);
+            $track->artist = $artist;
+        }
         //return structured track
         return $track;
     }
