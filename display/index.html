@@ -15,7 +15,7 @@
             <input ng-model="user.login" type="text" name="login" id="login" placeholder="Your login" autofocus="autofocus" autocapitalize="off" autocorrect="off" required="required"/>
             <label for="password">Password</label>
             <input ng-model="user.password" type="password" name="password" id="password" placeholder="*****"" required="required"/>
-            <input type="submit" value="Sign in" />
+            <button class="plain-button" type="submit" title="Sign in"><i class="fa fa-sign-in"></i> Sign in</button>
             <span ng-class="result.class" ng-bind="result.text"></span>
         </form>
         <script src="/display/files/vendor/angularjs/angular.min.js"></script>

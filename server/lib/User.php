@@ -99,7 +99,7 @@ class User
             }
         }
         //check mandatory attributes
-        if (!is_int($this->id)) {
+        if (isset($this->id) && !is_int($this->id)) {
             $error = 'integer must be provided in sub attribute';
             //return false and detailed error message
             return false;
@@ -124,14 +124,81 @@ class User
     }
 
     /**
+     * Create user with provided informations.
+     *
+     * @param object $user  User with his values attributes
+     * @param string $error The returned error message
+     *
+     * @return bool True if the user is created
+     */
+    public function create($user, &$error)
+    {
+        $error = '';
+        global $connection;
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        $query = $connection->prepare('INSERT INTO `user` (`login`, `name`, `email`, `password`, `status`) VALUES (:login, :name, :email, :password, :status);');
+        $query->bindValue(':login', $this->login, PDO::PARAM_STR);
+        $query->bindValue(':name', $this->name, PDO::PARAM_STR);
+        $query->bindValue(':email', $this->email, PDO::PARAM_STR);
+        $query->bindValue(':password', md5($this->password), PDO::PARAM_STR);
+        $query->bindValue(':status', $this->status, PDO::PARAM_INT);
+        if ($query->execute() && $query->rowCount() > 0) {
+            $this->id = $connection->lastInsertId();
+            //return true to indicate a successful user creation
+            return true;
+        }
+        $error = $query->errorInfo()[2];
+        //try to return intelligible error
+        if ($query->errorInfo()[1] === 1062) {
+            $error = 'login `'.$this->login.'` already exists';
+        }
+        //return false to indicate an error occurred while creating user
+        return false;
+    }
+
+    /**
+     * Update user scope with provided information.
+     *
+     * @param string $scope The requested scope (space-delimited)
+     *
+     * @return bool True if scope is updated
+     */
+    public function updateScope($scope)
+    {
+        global $connection;
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        $scopes = explode(' ', $scope);
+        $result = true;
+        $query = $connection->prepare('DELETE FROM `scope` WHERE `userId` = :userId;');
+        $query->bindValue(':userId', $this->id, PDO::PARAM_INT);
+        if (!$query->execute()) {
+            //return false to indicate an error during scope update
+            return false;
+        }
+        foreach ($scopes as $scope) {
+            $query = $connection->prepare('INSERT INTO `scope` (`userId`, `scope`) VALUES (:userId, :scope);');
+            $query->bindValue(':userId', $this->id, PDO::PARAM_INT);
+            $query->bindValue(':scope', $scope, PDO::PARAM_STR);
+            if (!$query->execute()) {
+                //set result to false to indicate an error during scope update
+                $result = false;
+            }
+        }
+        //return the scope global update result
+        return $result;
+    }
+
+    /**
      * Update user with provided informations.
      *
-     * @param object $user User with his new values attributes
+     * @param object $user  User with his new values attributes
+     * @param string $error The returned error message
      *
      * @return bool True if the user is updated
      */
-    public function update($user)
+    public function update($user, &$error)
     {
+        $error = '';
         if (is_int($user->id)) {
             global $connection;
             include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
@@ -142,9 +209,14 @@ class User
             $query->bindValue(':email', $this->email, PDO::PARAM_STR);
             $query->bindValue(':password', md5($this->password), PDO::PARAM_STR);
             $query->bindValue(':status', $this->status, PDO::PARAM_INT);
-            if ($query->execute() && $query->rowCount() > 0) {
+            if ($query->execute()) {
                 //return true to indicate a successful user update
                 return true;
+            }
+            $error = $query->errorInfo()[2];
+            //try to return intelligible error
+            if ($query->errorInfo()[1] === 1062) {
+                $error = ': login `'.$this->login.'` already exists';
             }
         }
         //return false to indicate an error occurred while reading the user

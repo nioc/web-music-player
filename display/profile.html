@@ -1,15 +1,17 @@
             <section>
-                <h2><i class="fa fa-user"></i>Profile</h2>
+                <h2><i class="fa fa-user"></i>{{::profile.title}}</h2>
                 <form class="auth-form" ng-submit="profile.submit()">
-                    <label>login*</label>
-                    <input ng-model="profile.user.login" type="text" name="login" id="login" placeholder="Your login" autocorrect="off" required="required" readonly="readonly" disabled="disabled"/>
-                    <label for="name">name*</label>
-                    <input ng-model="profile.user.name" type="text" name="name" id="name" placeholder="Your displayed name" autofocus="autofocus" autocorrect="off" required="required"/>
-                    <label for="email">email*</label>
-                    <input ng-model="profile.user.email" type="text" name="email" id="email" placeholder="Your email address" autocorrect="off" required="required"/>
-                    <label for="password">password*</label>
+                    <label>Login*</label>
+                    <input ng-model="profile.user.login" type="text" name="login" id="login" placeholder="Sign-in login" autocorrect="off" required="required"/>
+                    <label for="name">Name*</label>
+                    <input ng-model="profile.user.name" type="text" name="name" id="name" placeholder="Displayed full name" autofocus="autofocus" autocorrect="off" required="required"/>
+                    <label for="email">Email*</label>
+                    <input ng-model="profile.user.email" type="email" name="email" id="email" placeholder="Contact email address" autocorrect="off" required="required"/>
+                    <label for="password">Password*</label>
                     <input ng-model="profile.user.password" type="password" name="password" id="password" placeholder="*****"" required="required"/>
-                    <input type="submit" value="Save"/>
+                    <label ng-if="::profile.scopeEditable" for="scope">Scope*</label>
+                    <input ng-if="::profile.scopeEditable" ng-model="profile.user.scope" type="text" name="scope" id="scope" placeholder="Space-separated scope: user admin" required="required"/>
+                    <button type="submit" class="plain-button" title="Save your modifications"><i class="fa fa-save"></i> Save profile</button>
                     <span ng-class="profile.result.class" ng-bind="profile.result.text"></span>
                 </form>
             </section>

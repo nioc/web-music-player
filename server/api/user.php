@@ -12,7 +12,7 @@
 include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Api.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/User.php';
-$api = new Api('json', ['GET', 'PUT']);
+$api = new Api('json', ['GET', 'PUT', 'POST']);
 switch ($api->method) {
     case 'GET':
         if (!$api->checkAuth()) {
@@ -92,11 +92,57 @@ switch ($api->method) {
             return;
         }
         //update user
-        if (!$user->update($updatedUser)) {
-            $api->output(500, 'Error during profile update');
+        if (!$user->update($updatedUser, $errorMessage)) {
+            $api->output(500, 'Error during profile update'.$errorMessage);
             //something gone wrong :(
             return;
         }
+        //update scope if requester is admin
+        if (property_exists($updatedUser, 'scope') && $api->checkScope('admin')) {
+            if (!$user->updateScope($updatedUser->scope)) {
+                $api->output(500, 'User is updated but not his scope');
+                //something gone wrong :(
+                return;
+            }
+        }
         $api->output(200, $user->getProfile());
+        break;
+    case 'POST':
+        //create a user
+        if (!$api->checkAuth()) {
+            //User not authentified/authorized
+            return;
+        }
+        if (!$api->checkScope('admin')) {
+            $api->output(403, 'Admin scope is required for creating user');
+            //indicate the requester do not have the required scope for creating another user
+            return;
+        }
+        $user = new User();
+        //adapt and validate object received
+        $requestedUser = $api->query['body'];
+        if ($requestedUser !== null) {
+            $requestedUser->status = 1;
+        }
+        if (!$user->validateModel($requestedUser, $errorMessage)) {
+            $api->output(400, 'User is not valid: '.$errorMessage);
+            //provided user is not valid
+            return;
+        }
+        //create user
+        if (!$user->create($requestedUser, $errorMessage)) {
+            $api->output(500, 'Error during creation: '.$errorMessage);
+            //something gone wrong :(
+            return;
+        }
+        //add scope
+        if (property_exists($requestedUser, 'scope')) {
+            if (!$user->updateScope($requestedUser->scope)) {
+                $api->output(500, 'User is created but not his scope');
+                //something gone wrong :(
+                return;
+            }
+        }
+        $api->output(201, $user->getProfile());
         break;
 }

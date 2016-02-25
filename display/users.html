@@ -1,11 +1,12 @@
             <section>
                 <h2><i class="fa fa-users"></i>Users management</h2>
+                <a class="plain-button" href="/#/users/new"><i class="fa fa-user-plus"></i> Create a user</a>
                 <ul class="grid" ng-cloak>
                     <li class="grid-header">
-                        <span class="grid-cell">login</span>
-                        <span class="grid-cell">name</span>
-                        <span class="grid-cell">email</span>
-                        <span class="grid-cell">scope</span>
+                        <span class="grid-cell">Login</span>
+                        <span class="grid-cell">Name</span>
+                        <span class="grid-cell">Email</span>
+                        <span class="grid-cell">Scope</span>
                         <span class="grid-cell"></span>
                     </li>
                     <li class="grid-row" ng-repeat="user in usersManagement.users track by user.sub">

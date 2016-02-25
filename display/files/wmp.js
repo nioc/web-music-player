@@ -356,17 +356,45 @@ function SignOutController(LocalUser, $window) {
 function UserController(LocalUser, User, $routeParams) {
     var profile = this;
     profile.result = {text: '', class: ''};
+    profile.submit = submit;
     if ($routeParams && $routeParams.id) {
-        //get user profile from url id parameter
-        profile.user = User.get({id: $routeParams.id});
+        if (Number.isInteger(parseInt($routeParams.id))) {
+            //edit existing user, get his profile from url id parameter
+            profile.user = User.get({id: $routeParams.id});
+            profile.title = 'Edit user';
+            profile.scopeEditable = true;
+        } else {
+            //add user form
+            profile.user = new User();
+            profile.submit = addUser;
+            profile.title = 'Create user';
+            profile.scopeEditable = true;
+        }
     } else {
-        //get local user profile
+        //edit current user, get his local profile
         LocalUser.getProfile();
         profile.user = User.get({id: LocalUser.id});
+        profile.title = 'Edit your profile';
+        profile.scopeEditable = false;
     }
-    profile.submit = submit;
+    //function for creating user profile
+    function addUser() {
+        function successCallback() {
+            profile.result.text = 'Profile successfully created';
+            profile.result.class = 'form-valid';
+        }
+        function errorCallback(response) {
+            profile.result.text = 'Error, profile not created';
+            if (response.data && response.data.message) {
+                profile.result.text = response.data.message;
+            }
+            profile.result.class = 'form-error';
+        }
+        profile.user.$save(successCallback, errorCallback);
+    }
+    //function for saving user profile modifications
     function submit() {
-        function successCallback(response) {
+        function successCallback() {
             profile.result.text = 'Profile successfully updated';
             profile.result.class = 'form-valid';
         }
