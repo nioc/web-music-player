@@ -8,5 +8,5 @@ angular
 .factory('Artist', Artist);
 
 function Artist($resource) {
-    return $resource('/server/api/artists/:id');
+    return $resource('/server/api/artists/:id', {id: '@id'});
 }

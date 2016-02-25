@@ -25,9 +25,9 @@ angular
 //declare users management controller
 .controller('UsersController', ['User', UsersController])
 //declare album controller
-.controller('AlbumController', ['$routeParams', 'Album', AlbumController])
+.controller('AlbumController', ['$routeParams', '$location', 'Album', AlbumController])
 //declare artist controller
-.controller('ArtistController', ['$routeParams', 'Artist', ArtistController])
+.controller('ArtistController', ['$routeParams', '$location', 'Artist', ArtistController])
 //declare filter converting duration in seconds into a datetime
 .filter('duration', duration);
 //playlist function
@@ -414,14 +414,26 @@ function UsersController(User) {
     usersManagement.users = User.query();
 }
 //AlbumController function
-function AlbumController($routeParams, Album) {
+function AlbumController($routeParams, $location, Album) {
     var album = this;
     album.album = Album.get({id: $routeParams.id});
+    album.remove = remove;
+    function remove() {
+        if (confirm('This will delete "' + album.album.name + '" album from the library, are you sure?')) {
+            album.album.$delete(function() {$location.path('/library').replace();}, function(error) {alert(error.data.message);});
+        }
+    }
 }
 //ArtistController function
-function ArtistController($routeParams, Artist) {
+function ArtistController($routeParams, $location, Artist) {
     var artist = this;
     artist.artist = Artist.get({id: $routeParams.id});
+    artist.remove = remove;
+    function remove() {
+        if (confirm('This will delete "' + artist.artist.name + '" artist from the library and all his tracks, are you sure?')) {
+            artist.artist.$delete(function() {$location.path('/library').replace();}, function(error) {alert(error.data.message);});
+        }
+    }
 }
 //duration filter function
 function duration() {

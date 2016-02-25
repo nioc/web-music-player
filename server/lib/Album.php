@@ -53,6 +53,18 @@ class Album
     public $tracks;
 
     /**
+     * Initializes an Album object with his identifier.
+     *
+     * @param int $id Album identifier
+     */
+    public function __construct($id = null)
+    {
+        if ($id !== null) {
+            $this->id = intval($id);
+        }
+    }
+
+    /**
      * Inserts an album in database.
      *
      * @return bool True on success or false on failure
@@ -184,6 +196,25 @@ class Album
             return $this->tracks;
         }
         //returns database was not reachable
+        return false;
+    }
+
+    /**
+     * Delete an album from database.
+     *
+     * @return bool True on success or false on failure
+     */
+    public function delete()
+    {
+        if (is_int($this->id)) {
+            global $connection;
+            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+            $query = $connection->prepare('DELETE FROM `album` WHERE `id` = :id LIMIT 1;');
+            $query->bindValue(':id', $this->id, PDO::PARAM_INT);
+            //returns deletion result
+            return $query->execute();
+        }
+        //returns an error if no identifier was provided
         return false;
     }
 

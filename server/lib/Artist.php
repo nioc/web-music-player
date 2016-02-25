@@ -33,6 +33,18 @@ class Artist
     public $country;
 
     /**
+     * Initializes an Artist object with his identifier.
+     *
+     * @param int $id Artist identifier
+     */
+    public function __construct($id = null)
+    {
+        if ($id !== null) {
+            $this->id = intval($id);
+        }
+    }
+
+    /**
      * Inserts an artist in database.
      *
      * @return bool True on success or false on failure
@@ -134,6 +146,25 @@ class Artist
             return true;
         }
         //returns the artist is not known or database was not reachable
+        return false;
+    }
+
+    /**
+     * Delete an artist from database.
+     *
+     * @return bool True on success or false on failure
+     */
+    public function delete()
+    {
+        if (is_int($this->id)) {
+            global $connection;
+            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+            $query = $connection->prepare('DELETE FROM `artist` WHERE `id` = :id LIMIT 1;');
+            $query->bindValue(':id', $this->id, PDO::PARAM_INT);
+            //returns deletion result
+            return $query->execute();
+        }
+        //returns an error if no identifier was provided
         return false;
     }
 
