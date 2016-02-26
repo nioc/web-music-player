@@ -307,7 +307,7 @@ function MenuController(LocalUser, $window, $scope) {
         menu.currentPage = this;
         menu.toggle();
     }
-    function locationChangeSuccess(event, newUrl, oldUrl) {
+    function locationChangeSuccess(event) {
         //browser location detected, check if menu is synchronized
         if (menu.currentPage.link !== $window.location.hash) {
             //try to found the active item
@@ -478,7 +478,7 @@ function duration() {
     };
 }
 //Configuration function
-function config($routeProvider, $locationProvider) {
+function config($routeProvider) {
     $routeProvider
     .when('/player', {
     })

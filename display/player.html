@@ -17,7 +17,7 @@
             </header>
             <nav>
                 <ul class="menu" ng-if="menu.visible" ng-cloak>
-                    <li ng-repeat="item in menu.items track by $index" ng-class="{'menu-current':item.isCurrentPage()}"><a href={{::item.link}} ng-click="item.setCurrentPage()"><i class="fa fa-fw" ng-class="::item.icon"></i>{{::item.label}}</li></a>
+                    <li ng-repeat="item in menu.items track by $index" ng-class="{'menu-current':item.isCurrentPage()}"><a href={{::item.link}} ng-click="item.setCurrentPage()"><i class="fa fa-fw" ng-class="::item.icon"></i>{{::item.label}}</a></li>
                 </ul>
             </nav>
         </div>
