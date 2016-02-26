@@ -17,7 +17,7 @@
                         <span class="grid-cell">
                         </span>
                     </li>
-                    <li class="grid-row" ng-repeat="track in library.tracks track by track.id | orderBy:library.order">
+                    <li class="grid-row" ng-repeat="track in library.tracksFiltered | orderBy:library.order track by track.id">
                         <span class="grid-cell" ng-bind="::track.title"></span>
                         <span class="grid-cell artist"><a ng-href="/#/artists/{{::track.artist.id}}" ng-bind="::track.artist.label"></a></span>
                         <span class="grid-cell album"><a ng-href="/#/albums/{{::track.album.id}}" ng-bind="::track.album.label"></a></span>
@@ -25,6 +25,21 @@
                     </li>
                     <li class="grid-row" ng-if="library.tracks.length === 0">
                         <span class="grid-cell">No results found</span>
+                        <span class="grid-cell"></span>
+                        <span class="grid-cell"></span>
+                        <span class="grid-cell"></span>
+                    </li>
+                </ul>
+                <ul class="grid pagination" ng-if="library.pagesCount > 1" ng-cloak>
+                    <li class="grid-footer">
+                        <span class="grid-cell">
+                            <button class="button-icon" ng-disabled="library.currentPage === 1" ng-click="library.setPage(library.currentPage - 1)"><i class="fa fa-chevron-circle-left"></i> Previous</button>
+                        </span>
+                        <span class="grid-cell">Page {{library.currentPage}} / {{library.pagesCount}}
+                        </span>
+                        <span class="grid-cell">
+                            <button class="button-icon" ng-disabled="library.currentPage === library.pagesCount" ng-click="library.setPage(library.currentPage + 1)">Next <i class="fa fa-chevron-circle-right"></i></button>
+                        </span>
                     </li>
                 </ul>
             </section>

@@ -236,7 +236,12 @@ function LibraryController(Library, Playlist) {
     var librarys = this;
     //get library
     librarys.tracks = [];
-    librarys.order = ['title','artist'];
+    librarys.order = ['title', 'album', 'artist'];
+    librarys.tracksFiltered = [];
+    librarys.pagesCount = 1;
+    librarys.currentPage = 1;
+    librarys.itemsPerPage = 50;
+    librarys.setPage = setPage;
     librarys.search = {
         artist: null,
         album: null,
@@ -251,12 +256,25 @@ function LibraryController(Library, Playlist) {
                 title: this.title,
                 album: this.album,
                 artist: this.artist
-            });
+            }, function() {
+            updateFilteredItems();});
         }
     };
     //add link to Playlist service ("add track to playlist" function)
     librarys.add = Playlist.add;
     librarys.search.query();
+    //declare function for setting page number
+    function setPage(currentPage) {
+        librarys.currentPage = currentPage;
+        updateFilteredItems();
+    }
+    //declare function for update pagination system
+    function updateFilteredItems() {
+        var begin = ((librarys.currentPage - 1) * librarys.itemsPerPage);
+        var end = begin + librarys.itemsPerPage;
+        librarys.tracksFiltered = librarys.tracks.slice(begin, end);
+        librarys.pagesCount = Math.ceil(librarys.tracks.length / librarys.itemsPerPage);
+    }
 }
 //MenuController function
 function MenuController(LocalUser, $window, $scope) {
