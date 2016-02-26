@@ -487,13 +487,28 @@ function AlbumController($routeParams, $location, Playlist, Album) {
 function ArtistController($routeParams, $location, Playlist, Artist) {
     var artist = this;
     artist.artist = Artist.get({id: $routeParams.id});
+    artist.editMode = false;
     artist.remove = remove;
+    artist.edit = edit;
+    artist.save = save;
     //add link to Playlist service ("add track to playlist" function)
     artist.add = Playlist.add;
     function remove() {
         if (confirm('This will delete "' + artist.artist.name + '" artist from the library and all his tracks, are you sure?')) {
             artist.artist.$delete(function() {$location.path('/library').replace();}, function(error) {alert(error.data.message);});
         }
+    }
+    function edit() {
+        artist.editMode = true;
+    }
+    function successCallback() {
+        artist.editMode = false;
+    }
+    function errorCallback(response) {
+        alert(response.data.message);
+    }
+    function save() {
+        artist.artist.$update(successCallback, errorCallback);
     }
 }
 //duration filter function

@@ -154,6 +154,70 @@ class Artist
     }
 
     /**
+     * Validate a artist object with provided informations.
+     *
+     * @param object $artist Artist object to validate
+     * @param string $error  The returned error message
+     *
+     * @return bool True if the artist object provided is correct
+     */
+    public function validateModel($artist, &$error)
+    {
+        $error = '';
+        if ($artist === null) {
+            $error = 'invalid resource';
+            //return false and detailed error message
+            return false;
+        }
+        //iterate on each object attributes to set object
+        foreach ($this as $key => $value) {
+            if (property_exists($artist, $key)) {
+                //get provided attribute
+                $this->$key = $artist->$key;
+            }
+        }
+        //check mandatory attributes
+        if (!is_int($this->id)) {
+            $error = 'integer must be provided in id attribute';
+            //return false and detailed error message
+            return false;
+        }
+        if (!is_string($this->name) || $this->name === '') {
+            $error = 'string must be provided in name attribute';
+            //return false and detailed error message
+            return false;
+        }
+        //Artist is valid
+        return true;
+    }
+
+    /**
+     * Update artist with provided informations.
+     *
+     * @param string $error The returned error message
+     *
+     * @return bool True if the artist is updated
+     */
+    public function update(&$error)
+    {
+        $error = '';
+        if (is_int($this->id)) {
+            global $connection;
+            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+            $query = $connection->prepare('UPDATE `artist` SET `name`=:name WHERE `id`=:id LIMIT 1;');
+            $query->bindValue(':id', $this->id, PDO::PARAM_INT);
+            $query->bindValue(':name', $this->name, PDO::PARAM_STR);
+            if ($query->execute()) {
+                //return true to indicate a successful artist update
+                return true;
+            }
+            $error = $query->errorInfo()[2];
+        }
+        //return false to indicate an error occurred while reading the user
+        return false;
+    }
+
+    /**
      * Get artist tracks.
      *
      * @return mixed Array of artist tracks or false on failure

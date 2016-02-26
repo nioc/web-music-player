@@ -3,7 +3,8 @@
                 <ul class="table">
                     <li class="table-row">
                         <span class="label">Name</span>
-                        <span class="value" ng-bind="::artist.artist.name"></span>
+                        <span class="value" ng-if="!artist.editMode" ng-bind="::artist.artist.name"></span>
+                        <span class="value" ng-if="artist.editMode"><input type="text" ng-model="artist.artist.name"></span>
                     </li>
                     <li class="table-row">
                         <span class="label">Summary</span>
@@ -14,7 +15,9 @@
                         <span class="value" ng-bind="::artist.artist.country"></span>
                     </li>
                 </ul>
-                <button class="plain-button" ng-click="artist.remove()"><i class="fa fa-trash"></i> Delete artist</button>
+                <button class="plain-button" ng-if="!artist.editMode" ng-click="artist.remove()"><i class="fa fa-trash"></i> Delete artist</button>
+                <button class="plain-button" ng-if="!artist.editMode" ng-click="artist.edit()"><i class="fa fa-pencil"></i> Edit artist</button>
+                <button class="plain-button" ng-if="artist.editMode" ng-click="artist.save()"><i class="fa fa-save"></i> Save</button>
                 <ul class="table" ng-if="artist.artist.tracks.length">
                     <li class="grid-header">
                         <span class="grid-cell">Title</span>
