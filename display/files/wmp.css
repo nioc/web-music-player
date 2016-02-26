@@ -337,6 +337,39 @@ progress::-moz-progress-bar {
 .plain-button {
     text-decoration: none;
 }
+.spinner{
+    color: #F50057;
+    font-size: 1.5rem;
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    z-index: 10001;
+}
+.loading-bar .peg {
+    position: absolute;
+    width: 70px;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    opacity: .45;
+    box-shadow: #F50057 1px 3px 15px 1px;
+    border-radius: 100%;
+}
+.loading-bar .bar {
+    background: #F50057;
+    position: fixed;
+    z-index: 10002;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px;
+    -webkit-transition: width 350ms;
+    -moz-transition: width 350ms;
+    -o-transition: width 350ms;
+    transition: width 350ms;
+}
 h2 .fa {
     padding: 0 10px;
 }

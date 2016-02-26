@@ -70,3 +70,4 @@ This project includes the following:
 - [normalize.css](https://github.com/necolas/normalize.css)
 - [getID3()](http://getid3.sourceforge.net)
 - [Sortable](https://github.com/RubaXa/Sortable)
+- [angular-loading-bar](https://github.com/chieffancypants/angular-loading-bar)

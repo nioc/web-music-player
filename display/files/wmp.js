@@ -5,7 +5,7 @@
 'use strict';
 angular
 //declare module and dependencies
-.module('wmpApp', ['ngResource', 'ngRoute', 'ng-sortable', 'ngAnimate'])
+.module('wmpApp', ['ngResource', 'ngRoute', 'ng-sortable', 'angular-loading-bar', 'ngAnimate'])
 //declare configuration
 .config(config)
 //declare playlist service
@@ -503,7 +503,7 @@ function duration() {
     };
 }
 //Configuration function
-function config($routeProvider) {
+function config($routeProvider, cfpLoadingBarProvider) {
     $routeProvider
     .when('/player', {
     })
@@ -549,4 +549,6 @@ function config($routeProvider) {
     .otherwise({
         redirectTo: '/player'
     });
+    cfpLoadingBarProvider.spinnerTemplate = '<div class="spinner"><i class="fa fa-refresh fa-spin"></i></div>';
+    cfpLoadingBarProvider.loadingBarTemplate = '<div class="loading-bar"><div class="bar"><div class="peg"></div></div></div>';
 }
