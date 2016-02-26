@@ -184,7 +184,7 @@ class Album
         global $connection;
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
-        $query = $connection->prepare('SELECT `track`.`track`,`track`.`title`,`track`.`time`, `track`.`artist`, `artist`.`name` AS `artistName` FROM `track` INNER JOIN `artist` ON `artist`.`id` = `track`.`artist` WHERE `track`.`album` = :albumId  ORDER BY `track`.`track` ASC;');
+        $query = $connection->prepare('SELECT `track`.`id`, `track`.`track`, `track`.`title`, `track`.`time`, `track`.`artist`, `artist`.`name` AS `artistName` FROM `track` INNER JOIN `artist` ON `artist`.`id` = `track`.`artist` WHERE `track`.`album` = :albumId  ORDER BY `track`.`track` ASC;');
         $query->bindValue(':albumId', $this->id, PDO::PARAM_INT);
         if ($query->execute()) {
             $this->tracks = $query->fetchAll(PDO::FETCH_CLASS);

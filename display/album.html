@@ -30,12 +30,14 @@
                         <span class="grid-cell">Title</span>
                         <span class="grid-cell">Artist</span>
                         <span class="grid-cell">Duration</span>
+                        <span class="grid-cell"></span>
                     </li>
-                    <li class="grid-row" ng-repeat="track in album.album.tracks track by $index">
+                    <li class="grid-row" ng-repeat="track in album.album.tracks | orderBy:['track', 'title'] track by track.id">
                         <span class="grid-cell" ng-bind="::track.track"></span>
                         <span class="grid-cell" ng-bind="::track.title"></span>
                         <span class="grid-cell"><a ng-href="/#/artists/{{::track.artist.id}}" ng-bind="::track.artist.label"></a></span>
                         <span class="grid-cell" ng-bind="::track.time | duration | date:'m:ss'"></span>
+                        <span class="grid-cell"><button class="button-icon" ng-click="album.add(track)" title="Add to playlist"><i class="fa fa-plus-square-o"></i></button></span>
                     </li>
                 </ul>
             </article>

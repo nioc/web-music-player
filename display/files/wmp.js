@@ -25,9 +25,9 @@ angular
 //declare users management controller
 .controller('UsersController', ['User', UsersController])
 //declare album controller
-.controller('AlbumController', ['$routeParams', '$location', 'Album', AlbumController])
+.controller('AlbumController', ['$routeParams', '$location', 'Playlist', 'Album', AlbumController])
 //declare artist controller
-.controller('ArtistController', ['$routeParams', '$location', 'Artist', ArtistController])
+.controller('ArtistController', ['$routeParams', '$location', 'Playlist', 'Artist', ArtistController])
 //declare filter converting duration in seconds into a datetime
 .filter('duration', duration);
 //playlist function
@@ -471,10 +471,12 @@ function UsersController(User) {
     usersManagement.users = User.query();
 }
 //AlbumController function
-function AlbumController($routeParams, $location, Album) {
+function AlbumController($routeParams, $location, Playlist, Album) {
     var album = this;
     album.album = Album.get({id: $routeParams.id});
     album.remove = remove;
+    //add link to Playlist service ("add track to playlist" function)
+    album.add = Playlist.add;
     function remove() {
         if (confirm('This will delete "' + album.album.name + '" album from the library, are you sure?')) {
             album.album.$delete(function() {$location.path('/library').replace();}, function(error) {alert(error.data.message);});
@@ -482,10 +484,12 @@ function AlbumController($routeParams, $location, Album) {
     }
 }
 //ArtistController function
-function ArtistController($routeParams, $location, Artist) {
+function ArtistController($routeParams, $location, Playlist, Artist) {
     var artist = this;
     artist.artist = Artist.get({id: $routeParams.id});
     artist.remove = remove;
+    //add link to Playlist service ("add track to playlist" function)
+    artist.add = Playlist.add;
     function remove() {
         if (confirm('This will delete "' + artist.artist.name + '" artist from the library and all his tracks, are you sure?')) {
             artist.artist.$delete(function() {$location.path('/library').replace();}, function(error) {alert(error.data.message);});

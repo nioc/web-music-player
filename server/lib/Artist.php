@@ -31,6 +31,10 @@ class Artist
      * @var string Country where the artist came from
      */
     public $country;
+    /**
+     * @var array Tracks of the artist
+     */
+    public $tracks;
 
     /**
      * Initializes an Artist object with his identifier.
@@ -146,6 +150,31 @@ class Artist
             return true;
         }
         //returns the artist is not known or database was not reachable
+        return false;
+    }
+
+    /**
+     * Get artist tracks.
+     *
+     * @return mixed Array of artist tracks or false on failure
+     */
+    public function getTracks()
+    {
+        global $connection;
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
+        $query = $connection->prepare('SELECT `track`.`id`, `track`.`track`, `track`.`title`, `track`.`time`, `track`.`year`, `track`.`album`, `album`.`name` AS `albumName` FROM `track` INNER JOIN `album` ON `album`.`id` = `track`.`album` WHERE `track`.`artist` = :artistId  ORDER BY `track`.`year` ASC;');
+        $query->bindValue(':artistId', $this->id, PDO::PARAM_INT);
+        if ($query->execute()) {
+            $this->tracks = $query->fetchAll(PDO::FETCH_CLASS);
+            foreach ($this->tracks as $track) {
+                $trackStructured = new Track();
+                $track = $trackStructured->structureData($track);
+            }
+            //return album tracks
+            return $this->tracks;
+        }
+        //returns database was not reachable
         return false;
     }
 

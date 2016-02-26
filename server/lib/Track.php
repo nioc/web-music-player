@@ -141,6 +141,19 @@ class Track
      */
     public function structureData($track)
     {
+        //change type
+        if (property_exists($track, 'id')) {
+            $track->id = intval($track->id);
+        }
+        if (property_exists($track, 'track') && $track->track !== null) {
+            $track->track = intval($track->track);
+        }
+        if (property_exists($track, 'time') && $track->time !== null) {
+            $track->time = intval($track->time);
+        }
+        if (property_exists($track, 'year') && $track->year !== null) {
+            $track->year = intval($track->year);
+        }
         //create album structure
         if (property_exists($track, 'album') && property_exists($track, 'albumName')) {
             $album = new stdClass();

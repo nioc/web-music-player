@@ -30,6 +30,7 @@ switch ($api->method) {
             //indicate the artist was not found
             return;
         }
+        $artist->getTracks();
         $api->output(200, $artist->structureData());
         break;
     case 'DELETE':
