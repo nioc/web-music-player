@@ -341,20 +341,56 @@ class Tracks
         $result = array();
         $this->scanFolders($folder, $this->folders);
         foreach ($this->files as $file) {
+            //reset timeout for 20 seconds before processing each file
+            set_time_limit(20);
             $track = new Track();
             $track->file = $file;
             $trackInfo = $track->readId3();
             if (key_exists('comments_html', $trackInfo)) {
                 //ID3 has been found, we can use it
-                $track->title = $trackInfo['comments_html']['title'][0];
-                $track->albumName = $trackInfo['comments_html']['album'][0];
-                $track->artistName = $trackInfo['comments_html']['artist'][0];
-            } else {
+                if (key_exists('title', $trackInfo['comments_html'])) {
+                    $track->title = $trackInfo['comments_html']['title'][0];
+                }
+                if (key_exists('album', $trackInfo['comments_html'])) {
+                    $track->albumName = $trackInfo['comments_html']['album'][0];
+                }
+                if (key_exists('artist', $trackInfo['comments_html'])) {
+                    $track->artistName = $trackInfo['comments_html']['artist'][0];
+                }
+                if (key_exists('track_number', $trackInfo['comments_html'])) {
+                    $track->track = intval($trackInfo['comments_html']['track_number'][0]);
+                }
+                if (key_exists('year', $trackInfo['comments_html'])) {
+                    $track->year = intval($trackInfo['comments_html']['year'][0]);
+                }
+                if (key_exists('audio', $trackInfo) && key_exists('bitrate_mode', $trackInfo['audio'])) {
+                    $track->mode = $trackInfo['audio']['bitrate_mode'];
+                }
+                if (key_exists('audio', $trackInfo) && key_exists('bitrate', $trackInfo['audio'])) {
+                    $track->bitrate = intval($trackInfo['audio']['bitrate']);
+                }
+                if (key_exists('playtime_seconds', $trackInfo)) {
+                    $track->time = intval($trackInfo['playtime_seconds']);
+                }
+                if (key_exists('filesize', $trackInfo)) {
+                    $track->size = intval($trackInfo['filesize']);
+                }
+            }
+            if (!isset($track->title, $track->albumName, $track->artistName)) {
                 //We use the filesystem pattern /path/artistName/albumName/title.ext
                 $elements = explode('/', $file);
-                $track->title = str_replace('-', ' ', str_replace('_', ' ', end($elements)));
-                $track->albumName = str_replace('-', ' ', str_replace('_', ' ', prev($elements)));
-                $track->artistName = str_replace('-', ' ', str_replace('_', ' ', prev($elements)));
+                $title = str_replace('-', ' ', str_replace('_', ' ', end($elements)));
+                $albumName = str_replace('-', ' ', str_replace('_', ' ', prev($elements)));
+                $artistName = str_replace('-', ' ', str_replace('_', ' ', prev($elements)));
+                if (!isset($track->title)) {
+                    $track->title = $title;
+                }
+                if (!isset($track->albumName)) {
+                    $track->albumName = $albumName;
+                }
+                if (!isset($track->artistName)) {
+                    $track->artistName = $artistName;
+                }
             }
             //insert/update artist
             $artist = new Artist();

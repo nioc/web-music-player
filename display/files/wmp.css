@@ -224,6 +224,47 @@ input[type="submit"],
 .player-duration {
     float: right;
 }
+.popin {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #383838;
+    z-index: 200;
+    padding-top: 60px;
+}
+progress {
+    width: 80%;
+    height: 24px;
+    margin: 0 auto;
+    display: block;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: none;
+    background: black;
+    border-radius: 50px;
+    padding: 2px;
+    box-shadow: 0 1px 0px 0 rgba(255, 255, 255, 0.2);
+}
+progress::-webkit-progress-bar {
+    background: black;
+    border-radius: 50px;
+    padding: 2px;
+    box-shadow: 0 1px 0px 0 rgba(255, 255, 255, 0.2);
+}
+progress::-webkit-progress-value {
+    border-radius: 60px;
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.4);
+    background: #F50057;
+}
+progress::-moz-progress-bar {
+    border-radius: 60px;
+    background: #F50057;
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.4);
+}
+.progressInfo {
+    display: block;
+    text-align: center;
+}
 .logo {
     padding-right: 8px;
     font-weight: 900;

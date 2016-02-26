@@ -17,7 +17,7 @@ angular
 //declare library controller
 .controller('LibraryController', ['Library', 'Playlist', LibraryController])
 //declare catalog controller
-.controller('CatalogController', ['Library', 'Folder', CatalogController])
+.controller('CatalogController', ['Library', 'Folder', '$q', CatalogController])
 //declare sign-out controller
 .controller('SignOutController', ['LocalUser', '$window', SignOutController])
 //declare profile controller
@@ -329,22 +329,58 @@ function MenuController(LocalUser, $window, $scope) {
     }
 }
 //CatalogController function
-function CatalogController(Library, Folder) {
+function CatalogController(Library, Folder, $q) {
     var catalog = this;
+    catalog.result = '';
+    catalog.isProcessing = false;
+    catalog.progress = 0;
     catalog.folders = Folder.query();
     catalog.expandFolder = function(folder) {
         folder.show = !folder.show;
     };
     catalog.addFolder = function(folder) {
-        if (folder.path !== '') {
-            Library.save({'folder': folder.path}, function(data) {
-                //success, apply display change
-                //@TODO
-            }, function(error) {
-                //error, alert user
-                alert(error.data.message);
-            });
+        catalog.result = 'Processing, please wait.';
+        //retrieve subfolders with files
+        var folderPathsWithFiles = new Array();
+        var filesCounter = 0;
+        var filesProcessed = 0;
+        catalog.isProcessing = true;
+        //declare recursive function for retreiving folders with files
+        function handleFolder(folder) {
+            if (folder.files.length > 0) {
+                //there are files under this subfolder, add it to the array and update files counter
+                folderPathsWithFiles.push(folder.path);
+                filesCounter += folder.files.length;
+            }
+            for (var i = 0; i < folder.subfolders.length; i++) {
+                handleFolder(folder.subfolders[i]);
+            }
         }
+        //call recursive function
+        handleFolder(folder);
+        //sequential calls API for each folder
+        var previous = $q.when(null);
+        for (var i = 0; i < folderPathsWithFiles.length; i++) {
+            (function(i) {
+                previous = previous.then(function() {
+                    return Library.save({'folder': folderPathsWithFiles[i]}, function(data) {
+                        //success, display progression
+                        filesProcessed += data.length;
+                        catalog.progress = parseInt(100 * filesProcessed / filesCounter);
+                        catalog.result = 'Processing, please wait (' + catalog.progress + '%)';
+                    }).$promise;
+                });
+            }(i));
+        }
+        previous.then(function() {
+            //success, remove popin and display end message
+            catalog.result = 'Tracks processing is done';
+            catalog.isProcessing = false;
+        }, function(error) {
+            //error, remove popin and display error message
+            catalog.result = 'Tracks processing encounter an error: ' + error.data.message + ' on ' + error.config.data.folder;
+            catalog.isProcessing = false;
+        });
     };
 }
 //SignOutController function
