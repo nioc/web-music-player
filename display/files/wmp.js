@@ -257,7 +257,10 @@ function LibraryController(Library, Playlist) {
                 album: this.album,
                 artist: this.artist
             }, function() {
-            updateFilteredItems();});
+                //update pagination system when query ends
+                librarys.currentPage = 1;
+                updateFilteredItems();
+            });
         }
     };
     //add link to Playlist service ("add track to playlist" function)

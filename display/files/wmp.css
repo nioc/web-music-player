@@ -242,6 +242,7 @@ input[type="submit"],
     background: #383838;
     z-index: 200;
     padding-top: 60px;
+    margin-top: -10px;
 }
 progress {
     width: 80%;
@@ -254,13 +255,13 @@ progress {
     background: black;
     border-radius: 50px;
     padding: 2px;
-    box-shadow: 0 1px 0px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.2);
 }
 progress::-webkit-progress-bar {
     background: black;
     border-radius: 50px;
     padding: 2px;
-    box-shadow: 0 1px 0px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.2);
 }
 progress::-webkit-progress-value {
     border-radius: 60px;
