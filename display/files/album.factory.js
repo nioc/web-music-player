@@ -8,5 +8,8 @@ angular
 .factory('Album', Album);
 
 function Album($resource) {
-    return $resource('/server/api/albums/:id', {id: '@id'});
+    return $resource('/server/api/albums/:id', {id: '@id'},
+    {
+        'update': {method: 'PUT'}
+    });
 }

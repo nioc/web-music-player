@@ -175,6 +175,84 @@ class Album
     }
 
     /**
+     * Validate a album object with provided informations.
+     *
+     * @param object $album Album object to validate
+     * @param string $error The returned error message
+     *
+     * @return bool True if the album object provided is correct
+     */
+    public function validateModel($album, &$error)
+    {
+        $error = '';
+        if ($album === null) {
+            $error = 'invalid resource';
+            //return false and detailed error message
+            return false;
+        }
+        //unset sub-objects
+        unset($album->artist, $album->tracks);
+        //iterate on each object attributes to set object
+        foreach ($this as $key => $value) {
+            if (property_exists($album, $key)) {
+                //get provided attribute
+                $this->$key = $album->$key;
+            }
+        }
+        //check mandatory attributes
+        if (!is_int($this->id)) {
+            $error = 'integer must be provided in id attribute';
+            //return false and detailed error message
+            return false;
+        }
+        if (!is_string($this->name) || $this->name === '') {
+            $error = 'string must be provided in name attribute';
+            //return false and detailed error message
+            return false;
+        }
+        if (isset($this->year)) {
+            $this->year = intval($this->year);
+            if ($this->year === 0) {
+                $this->year = null;
+            }
+            if ($this->year !== null && $this->year < 1800) {
+                $error = 'Integer with a valid value must be provided in year attribute';
+                //return false and detailed error message
+                return false;
+            }
+        }
+        //Album is valid
+        return true;
+    }
+
+    /**
+     * Update album with provided informations.
+     *
+     * @param string $error The returned error message
+     *
+     * @return bool True if the album is updated
+     */
+    public function update(&$error)
+    {
+        $error = '';
+        if (is_int($this->id)) {
+            global $connection;
+            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+            $query = $connection->prepare('UPDATE `album` SET `name`=:name, `year`=:year WHERE `id`=:id LIMIT 1;');
+            $query->bindValue(':id', $this->id, PDO::PARAM_INT);
+            $query->bindValue(':name', $this->name, PDO::PARAM_STR);
+            $query->bindValue(':year', $this->year, PDO::PARAM_INT);
+            if ($query->execute()) {
+                //return true to indicate a successful album update
+                return true;
+            }
+            $error = $query->errorInfo()[2];
+        }
+        //return false to indicate an error occurred while reading the user
+        return false;
+    }
+
+    /**
      * Get album tracks.
      *
      * @return mixed Array of album tracks or false on failure
@@ -241,7 +319,7 @@ class Album
         }
         //create artist structure
         $artist = new stdClass();
-        $artist->id = (int) $album->artist;
+        $artist->id = intval($album->artist);
         $artist->label = $album->artistName;
         unset($album->artist, $album->artistName);
         $album->artist = $artist;

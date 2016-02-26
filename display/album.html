@@ -4,7 +4,8 @@
                 <ul class="table">
                     <li class="table-row">
                         <span class="label">Name</span>
-                        <span class="value" ng-bind="::album.album.name"></span>
+                        <span class="value" ng-if="!album.editMode" ng-bind="::album.album.name"></span>
+                        <span class="value" ng-if="album.editMode"><input type="text" ng-model="album.album.name"></span>
                     </li>
                     <li class="table-row">
                         <span class="label">Artist</span>
@@ -12,7 +13,8 @@
                     </li>
                     <li class="table-row">
                         <span class="label">Year</span>
-                        <span class="value" ng-bind="::album.album.year"></span>
+                        <span class="value" ng-if="!album.editMode" ng-bind="::album.album.year"></span>
+                        <span class="value" ng-if="album.editMode"><input type="text" ng-model="album.album.year"></span>
                     </li>
                     <li class="table-row">
                         <span class="label">Disk</span>
@@ -23,7 +25,9 @@
                         <span class="value" ng-bind="::album.album.country"></span>
                     </li>
                 </ul>
-                <button class="plain-button" ng-click="album.remove()"><i class="fa fa-trash"></i> Delete album</button>
+                <button class="plain-button" ng-if="!album.editMode" ng-click="album.remove()"><i class="fa fa-trash"></i> Delete album</button>
+                <button class="plain-button" ng-if="!album.editMode" ng-click="album.edit()"><i class="fa fa-pencil"></i> Edit album</button>
+                <button class="plain-button" ng-if="album.editMode" ng-click="album.save()"><i class="fa fa-save"></i> Save</button>
                 <ul class="table">
                     <li class="grid-header">
                         <span class="grid-cell">N°</span>

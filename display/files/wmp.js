@@ -474,13 +474,28 @@ function UsersController(User) {
 function AlbumController($routeParams, $location, Playlist, Album) {
     var album = this;
     album.album = Album.get({id: $routeParams.id});
+    album.editMode = false;
     album.remove = remove;
+    album.edit = edit;
+    album.save = save;
     //add link to Playlist service ("add track to playlist" function)
     album.add = Playlist.add;
     function remove() {
         if (confirm('This will delete "' + album.album.name + '" album from the library, are you sure?')) {
             album.album.$delete(function() {$location.path('/library').replace();}, function(error) {alert(error.data.message);});
         }
+    }
+    function edit() {
+        album.editMode = true;
+    }
+    function successCallback() {
+        album.editMode = false;
+    }
+    function errorCallback(response) {
+        alert(response.data.message);
+    }
+    function save() {
+        album.album.$update(successCallback, errorCallback);
     }
 }
 //ArtistController function
