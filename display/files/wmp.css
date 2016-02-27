@@ -341,6 +341,7 @@ progress::-moz-progress-bar {
 }
 .artist a,
 .album a,
+.track a,
 .plain-button {
     text-decoration: none;
 }

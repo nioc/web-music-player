@@ -1,6 +1,7 @@
 RewriteEngine on
 RewriteRule ^users/([0-9]+)/playlist/tracks/?([0-9]*)$     playlist.php?userId=$1&sequence=$2 [L]
 RewriteRule ^library/tracks/?$                             library.php [L]
+RewriteRule ^library/tracks/([0-9]+)/?$                    library.php?id=$1 [L]
 RewriteRule ^library/folders/?$                            folder.php [L]
 RewriteRule ^users/tokens/?$                               token.php [L]
 RewriteRule ^users/([0-9]+)/?$                             user.php?id=$1 [L]

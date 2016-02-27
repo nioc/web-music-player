@@ -28,6 +28,8 @@ angular
 .controller('AlbumController', ['$routeParams', '$location', 'Playlist', 'Album', AlbumController])
 //declare artist controller
 .controller('ArtistController', ['$routeParams', '$location', 'Playlist', 'Artist', ArtistController])
+//declare track controller
+.controller('TrackController', ['$routeParams', 'Library', TrackController])
 //declare filter converting duration in seconds into a datetime
 .filter('duration', duration);
 //playlist function
@@ -526,6 +528,26 @@ function ArtistController($routeParams, $location, Playlist, Artist) {
         artist.artist.$update(successCallback, errorCallback);
     }
 }
+//TrackController function
+function TrackController($routeParams, Library) {
+    var track = this;
+    track.track = Library.get({id: $routeParams.id});
+    track.editMode = false;
+    track.edit = edit;
+    track.save = save;
+    function edit() {
+        track.editMode = true;
+    }
+    function successCallback() {
+        track.editMode = false;
+    }
+    function errorCallback(response) {
+        alert(response.data.message);
+    }
+    function save() {
+        track.track.$update(successCallback, errorCallback);
+    }
+}
 //duration filter function
 function duration() {
     return function(seconds) {
@@ -551,6 +573,11 @@ function config($routeProvider, cfpLoadingBarProvider) {
         templateUrl: '/artists',
         controller: 'ArtistController',
         controllerAs: 'artist'
+    })
+    .when('/tracks/:id', {
+        templateUrl: '/tracks',
+        controller: 'TrackController',
+        controllerAs: 'track'
     })
     .when('/catalog', {
         templateUrl: '/catalog',

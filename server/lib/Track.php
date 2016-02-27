@@ -77,6 +77,125 @@ class Track
     public $composer;
 
     /**
+     * Initializes a Track object with his identifier.
+     *
+     * @param int $id Track identifier
+     */
+    public function __construct($id = null)
+    {
+        if ($id !== null) {
+            $this->id = intval($id);
+        }
+    }
+
+    /**
+     * Populates a track.
+     *
+     * @return bool true if the database read is ok and track is returned, false otherwise
+     */
+    public function populate()
+    {
+        global $connection;
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        //prepare query
+        $query = $connection->prepare('SELECT `track`.`id`, `track`.`track`, `track`.`title`, `track`.`time`, `track`.`year`, `track`.`artist`, `artist`.`name` AS `artistName`, `track`.`album`, `album`.`name` AS `albumName` FROM `track` INNER JOIN `artist` ON `artist`.`id` = `track`.`artist` INNER JOIN `album` ON `album`.`id` = `track`.`album` WHERE `track`.`id` = :id LIMIT 1;');
+        $query->bindValue(':id', $this->id, PDO::PARAM_INT);
+        //execute query
+        $query->setFetchMode(PDO::FETCH_INTO, $this);
+        if ($query->execute() && $query->fetch()) {
+            //returns the track object was successfully fetched
+            return true;
+        }
+        //returns the track is not known or database was not reachable
+        return false;
+    }
+
+    /**
+     * Validate a track object with provided informations.
+     *
+     * @param object $track Track object to validate
+     * @param string $error The returned error message
+     *
+     * @return bool True if the track object provided is correct
+     */
+    public function validateModel($track, &$error)
+    {
+        $error = '';
+        if ($track === null) {
+            $error = 'invalid resource';
+            //return false and detailed error message
+            return false;
+        }
+        //unset sub-objects
+        unset($track->artist, $track->album);
+        //iterate on each object attributes to set object
+        foreach ($this as $key => $value) {
+            if (property_exists($track, $key)) {
+                //get provided attribute
+                $this->$key = $track->$key;
+            }
+        }
+        //check mandatory attributes
+        if (!is_int($this->id)) {
+            $error = 'integer must be provided in id attribute';
+            //return false and detailed error message
+            return false;
+        }
+        if (!is_string($this->title) || $this->title === '') {
+            $error = 'string must be provided in title attribute';
+            //return false and detailed error message
+            return false;
+        }
+        if (isset($this->track)) {
+            $this->track = intval($this->track);
+            if ($this->track === 0) {
+                $this->track = null;
+            }
+        }
+        if (isset($this->year)) {
+            $this->year = intval($this->year);
+            if ($this->year === 0) {
+                $this->year = null;
+            }
+            if ($this->year !== null && $this->year < 1800) {
+                $error = 'Integer with a valid value must be provided in year attribute';
+                //return false and detailed error message
+                return false;
+            }
+        }
+        //Track is valid
+        return true;
+    }
+
+    /**
+     * Update track with provided informations.
+     *
+     * @param string $error The returned error message
+     *
+     * @return bool True if the track is updated
+     */
+    public function update(&$error)
+    {
+        $error = '';
+        if (is_int($this->id)) {
+            global $connection;
+            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+            $query = $connection->prepare('UPDATE `track` SET `title`=:title, `track`=:track, `year`=:year WHERE `id`=:id LIMIT 1;');
+            $query->bindValue(':id', $this->id, PDO::PARAM_INT);
+            $query->bindValue(':title', $this->title, PDO::PARAM_STR);
+            $query->bindValue(':track', $this->track, PDO::PARAM_INT);
+            $query->bindValue(':year', $this->year, PDO::PARAM_INT);
+            if ($query->execute()) {
+                //return true to indicate a successful track update
+                return true;
+            }
+            $error = $query->errorInfo()[2];
+        }
+        //return false to indicate an error occurred while reading the user
+        return false;
+    }
+
+    /**
      * Returns the filename for a specific track.
      *
      * @param string $id track identifier
