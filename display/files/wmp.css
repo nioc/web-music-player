@@ -188,7 +188,7 @@ input[type="submit"],
 .button-icon{
     border: none;
     background: none;
-    color: white;
+    color: inherit;
     padding: 0 0.3em;
 }
 .button-icon:disabled {
@@ -344,6 +344,39 @@ progress::-moz-progress-bar {
 .track a,
 .plain-button {
     text-decoration: none;
+}
+.tooltip-container {
+    position: fixed;
+    bottom: 10px;
+    display: flex;
+    width: 100%;
+    z-index: 98;
+}
+.tooltip {
+    position: relative;
+    color: #F50057;
+    font-size: 0.9rem;
+    margin: auto;
+    padding: 6px 20px 6px 6px;
+    background-color: #222222;
+    border: #333333 1px solid;
+    border-radius: 9px;
+    max-width: 300px;
+    z-index: 99;
+}
+.tooltip-close {
+    position: absolute;
+    top: 6px;
+    right: 0px;
+}
+.tooltip-container.ng-enter, .tooltip-container.ng-leave {
+    transition: all ease-in-out 0.3s;
+}
+.tooltip-container.ng-leave, .tooltip-container.ng-enter.ng-enter-active {
+    bottom: 10px;
+}
+.tooltip-container.ng-enter, .tooltip-container.ng-leave.ng-leave-active {
+    bottom: -70px;
 }
 .spinner{
     color: #F50057;

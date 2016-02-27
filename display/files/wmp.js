@@ -8,8 +8,10 @@ angular
 .module('wmpApp', ['ngResource', 'ngRoute', 'ng-sortable', 'angular-loading-bar', 'ngAnimate'])
 //declare configuration
 .config(config)
+//declare tooltip service
+.service('Tooltip', ['$animate', '$timeout', '$compile', '$rootScope', Tooltip])
 //declare playlist service
-.service('Playlist', ['LocalUser', 'PlaylistItem', Playlist])
+.service('Playlist', ['LocalUser', 'Tooltip', 'PlaylistItem', Playlist])
 //declare player controller
 .controller('PlayerController', ['$scope', 'Playlist', 'PlaylistItem', 'Audio', 'LocalUser', '$window', PlayerController])
 //declare menu controller
@@ -32,8 +34,45 @@ angular
 .controller('TrackController', ['$routeParams', 'Library', TrackController])
 //declare filter converting duration in seconds into a datetime
 .filter('duration', duration);
+//tooltip function
+function Tooltip($animate, $timeout, $compile, $rootScope) {
+    var tooltip = this;
+    tooltip.display = display;
+    function display(data, delay, style) {
+        //choose icon
+        var icon = '';
+        switch (style) {
+            case 'info':
+                var icon = '<i class="fa fa-info-circle"></i> ';
+                break;
+            case 'error':
+                var icon = '<i class="fa fa-warning"></i> ';
+                break;
+        }
+        //create local scope
+        var scope = $rootScope.$new();
+        scope.removeTooltip = removeTooltip;
+        var template = '<div class="tooltip-container"><div class="tooltip">' + icon + data + ' <button class="button-icon tooltip-close" ng-click="removeTooltip($event);"><i class="fa fa-close"></i></button></div></div>';
+        var tooltipElement = $compile(template)(scope);
+        var parentElement = document.querySelector('body');
+        //add tooltip
+        $animate.enter(tooltipElement, parentElement);
+        //handle tooltip removing if a delay is provided
+        if (delay && delay !== 0) {
+            $timeout(function() {
+                $animate.leave(tooltipElement);
+                scope.$destroy();
+            }, delay);
+        }
+        //manual removing function
+        function removeTooltip(element) {
+            $animate.leave(angular.element(element.currentTarget).parent().parent());
+            scope.$destroy();
+        }
+    }
+}
 //playlist function
-function Playlist(LocalUser, PlaylistItem) {
+function Playlist(LocalUser, Tooltip, PlaylistItem) {
     var playlist = this;
     //get tracks
     playlist.tracks = PlaylistItem.query({userId: LocalUser.id});
@@ -48,6 +87,8 @@ function Playlist(LocalUser, PlaylistItem) {
         PlaylistItem.save(playlistItem, function(data) {
             //success, add to playlist
             playlist.tracks.push(data);
+            //notify user with a tooltip
+            Tooltip.display('Track "' + track.title + '" added to your playlist', 2000, 'info');
         }, function(error) {
             //error, alert user
             alert(error.data.message);
@@ -608,4 +649,5 @@ function config($routeProvider, cfpLoadingBarProvider) {
     });
     cfpLoadingBarProvider.spinnerTemplate = '<div class="spinner"><i class="fa fa-refresh fa-spin"></i></div>';
     cfpLoadingBarProvider.loadingBarTemplate = '<div class="loading-bar"><div class="bar"><div class="peg"></div></div></div>';
+    cfpLoadingBarProvider.latencyThreshold = 50;
 }
