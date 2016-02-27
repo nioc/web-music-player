@@ -98,7 +98,7 @@ class Track
         global $connection;
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
         //prepare query
-        $query = $connection->prepare('SELECT `track`.`id`, `track`.`track`, `track`.`title`, `track`.`time`, `track`.`year`, `track`.`artist`, `artist`.`name` AS `artistName`, `track`.`album`, `album`.`name` AS `albumName` FROM `track` INNER JOIN `artist` ON `artist`.`id` = `track`.`artist` INNER JOIN `album` ON `album`.`id` = `track`.`album` WHERE `track`.`id` = :id LIMIT 1;');
+        $query = $connection->prepare('SELECT `track`.`id`, `track`.`track`, `track`.`title`, `track`.`file`, `track`.`time`, `track`.`year`, `track`.`artist`, `artist`.`name` AS `artistName`, `track`.`album`, `album`.`name` AS `albumName` FROM `track` INNER JOIN `artist` ON `artist`.`id` = `track`.`artist` INNER JOIN `album` ON `album`.`id` = `track`.`album` WHERE `track`.`id` = :id LIMIT 1;');
         $query->bindValue(':id', $this->id, PDO::PARAM_INT);
         //execute query
         $query->setFetchMode(PDO::FETCH_INTO, $this);
@@ -276,7 +276,7 @@ class Track
         //create album structure
         if (property_exists($track, 'album') && property_exists($track, 'albumName')) {
             $album = new stdClass();
-            $album->id = $track->album;
+            $album->id = intval($track->album);
             $album->label = $track->albumName;
             //add path to cover
             if (isset($track->coverId)) {
@@ -288,7 +288,7 @@ class Track
         //create artist structure
         if (property_exists($track, 'artist') && property_exists($track, 'artistName')) {
             $artist = new stdClass();
-            $artist->id = $track->artist;
+            $artist->id = intval($track->artist);
             $artist->label = $track->artistName;
             unset($track->artist, $track->artistName);
             $track->artist = $artist;
@@ -533,7 +533,7 @@ class Tracks
             //insert track
             if ($track->insert()) {
                 //add to the returned array
-                array_push($result, $track);
+                array_push($result, $track->structureData($track));
             }
         }
         //return inserted files

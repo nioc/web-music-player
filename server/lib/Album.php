@@ -315,8 +315,8 @@ class Album
         //add path to cover
         if (isset($album->coverId)) {
             $album->coverPath = '/server/covers/'.$album->coverId.'.jpeg';
-            unset($album->coverId);
         }
+        unset($album->coverId);
         //create artist structure
         $artist = new stdClass();
         $artist->id = intval($album->artist);

@@ -1,6 +1,8 @@
 # web-music-player
 
-Web Music Player is a simple way to play music on the web.
+![logo](/display/files/favicon/favicon-16x16.png)
+Web Music Player is a simple way to play your own music on any device connected to the web (pc, smartphone, tablet, ...).
+It can work as a standalone application or in your smartphone browser.
 
 ## Installation and usage
 
@@ -11,8 +13,18 @@ Following example is based on Linux distribution with Apache :
 3. Move the files into you web server directory `mv web-music-player-master /var/www/wmp`
 4. Fix file permissions `chown www-data:www-data /var/www/wmp -R`
 5. Create database stuff using with the [database setup page](http://localhost/server/configuration/setup.php)
-6. Set you library folder
-7. Enjoy :musical_note:
+6. Update Admin user (edit password obviously)
+7. Remove unnecessary files (/docs, /configuration/setup.php, ...)
+8. Set your library folder
+9. Enjoy :musical_note:
+
+![menu](/docs/1-menu.png)
+![player](/docs/2-player.png)
+![playlist](/docs/3-playlist.png)
+![library](/docs/4-library.png)
+![album](/docs/5-library-album.png)
+![folder](/docs/6-library-folder-add.png)
+![profile](/docs/7-user-profile-edit.png)
 
 ## Versioning
 
@@ -26,7 +38,7 @@ See also the list of [contributors](https://github.com/nioc/web-music-player/con
 
 ## Motivation
 
-Our aim is to provide an easy to use web player able to handle a local catalog. Some awesome projects already already exists but often with a complicated code.
+Our aim is to provide an easy to use web player able to handle a local catalog. Some awesome projects already exists but often with a complicated code.
 
 ## API
 
