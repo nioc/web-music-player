@@ -1,0 +1,49 @@
+CACHE MANIFEST
+
+#version 1.0 2-28-2016
+
+CACHE:
+
+#images
+/display/files/images/default_cover.png
+
+#internal HTML documents
+/
+/sign
+/sign-out
+/profile
+/library
+/artists
+/albums
+/tracks
+/catalog
+/users
+
+#style sheets
+/display/files/vendor/font-awesome-4.3.0/css/font-awesome.min.css
+/display/files/vendor/normalize.css/normalize.css
+/display/files/wmp.css
+
+#style sheet images
+
+#javascript files
+/display/files/vendor/angularjs/angular.min.js
+/display/files/vendor/angularjs/angular-resource.min.js
+/display/files/vendor/angularjs/angular-route.min.js
+/display/files/vendor/angularjs/angular-animate.min.js
+/display/files/vendor/Sortable/Sortable.js
+/display/files/vendor/Sortable/ng-sortable.js
+/display/files/vendor/angular-loading-bar/build/loading-bar.min.js
+/display/files/sign.controller.js
+/display/files/wmp.js
+/display/files/playlistItem.factory.js
+/display/files/audio.factory.js
+/display/files/folder.factory.js
+/display/files/library.factory.js
+/display/files/album.factory.js
+/display/files/artist.factory.js
+/display/files/user.factory.js
+/display/files/authInterceptor.factory.js
+
+NETWORK:
+*
