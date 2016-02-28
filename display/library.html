@@ -19,8 +19,8 @@
                     </li>
                     <li class="grid-row" ng-repeat="track in library.tracksFiltered | orderBy:library.order track by track.id">
                         <span class="grid-cell" ng-bind="::track.title"></span>
-                        <span class="grid-cell artist"><a ng-href="/#/artists/{{::track.artist.id}}" ng-bind="::track.artist.label"></a></span>
-                        <span class="grid-cell album"><a ng-href="/#/albums/{{::track.album.id}}" ng-bind="::track.album.label"></a></span>
+                        <span class="grid-cell artist"><a ng-href="#/artists/{{::track.artist.id}}" ng-bind="::track.artist.label"></a></span>
+                        <span class="grid-cell album"><a ng-href="#/albums/{{::track.album.id}}" ng-bind="::track.album.label"></a></span>
                         <span class="grid-cell"><button class="button-icon" ng-click="library.add(track)" title="Add to playlist"><i class="fa fa-plus-square-o"></i></button></span>
                     </li>
                     <li class="grid-row" ng-if="library.tracks.length === 0">

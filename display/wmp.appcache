@@ -26,6 +26,14 @@ CACHE:
 
 #style sheet images
 
+#fonts
+/display/files/vendor/font-awesome-4.3.0/fonts/fontawesome-webfont.eot
+/display/files/vendor/font-awesome-4.3.0/fonts/fontawesome-webfont.svg
+/display/files/vendor/font-awesome-4.3.0/fonts/fontawesome-webfont.ttf
+/display/files/vendor/font-awesome-4.3.0/fonts/fontawesome-webfont.woff
+/display/files/vendor/font-awesome-4.3.0/fonts/fontawesome-webfont.woff2
+/display/files/vendor/font-awesome-4.3.0/fonts/FontAwesome.otf
+
 #javascript files
 /display/files/vendor/angularjs/angular.min.js
 /display/files/vendor/angularjs/angular-resource.min.js
@@ -47,3 +55,6 @@ CACHE:
 
 NETWORK:
 *
+
+FALLBACK:
+/server/covers/ /display/files/images/default_cover.png

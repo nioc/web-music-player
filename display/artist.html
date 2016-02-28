@@ -1,23 +1,25 @@
             <article class="artist">
                 <h2><i class="fa fa-user"></i>Artist</h2>
-                <ul class="table">
-                    <li class="table-row">
-                        <span class="label">Name</span>
-                        <span class="value" ng-if="!artist.editMode" ng-bind="::artist.artist.name"></span>
-                        <span class="value" ng-if="artist.editMode"><input type="text" ng-model="artist.artist.name"></span>
-                    </li>
-                    <li class="table-row">
-                        <span class="label">Summary</span>
-                        <span class="value" ng-bind="::artist.artist.summary"></span>
-                    </li>
-                    <li class="table-row">
-                        <span class="label">Country</span>
-                        <span class="value" ng-bind="::artist.artist.country"></span>
-                    </li>
-                </ul>
-                <button class="plain-button" ng-if="!artist.editMode" ng-click="artist.remove()"><i class="fa fa-trash"></i> Delete artist</button>
-                <button class="plain-button" ng-if="!artist.editMode" ng-click="artist.edit()"><i class="fa fa-pencil"></i> Edit artist</button>
-                <button class="plain-button" ng-if="artist.editMode" ng-click="artist.save()"><i class="fa fa-save"></i> Save</button>
+                <fieldset class="form">
+                    <ul class="table">
+                        <li class="table-row">
+                            <span class="label">Name</span>
+                            <span class="value" ng-if="!artist.editMode" ng-bind="::artist.artist.name"></span>
+                            <span class="value" ng-if="artist.editMode"><input type="text" ng-model="artist.artist.name"></span>
+                        </li>
+                        <li class="table-row">
+                            <span class="label">Summary</span>
+                            <span class="value" ng-bind="::artist.artist.summary"></span>
+                        </li>
+                        <li class="table-row">
+                            <span class="label">Country</span>
+                            <span class="value" ng-bind="::artist.artist.country"></span>
+                        </li>
+                    </ul>
+                    <button class="plain-button" ng-if="!artist.editMode" ng-click="artist.remove()"><i class="fa fa-trash"></i> Delete artist</button>
+                    <button class="plain-button" ng-if="!artist.editMode" ng-click="artist.edit()"><i class="fa fa-pencil"></i> Edit artist</button>
+                    <button class="plain-button" ng-if="artist.editMode" ng-click="artist.save()"><i class="fa fa-save"></i> Save</button>
+                </fieldset>
                 <ul class="table" ng-if="artist.artist.tracks.length">
                     <li class="grid-header">
                         <span class="grid-cell">Title</span>
@@ -29,11 +31,11 @@
                     </li>
                     <li class="grid-row" ng-repeat="track in artist.artist.tracks | orderBy:['year', 'title'] track by track.id">
                         <span class="grid-cell" ng-bind="::track.title"></span>
-                        <span class="grid-cell"><a ng-href="/#/albums/{{::track.album.id}}" ng-bind="::track.album.label" title="See album informations"></a></span>
+                        <span class="grid-cell"><a ng-href="#/albums/{{::track.album.id}}" ng-bind="::track.album.label" title="See album informations"></a></span>
                         <span class="grid-cell" ng-bind="::track.year"></span>
                         <span class="grid-cell" ng-bind="::track.time | duration | date:'m:ss'"></span>
                         <span class="grid-cell"><button class="button-icon" ng-click="artist.add(track)" title="Add to playlist"><i class="fa fa-plus-square-o"></i></button></span>
-                        <span class="grid-cell"><a ng-href="/#/tracks/{{::track.id}}" title="Edit track"><i class="fa fa-pencil"></i></a></span>
+                        <span class="grid-cell"><a ng-href="#/tracks/{{::track.id}}" title="Edit track"><i class="fa fa-pencil"></i></a></span>
                     </li>
                 </ul>
             </article>

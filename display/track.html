@@ -1,34 +1,36 @@
             <article class="track">
                 <h2><i class="fa fa-music"></i>Track</h2>
-                <ul class="table">
-                    <li class="table-row">
-                        <span class="label">Title</span>
-                        <span class="value" ng-if="!track.editMode" ng-bind="::track.track.title"></span>
-                        <span class="value" ng-if="track.editMode"><input type="text" ng-model="track.track.title"></span>
-                    </li>
-                    <li class="table-row">
-                        <span class="label">Duration</span>
-                        <span class="value">{{track.track.time | duration | date:'m:ss'}}</span>
-                    </li>
-                    <li class="table-row">
-                        <span class="label">Artist</span>
-                        <span class="value"><a ng-href="/#/artists/{{::track.track.artist.id}}" ng-bind="::track.track.artist.label"></a></span>
-                    </li>
-                    <li class="table-row">
-                        <span class="label">Album</span>
-                        <span class="value"><a ng-href="/#/albums/{{::track.track.album.id}}" ng-bind="::track.track.album.label"></a></span>
-                    </li>
-                    <li class="table-row">
-                        <span class="label">Track n°</span>
-                        <span class="value" ng-if="!track.editMode" ng-bind="::track.track.track"></span>
-                        <span class="value" ng-if="track.editMode"><input type="text" ng-model="track.track.track"></span>
-                    </li>
-                    <li class="table-row">
-                        <span class="label">Year</span>
-                        <span class="value" ng-if="!track.editMode" ng-bind="::track.track.year"></span>
-                        <span class="value" ng-if="track.editMode"><input type="text" ng-model="track.track.year"></span>
-                    </li>
-                </ul>
-                <button class="plain-button" ng-if="!track.editMode" ng-click="track.edit()"><i class="fa fa-pencil"></i> Edit track</button>
-                <button class="plain-button" ng-if="track.editMode" ng-click="track.save()"><i class="fa fa-save"></i> Save</button>
+                <fieldset class="form">
+                    <ul class="table">
+                        <li class="table-row">
+                            <span class="label">Title</span>
+                            <span class="value" ng-if="!track.editMode" ng-bind="::track.track.title"></span>
+                            <span class="value" ng-if="track.editMode"><input type="text" ng-model="track.track.title"></span>
+                        </li>
+                        <li class="table-row">
+                            <span class="label">Duration</span>
+                            <span class="value">{{track.track.time | duration | date:'m:ss'}}</span>
+                        </li>
+                        <li class="table-row">
+                            <span class="label">Artist</span>
+                            <span class="value"><a ng-href="#/artists/{{::track.track.artist.id}}" ng-bind="::track.track.artist.label"></a></span>
+                        </li>
+                        <li class="table-row">
+                            <span class="label">Album</span>
+                            <span class="value"><a ng-href="#/albums/{{::track.track.album.id}}" ng-bind="::track.track.album.label"></a></span>
+                        </li>
+                        <li class="table-row">
+                            <span class="label">Track n°</span>
+                            <span class="value" ng-if="!track.editMode" ng-bind="::track.track.track"></span>
+                            <span class="value" ng-if="track.editMode"><input type="text" ng-model="track.track.track"></span>
+                        </li>
+                        <li class="table-row">
+                            <span class="label">Year</span>
+                            <span class="value" ng-if="!track.editMode" ng-bind="::track.track.year"></span>
+                            <span class="value" ng-if="track.editMode"><input type="text" ng-model="track.track.year"></span>
+                        </li>
+                    </ul>
+                    <button class="plain-button" ng-if="!track.editMode" ng-click="track.edit()"><i class="fa fa-pencil"></i> Edit track</button>
+                    <button class="plain-button" ng-if="track.editMode" ng-click="track.save()"><i class="fa fa-save"></i> Save</button>
+                </fieldset>
             </article>
