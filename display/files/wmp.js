@@ -101,7 +101,7 @@ function PlayerController($scope, Playlist, PlaylistItem, Audio, LocalUser, $win
     //check user profile
     player.user = LocalUser;
     if (!player.user.getProfile() || !Number.isInteger(player.user.id)) {
-        $window.location = '/display/sign.html';
+        $window.location = 'index.html';
         //redirect to sign in page
         return false;
     }
@@ -111,7 +111,7 @@ function PlayerController($scope, Playlist, PlaylistItem, Audio, LocalUser, $win
     player.isPaused = false;
     player.currentTime = 0;
     player.duration = 0;
-    player.coverPath = '/display/files/images/default_cover.png';
+    player.coverPath = 'files/images/default_cover.png';
     //declare functions for controlling player
     player.play = play;
     player.pause = pause;
@@ -180,7 +180,7 @@ function PlayerController($scope, Playlist, PlaylistItem, Audio, LocalUser, $win
                 if (this.playlist.tracks[this.playlist.currentTrack].album.coverPath) {
                     player.coverPath = this.playlist.tracks[this.playlist.currentTrack].album.coverPath;
                 } else {
-                    player.coverPath = '/display/files/images/default_cover.png';
+                    player.coverPath = 'files/images/default_cover.png';
                 }
                 this.currentTime = 0;
             }
@@ -343,7 +343,7 @@ function MenuController(LocalUser, $window, $scope) {
     //check user profile
     var user = LocalUser;
     if (!user.getProfile() || !Number.isInteger(user.id)) {
-        $window.location = '/display/sign.html';
+        $window.location = 'index.html';
         //no valid token found, redirect to sign in page
         return false;
     }
@@ -450,7 +450,7 @@ function CatalogController(Library, Folder, $q) {
 //SignOutController function
 function SignOutController(LocalUser, $window) {
     LocalUser.deleteToken();
-    $window.location = '/display/sign.html';
+    $window.location = 'index.html';
 }
 //ProfileController function
 function UserController(LocalUser, User, $routeParams) {
@@ -601,47 +601,47 @@ function config($routeProvider, cfpLoadingBarProvider) {
     .when('/player', {
     })
     .when('/library', {
-        templateUrl: '/display/library.html',
+        templateUrl: 'library.html',
         controller: 'LibraryController',
         controllerAs: 'library'
     })
     .when('/albums/:id', {
-        templateUrl: '/display/album.html',
+        templateUrl: 'album.html',
         controller: 'AlbumController',
         controllerAs: 'album'
     })
     .when('/artists/:id', {
-        templateUrl: '/display/artist.html',
+        templateUrl: 'artist.html',
         controller: 'ArtistController',
         controllerAs: 'artist'
     })
     .when('/tracks/:id', {
-        templateUrl: '/display/track.html',
+        templateUrl: 'track.html',
         controller: 'TrackController',
         controllerAs: 'track'
     })
     .when('/catalog', {
-        templateUrl: '/display/catalog.html',
+        templateUrl: 'catalog.html',
         controller: 'CatalogController',
         controllerAs: 'catalog'
     })
     .when('/profile', {
-        templateUrl: '/display/profile.html',
+        templateUrl: 'profile.html',
         controller: 'UserController',
         controllerAs: 'profile'
     })
     .when('/users', {
-        templateUrl: '/display/users.html',
+        templateUrl: 'users.html',
         controller: 'UsersController',
         controllerAs: 'usersManagement'
     })
     .when('/users/:id', {
-        templateUrl: '/display/profile.html',
+        templateUrl: 'profile.html',
         controller: 'UserController',
         controllerAs: 'profile'
     })
     .when('/sign-out', {
-        templateUrl: '/display/sign-out.html',
+        templateUrl: 'sign-out.html',
         controller: 'SignOutController'
     })
     .otherwise({

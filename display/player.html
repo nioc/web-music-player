@@ -4,32 +4,32 @@
         <meta charset="utf-8">
         <title>Web Music Player</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-        <link type="text/css" href="/display/files/vendor/normalize.css/normalize.css" rel="stylesheet"/>
-        <link type="text/css" href="/display/files/vendor/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
-        <link type="text/css" href="/display/files/wmp.css" rel="stylesheet"/>
-        <link rel="apple-touch-icon" sizes="57x57" href="/display/files/favicon/apple-touch-icon-57x57.png">
-        <link rel="apple-touch-icon" sizes="60x60" href="/display/files/favicon/apple-touch-icon-60x60.png">
-        <link rel="apple-touch-icon" sizes="72x72" href="/display/files/favicon/apple-touch-icon-72x72.png">
-        <link rel="apple-touch-icon" sizes="76x76" href="/display/files/favicon/apple-touch-icon-76x76.png">
-        <link rel="apple-touch-icon" sizes="114x114" href="/display/files/favicon/apple-touch-icon-114x114.png">
-        <link rel="apple-touch-icon" sizes="120x120" href="/display/files/favicon/apple-touch-icon-120x120.png">
-        <link rel="apple-touch-icon" sizes="144x144" href="/display/files/favicon/apple-touch-icon-144x144.png">
-        <link rel="apple-touch-icon" sizes="152x152" href="/display/files/favicon/apple-touch-icon-152x152.png">
-        <link rel="apple-touch-icon" sizes="180x180" href="/display/files/favicon/apple-touch-icon-180x180.png">
-        <link rel="icon" type="image/png" href="/display/files/favicon/android-chrome-192x192.png" sizes="192x192">
-        <link rel="icon" type="image/png" href="/display/files/favicon/favicon-32x32.png" sizes="32x32">
-        <link rel="icon" type="image/png" href="/display/files/favicon/favicon-96x96.png" sizes="96x96">
-        <link rel="icon" type="image/png" href="/display/files/favicon/favicon-16x16.png" sizes="16x16">
-        <link rel="manifest" href="/display/files/favicon/manifest.json">
-        <link rel="mask-icon" href="/display/files/favicon/safari-pinned-tab.svg" color="#f50057">
-        <link rel="shortcut icon" href="/display/files/favicon/favicon.ico">
+        <link type="text/css" href="files/vendor/normalize.css/normalize.css" rel="stylesheet"/>
+        <link type="text/css" href="files/vendor/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
+        <link type="text/css" href="files/wmp.css" rel="stylesheet"/>
+        <link rel="apple-touch-icon" sizes="57x57" href="files/favicon/apple-touch-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="files/favicon/apple-touch-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="files/favicon/apple-touch-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="files/favicon/apple-touch-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="files/favicon/apple-touch-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="files/favicon/apple-touch-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="files/favicon/apple-touch-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="files/favicon/apple-touch-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="files/favicon/apple-touch-icon-180x180.png">
+        <link rel="icon" type="image/png" href="files/favicon/android-chrome-192x192.png" sizes="192x192">
+        <link rel="icon" type="image/png" href="files/favicon/favicon-32x32.png" sizes="32x32">
+        <link rel="icon" type="image/png" href="files/favicon/favicon-96x96.png" sizes="96x96">
+        <link rel="icon" type="image/png" href="files/favicon/favicon-16x16.png" sizes="16x16">
+        <link rel="manifest" href="files/favicon/manifest.json">
+        <link rel="mask-icon" href="files/favicon/safari-pinned-tab.svg" color="#f50057">
+        <link rel="shortcut icon" href="files/favicon/favicon.ico">
         <meta name="msapplication-TileColor" content="#333333">
-        <meta name="msapplication-TileImage" content="/display/files/favicon/mstile-144x144.png">
+        <meta name="msapplication-TileImage" content="files/favicon/mstile-144x144.png">
         <meta name="theme-color" content="#333333">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-title" content="Web Music Player">
         <meta name="application-name" content="Web Music Player">
-        <base href="/display/player.html">
+        <base href="player.html">
     </head>
     <body ng-controller="MenuController as menu">
         <div>
@@ -81,21 +81,21 @@
         </div>
         <div ng-view ng-show="!menu.visible"></div>
         </div>
-        <script src="/display/files/vendor/angularjs/angular.min.js"></script>
-        <script src="/display/files/vendor/angularjs/angular-resource.min.js"></script>
-        <script src="/display/files/vendor/angularjs/angular-route.min.js"></script>
-        <script src="/display/files/vendor/Sortable/Sortable.js"></script>
-        <script src="/display/files/vendor/Sortable/ng-sortable.js"></script>
-        <script src="/display/files/vendor/angularjs/angular-animate.min.js"></script>
-        <script src="/display/files/vendor/angular-loading-bar/build/loading-bar.min.js"></script>
-        <script src="/display/files/wmp.js"></script>
-        <script src="/display/files/playlistItem.factory.js"></script>
-        <script src="/display/files/audio.factory.js"></script>
-        <script src="/display/files/folder.factory.js"></script>
-        <script src="/display/files/library.factory.js"></script>
-        <script src="/display/files/album.factory.js"></script>
-        <script src="/display/files/artist.factory.js"></script>
-        <script src="/display/files/user.factory.js"></script>
-        <script src="/display/files/authInterceptor.factory.js"></script>
+        <script src="files/vendor/angularjs/angular.min.js"></script>
+        <script src="files/vendor/angularjs/angular-resource.min.js"></script>
+        <script src="files/vendor/angularjs/angular-route.min.js"></script>
+        <script src="files/vendor/Sortable/Sortable.js"></script>
+        <script src="files/vendor/Sortable/ng-sortable.js"></script>
+        <script src="files/vendor/angularjs/angular-animate.min.js"></script>
+        <script src="files/vendor/angular-loading-bar/build/loading-bar.min.js"></script>
+        <script src="files/wmp.js"></script>
+        <script src="files/playlistItem.factory.js"></script>
+        <script src="files/audio.factory.js"></script>
+        <script src="files/folder.factory.js"></script>
+        <script src="files/library.factory.js"></script>
+        <script src="files/album.factory.js"></script>
+        <script src="files/artist.factory.js"></script>
+        <script src="files/user.factory.js"></script>
+        <script src="files/authInterceptor.factory.js"></script>
     </body>
 </html>
