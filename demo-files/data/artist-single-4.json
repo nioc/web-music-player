@@ -1,0 +1,21 @@
+{
+    "id": 4,
+    "name": "Louis Armstrong & Sy Oliver",
+    "mbid": null,
+    "summary": null,
+    "country": null,
+    "tracks": [
+        {
+            "id": 4,
+            "track": 1,
+            "title": "Georgia On My Mind",
+            "time": 205,
+            "year": 1956,
+            "album": {
+                "id": 4,
+                "label": "The Complete Decca Studio Recordings Of Louis Armstrong And The All Stars"
+            }
+        }
+    ]
+}
+

@@ -1,0 +1,8 @@
+{
+    "sub": 1,
+    "login": "demo",
+    "name": "Demo user",
+    "email": null,
+    "scope": "admin user"
+}
+

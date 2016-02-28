@@ -1,0 +1,21 @@
+{
+    "id": 2,
+    "name": "Billie Holiday & Her Orchestra",
+    "mbid": null,
+    "summary": null,
+    "country": null,
+    "tracks": [
+        {
+            "id": 2,
+            "track": null,
+            "title": "Fine And Mellow",
+            "time": 192,
+            "year": 1939,
+            "album": {
+                "id": 2,
+                "label": "Strange Fruit / Fine And Mellow"
+            }
+        }
+    ]
+}
+

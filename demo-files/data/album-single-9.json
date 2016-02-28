@@ -1,0 +1,26 @@
+{
+    "id": 9,
+    "name": "Brunswick 6074 (78)",
+    "mbid": null,
+    "year": null,
+    "disk": null,
+    "country": null,
+    "mbidGroup": null,
+    "tracks": [
+        {
+            "id": 9,
+            "track": null,
+            "title": "Minnie The Moocher",
+            "time": 192,
+            "artist": {
+                "id": 8,
+                "label": "Cab Calloway"
+            }
+        }
+    ],
+    "artist": {
+        "id": 8,
+        "label": "Cab Calloway"
+    }
+}
+

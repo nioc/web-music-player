@@ -1,0 +1,120 @@
+[
+    {
+        "id": 9,
+        "title": "Minnie The Moocher",
+        "file": "/demo-files/RiBru6074.mp3",
+        "album": {
+            "id": 9,
+            "label": "Brunswick 6074 (78)"
+        },
+        "artist": {
+            "id": 8,
+            "label": "Cab Calloway"
+        }
+    },
+    {
+        "id": 7,
+        "title": "When A Woman Loves A Man",
+        "file": "/demo-files/COL22284-2.mp3",
+        "album": {
+            "id": 7,
+            "label": "When A Woman Loves A Man / I Can't Get Started"
+        },
+        "artist": {
+            "id": 5,
+            "label": "Billie Holiday"
+        }
+    },
+    {
+        "id": 3,
+        "title": "Rum And Coca-Cola",
+        "file": "/demo-files/1945_001.mp3",
+        "album": {
+            "id": 3,
+            "label": "Rum And Coca-Cola / One Meat Ball"
+        },
+        "artist": {
+            "id": 3,
+            "label": "Andrews Sisters"
+        }
+    },
+    {
+        "id": 6,
+        "title": "Caravan",
+        "file": "/demo-files/TS481330.mp3",
+        "album": {
+            "id": 6,
+            "label": "Ella Fitzgerald Sings The Duke Ellington Song Book"
+        },
+        "artist": {
+            "id": 6,
+            "label": "Duke Ellington & Ella Fitzgerald"
+        }
+    },
+    {
+        "id": 4,
+        "title": "Georgia On My Mind",
+        "file": "/demo-files/TS488051.mp3",
+        "album": {
+            "id": 4,
+            "label": "The Complete Decca Studio Recordings Of Louis Armstrong And The All Stars"
+        },
+        "artist": {
+            "id": 4,
+            "label": "Louis Armstrong & Sy Oliver"
+        }
+    },
+    {
+        "id": 1,
+        "title": "I'm Your Hoochie Cooche Man",
+        "file": "/demo-files/CHE1560X.mp3",
+        "album": {
+            "id": 1,
+            "label": "One More Mile - Chess Collectibles Volume 1"
+        },
+        "artist": {
+            "id": 1,
+            "label": "Muddy Waters"
+        }
+    },
+    {
+        "id": 8,
+        "title": "C'est Si Bon",
+        "file": "/demo-files/TS487613.mp3",
+        "album": {
+            "id": 8,
+            "label": "The California Concerts"
+        },
+        "artist": {
+            "id": 7,
+            "label": "Louis Armstrong And His All Stars"
+        }
+    },
+    {
+        "id": 5,
+        "title": "My man",
+        "file": "/demo-files/DEC24638x.mp3",
+        "album": {
+            "id": 5,
+            "label": "Lady's Decca Days"
+        },
+        "artist": {
+            "id": 5,
+            "label": "Billie Holiday"
+        }
+    },
+    {
+        "id": 2,
+        "title": "Fine And Mellow",
+        "file": "/demo-files/COM24405-A.mp3",
+        "album": {
+            "id": 2,
+            "label": "Strange Fruit / Fine And Mellow"
+        },
+        "artist": {
+            "id": 2,
+            "label": "Billie Holiday & Her Orchestra"
+        }
+    }
+]
+

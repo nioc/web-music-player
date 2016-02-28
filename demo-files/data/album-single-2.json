@@ -1,0 +1,26 @@
+{
+    "id": 2,
+    "name": "Strange Fruit \/ Fine And Mellow",
+    "mbid": null,
+    "year": null,
+    "disk": null,
+    "country": null,
+    "mbidGroup": null,
+    "tracks": [
+        {
+            "id": 2,
+            "track": null,
+            "title": "Fine And Mellow",
+            "time": 192,
+            "artist": {
+                "id": 2,
+                "label": "Billie Holiday & Her Orchestra"
+            }
+        }
+    ],
+    "artist": {
+        "id": 2,
+        "label": "Billie Holiday & Her Orchestra"
+    }
+}
+

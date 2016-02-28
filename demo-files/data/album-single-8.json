@@ -1,0 +1,26 @@
+{
+    "id": 8,
+    "name": "The California Concerts",
+    "mbid": null,
+    "year": null,
+    "disk": null,
+    "country": null,
+    "mbidGroup": null,
+    "tracks": [
+        {
+            "id": 8,
+            "track": 1,
+            "title": "C'est Si Bon",
+            "time": 145,
+            "artist": {
+                "id": 7,
+                "label": "Louis Armstrong And His All Stars"
+            }
+        }
+    ],
+    "artist": {
+        "id": 7,
+        "label": "Louis Armstrong And His All Stars"
+    }
+}
+

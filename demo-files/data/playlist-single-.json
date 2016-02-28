@@ -1,0 +1,15 @@
+{
+    "id": 8,
+    "title": "C'est Si Bon",
+    "file": "/stream/8",
+    "userId": "1",
+    "sequence": 1,
+    "album": {
+        "id": 8,
+        "label": "The California Concerts"
+    },
+    "artist": {
+        "id": 7,
+        "label": "Louis Armstrong And His All Stars"
+    }
+}

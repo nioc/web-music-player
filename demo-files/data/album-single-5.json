@@ -1,0 +1,26 @@
+{
+    "id": 5,
+    "name": "Lady's Decca Days",
+    "mbid": null,
+    "year": null,
+    "disk": null,
+    "country": null,
+    "mbidGroup": null,
+    "tracks": [
+        {
+            "id": 5,
+            "track": null,
+            "title": "My man",
+            "time": 183,
+            "artist": {
+                "id": 5,
+                "label": "Billie Holiday"
+            }
+        }
+    ],
+    "artist": {
+        "id": 5,
+        "label": "Billie Holiday"
+    }
+}
+

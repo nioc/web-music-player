@@ -1,0 +1,21 @@
+{
+    "id": 1,
+    "name": "Muddy Waters",
+    "mbid": null,
+    "summary": null,
+    "country": null,
+    "tracks": [
+        {
+            "id": 1,
+            "track": null,
+            "title": "I'm Your Hoochie Cooche Man",
+            "time": 169,
+            "year": 1954,
+            "album": {
+                "id": 1,
+                "label": "One More Mile - Chess Collectibles Volume 1"
+            }
+        }
+    ]
+}
+

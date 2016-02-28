@@ -1,0 +1,32 @@
+{
+    "id": 5,
+    "name": "Billie Holiday",
+    "mbid": null,
+    "summary": null,
+    "country": null,
+    "tracks": [
+        {
+            "id": 5,
+            "track": null,
+            "title": "My man",
+            "time": 183,
+            "year": 1937,
+            "album": {
+                "id": 5,
+                "label": "Lady's Decca Days"
+            }
+        },
+        {
+            "id": 7,
+            "track": null,
+            "title": "When A Woman Loves A Man",
+            "time": 145,
+            "year": 1938,
+            "album": {
+                "id": 7,
+                "label": "When A Woman Loves A Man / I Can't Get Started"
+            }
+        }
+    ]
+}
+

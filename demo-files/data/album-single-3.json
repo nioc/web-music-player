@@ -1,0 +1,26 @@
+{
+    "id": 3,
+    "name": "Rum And Coca-Cola \/ One Meat Ball",
+    "mbid": null,
+    "year": null,
+    "disk": null,
+    "country": null,
+    "mbidGroup": null,
+    "tracks": [
+        {
+            "id": 3,
+            "track": null,
+            "title": "Rum And Coca-Cola",
+            "time": 188,
+            "artist": {
+                "id": 3,
+                "label": "Andrews Sisters"
+            }
+        }
+    ],
+    "artist": {
+        "id": 3,
+        "label": "Andrews Sisters"
+    }
+}
+

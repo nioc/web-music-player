@@ -1,0 +1,26 @@
+{
+    "id": 7,
+    "name": "When A Woman Loves A Man \/ I Can't Get Started",
+    "mbid": null,
+    "year": null,
+    "disk": null,
+    "country": null,
+    "mbidGroup": null,
+    "tracks": [
+        {
+            "id": 7,
+            "track": null,
+            "title": "When A Woman Loves A Man",
+            "time": 145,
+            "artist": {
+                "id": 5,
+                "label": "Billie Holiday"
+            }
+        }
+    ],
+    "artist": {
+        "id": 5,
+        "label": "Billie Holiday"
+    }
+}
+

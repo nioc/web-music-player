@@ -17,12 +17,12 @@
         function submit() {
             var user = LocalUser;
             $http
-            .post('/server/api/users/tokens', $scope.user)
+            .post('/demo-files/data/token.json', $scope.user)
             .then(successCallback, errorCallback);
             function successCallback(response) {
                 if (user.handleToken(response.data)) {
                     //redirect user to the main page
-                    $window.location = '/';
+                    $window.location = '/display/player.html';
                 } else {
                     errorCallback(response);
                 }

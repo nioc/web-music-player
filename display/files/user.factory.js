@@ -5,10 +5,13 @@
 'use strict';
 //User factory
 function User($resource) {
-    return $resource('/server/api/users/:id', {id: '@sub'},
-    {
-        'update': {method: 'PUT'}
-    });
+    return $resource('/demo-files/data/:resource-:action-:id.json/', null,
+        {
+            'query': {method: 'GET', params: {resource: 'user', action: 'query'}, isArray: true},
+            'get': {method: 'GET', params: {resource: 'user', action: 'single'}, isArray: false},
+            'update': {method: 'GET', params: {resource: 'user', action: 'single', id: '@sub'}, isArray: false},
+            'save': {method: 'GET', params: {resource: 'user', action: 'single', id: '1'}, isArray: false},
+        });
 }
 //LocalUser factory
 function LocalUser($window) {

@@ -1,0 +1,21 @@
+{
+    "id": 6,
+    "name": "Duke Ellington & Ella Fitzgerald",
+    "mbid": null,
+    "summary": null,
+    "country": null,
+    "tracks": [
+        {
+            "id": 6,
+            "track": 1,
+            "title": "Caravan",
+            "time": 235,
+            "year": 1957,
+            "album": {
+                "id": 6,
+                "label": "Ella Fitzgerald Sings The Duke Ellington Song Book"
+            }
+        }
+    ]
+}
+

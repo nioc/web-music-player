@@ -1,0 +1,21 @@
+{
+    "id": 8,
+    "name": "Cab Calloway",
+    "mbid": null,
+    "summary": null,
+    "country": null,
+    "tracks": [
+        {
+            "id": 9,
+            "track": null,
+            "title": "Minnie The Moocher",
+            "time": 192,
+            "year": 1933,
+            "album": {
+                "id": 9,
+                "label": "Brunswick 6074 (78)"
+            }
+        }
+    ]
+}
+

@@ -1,0 +1,26 @@
+{
+    "id": 6,
+    "name": "Ella Fitzgerald Sings The Duke Ellington Song Book",
+    "mbid": null,
+    "year": null,
+    "disk": null,
+    "country": null,
+    "mbidGroup": null,
+    "tracks": [
+        {
+            "id": 6,
+            "track": 1,
+            "title": "Caravan",
+            "time": 235,
+            "artist": {
+                "id": 6,
+                "label": "Duke Ellington & Ella Fitzgerald"
+            }
+        }
+    ],
+    "artist": {
+        "id": 6,
+        "label": "Duke Ellington & Ella Fitzgerald"
+    }
+}
+

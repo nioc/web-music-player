@@ -101,7 +101,7 @@ function PlayerController($scope, Playlist, PlaylistItem, Audio, LocalUser, $win
     //check user profile
     player.user = LocalUser;
     if (!player.user.getProfile() || !Number.isInteger(player.user.id)) {
-        $window.location = '/sign';
+        $window.location = '/display/sign.html';
         //redirect to sign in page
         return false;
     }
@@ -343,7 +343,7 @@ function MenuController(LocalUser, $window, $scope) {
     //check user profile
     var user = LocalUser;
     if (!user.getProfile() || !Number.isInteger(user.id)) {
-        $window.location = '/sign';
+        $window.location = '/display/sign.html';
         //no valid token found, redirect to sign in page
         return false;
     }
@@ -450,7 +450,7 @@ function CatalogController(Library, Folder, $q) {
 //SignOutController function
 function SignOutController(LocalUser, $window) {
     LocalUser.deleteToken();
-    $window.location = '/sign';
+    $window.location = '/display/sign.html';
 }
 //ProfileController function
 function UserController(LocalUser, User, $routeParams) {
@@ -601,47 +601,47 @@ function config($routeProvider, cfpLoadingBarProvider) {
     .when('/player', {
     })
     .when('/library', {
-        templateUrl: '/library',
+        templateUrl: '/display/library.html',
         controller: 'LibraryController',
         controllerAs: 'library'
     })
     .when('/albums/:id', {
-        templateUrl: '/albums',
+        templateUrl: '/display/album.html',
         controller: 'AlbumController',
         controllerAs: 'album'
     })
     .when('/artists/:id', {
-        templateUrl: '/artists',
+        templateUrl: '/display/artist.html',
         controller: 'ArtistController',
         controllerAs: 'artist'
     })
     .when('/tracks/:id', {
-        templateUrl: '/tracks',
+        templateUrl: '/display/track.html',
         controller: 'TrackController',
         controllerAs: 'track'
     })
     .when('/catalog', {
-        templateUrl: '/catalog',
+        templateUrl: '/display/catalog.html',
         controller: 'CatalogController',
         controllerAs: 'catalog'
     })
     .when('/profile', {
-        templateUrl: '/profile',
+        templateUrl: '/display/profile.html',
         controller: 'UserController',
         controllerAs: 'profile'
     })
     .when('/users', {
-        templateUrl: '/users',
+        templateUrl: '/display/users.html',
         controller: 'UsersController',
         controllerAs: 'usersManagement'
     })
     .when('/users/:id', {
-        templateUrl: '/profile',
+        templateUrl: '/display/profile.html',
         controller: 'UserController',
         controllerAs: 'profile'
     })
     .when('/sign-out', {
-        templateUrl: '/sign-out',
+        templateUrl: '/display/sign-out.html',
         controller: 'SignOutController'
     })
     .otherwise({

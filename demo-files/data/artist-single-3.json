@@ -1,0 +1,21 @@
+{
+    "id": 3,
+    "name": "Andrews Sisters",
+    "mbid": null,
+    "summary": null,
+    "country": null,
+    "tracks": [
+        {
+            "id": 3,
+            "track": null,
+            "title": "Rum And Coca-Cola",
+            "time": 188,
+            "year": 1945,
+            "album": {
+                "id": 3,
+                "label": "Rum And Coca-Cola / One Meat Ball"
+            }
+        }
+    ]
+}
+

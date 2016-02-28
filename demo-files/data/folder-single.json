@@ -1,0 +1,25 @@
+[
+    {
+        "path": "/home/user/music/",
+        "subfolders": [
+            {
+                "path": "/home/user/music/demo/",
+                "subfolders": [],
+                "files": [
+                    "1945_001.mp3",
+                    "CHE1560X.mp3",
+                    "COL22284-2.mp3",
+                    "COM24405-A.mp3",
+                    "DEC24638x.mp3",
+                    "RiBru6074.mp3",
+                    "TS481231.mp3",
+                    "TS481330.mp3",
+                    "TS487613.mp3",
+                    "TS488051.mp3"
+                ]
+            }
+        ],
+        "files": []
+    }
+]
+

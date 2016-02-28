@@ -8,8 +8,11 @@ angular
 .factory('PlaylistItem', PlaylistItem);
 
 function PlaylistItem($resource) {
-    return $resource('/server/api/users/:userId/playlist/tracks/:sequence', {userId: '@userId', sequence: '@sequence'},
+    return $resource('/demo-files/data/playlist-:action-:identifer.json/', null,
     {
-        'update': {method: 'PUT', isArray: true}
+        'query': {method: 'GET', params: {resource: 'playlist', action: 'query'}, isArray: true},
+        'save': {method: 'POST', params: {resource: 'playlist', action: 'single'}, isArray: false},
+        'delete': {method: 'GET', params: {resource: 'playlist', action: 'empty'}, isArray: false},
+        'update': {method: 'GET', params: {resource: 'playlist', action: 'query'}, isArray: true}
     });
 }

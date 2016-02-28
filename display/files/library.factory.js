@@ -8,9 +8,10 @@ angular
 .factory('Library', Library);
 
 function Library($resource) {
-    return $resource('/server/api/library/tracks/:id', {id: '@id'},
+    return $resource('/demo-files/data/:resource-:action-:identifer.json/', null,
     {
-        'save': {method: 'POST', isArray: true},
-        'update': {method: 'PUT'}
+        'query': {method: 'GET', params: {resource: 'library', action: 'query'}, isArray: true},
+        'save': {method: 'POST', params: {resource: 'library', action: 'query'}, isArray: true},
+        'update': {method: 'PUT', params: {resource: 'library', action: 'query'}}
     });
 }

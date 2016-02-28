@@ -1,0 +1,21 @@
+{
+    "id": 7,
+    "name": "Louis Armstrong And His All Stars",
+    "mbid": null,
+    "summary": null,
+    "country": null,
+    "tracks": [
+        {
+            "id": 8,
+            "track": 1,
+            "title": "C'est Si Bon",
+            "time": 145,
+            "year": 1955,
+            "album": {
+                "id": 8,
+                "label": "The California Concerts"
+            }
+        }
+    ]
+}
+

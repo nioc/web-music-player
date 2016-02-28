@@ -8,8 +8,10 @@ angular
 .factory('Artist', Artist);
 
 function Artist($resource) {
-    return $resource('/server/api/artists/:id', {id: '@id'},
-    {
-        'update': {method: 'PUT'}
-    });
+    return $resource('/demo-files/data/:resource-:action-:id.json/', null,
+        {
+            'get': {method: 'GET', params: {resource: 'artist', action: 'single', id: '@id'}, isArray: false},
+            'update': {method: 'GET', params: {resource: 'artist', action: 'single', id: '@id'}, isArray: false},
+            'delete': {method: 'GET', params: {resource: 'playlist', action: 'empty'}, isArray: false},
+        });
 }
