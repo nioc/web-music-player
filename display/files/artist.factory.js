@@ -8,7 +8,7 @@ angular
 .factory('Artist', Artist);
 
 function Artist($resource) {
-    return $resource('/demo-files/data/:resource-:action-:id.json/', null,
+    return $resource('../demo-files/data/:resource-:action-:id.json/', null,
         {
             'get': {method: 'GET', params: {resource: 'artist', action: 'single', id: '@id'}, isArray: false},
             'update': {method: 'GET', params: {resource: 'artist', action: 'single', id: '@id'}, isArray: false},

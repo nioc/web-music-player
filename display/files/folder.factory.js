@@ -8,7 +8,7 @@ angular
 .factory('Folder', Folder);
 
 function Folder($resource) {
-    return $resource('/demo-files/data/:resource-:action.json/', null,
+    return $resource('../demo-files/data/:resource-:action.json/', null,
         {
             'query': {method: 'GET', params: {resource: 'folder', action: 'single'}, isArray: true},
         });

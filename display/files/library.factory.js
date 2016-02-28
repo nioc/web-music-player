@@ -8,7 +8,7 @@ angular
 .factory('Library', Library);
 
 function Library($resource) {
-    return $resource('/demo-files/data/:resource-:action-:identifer.json/', null,
+    return $resource('../demo-files/data/:resource-:action-:identifer.json/', null,
     {
         'query': {method: 'GET', params: {resource: 'library', action: 'query'}, isArray: true},
         'save': {method: 'POST', params: {resource: 'library', action: 'query'}, isArray: true},

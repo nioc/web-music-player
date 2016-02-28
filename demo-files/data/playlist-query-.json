@@ -2,7 +2,7 @@
     {
         "id": 8,
         "title": "C'est Si Bon",
-        "file": "/demo-files/TS487613.mp3",
+        "file": "../demo-files/TS487613.mp3",
         "userId": "1",
         "sequence": 1,
         "album": {
@@ -17,7 +17,7 @@
     {
         "id": 6,
         "title": "Caravan",
-        "file": "/demo-files/TS481330.mp3",
+        "file": "../demo-files/TS481330.mp3",
         "userId": "1",
         "sequence": 3,
         "album": {
@@ -32,7 +32,7 @@
     {
         "id": 2,
         "title": "Fine And Mellow",
-        "file": "/demo-files/COM24405-A.mp3",
+        "file": "../demo-files/COM24405-A.mp3",
         "userId": "1",
         "sequence": 4,
         "album": {
@@ -47,7 +47,7 @@
     {
         "id": 4,
         "title": "Georgia On My Mind",
-        "file": "/demo-files/TS488051.mp3",
+        "file": "../demo-files/TS488051.mp3",
         "userId": "1",
         "sequence": 5,
         "album": {
@@ -62,7 +62,7 @@
     {
         "id": 1,
         "title": "I'm Your Hoochie Cooche Man",
-        "file": "/demo-files/CHE1560X.mp3",
+        "file": "../demo-files/CHE1560X.mp3",
         "userId": "1",
         "sequence": 6,
         "album": {
@@ -77,7 +77,7 @@
     {
         "id": 9,
         "title": "Minnie The Moocher",
-        "file": "/demo-files/RiBru6074.mp3",
+        "file": "../demo-files/RiBru6074.mp3",
         "userId": "1",
         "sequence": 7,
         "album": {
@@ -92,7 +92,7 @@
     {
         "id": 5,
         "title": "My man",
-        "file": "/demo-files/DEC24638x.mp3",
+        "file": "../demo-files/DEC24638x.mp3",
         "userId": "1",
         "sequence": 8,
         "album": {
@@ -107,7 +107,7 @@
     {
         "id": 3,
         "title": "Rum And Coca-Cola",
-        "file": "/demo-files/1945_001.mp3",
+        "file": "../demo-files/1945_001.mp3",
         "userId": "1",
         "sequence": 9,
         "album": {
@@ -122,7 +122,7 @@
     {
         "id": 7,
         "title": "When A Woman Loves A Man",
-        "file": "/demo-files/COL22284-2.mp3",
+        "file": "../demo-files/COL22284-2.mp3",
         "userId": "1",
         "sequence": 10,
         "album": {

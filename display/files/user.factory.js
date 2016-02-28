@@ -5,7 +5,7 @@
 'use strict';
 //User factory
 function User($resource) {
-    return $resource('/demo-files/data/:resource-:action-:id.json/', null,
+    return $resource('../demo-files/data/:resource-:action-:id.json/', null,
         {
             'query': {method: 'GET', params: {resource: 'user', action: 'query'}, isArray: true},
             'get': {method: 'GET', params: {resource: 'user', action: 'single'}, isArray: false},
