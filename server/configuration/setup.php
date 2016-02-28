@@ -10,19 +10,22 @@
 //get posted parameters and set default value
 include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
 $configuration = new Configuration();
-$rootDbLogin = isset($_POST['rootDbLogin']) ?      filter_input(INPUT_POST, 'rootDbLogin',     FILTER_SANITIZE_STRING) : 'root';
+$rootDbLogin = isset($_POST['rootDbLogin']) ? filter_input(INPUT_POST, 'rootDbLogin', FILTER_SANITIZE_STRING) : 'root';
 $rootDbPassword = filter_input(INPUT_POST, 'rootDbPassword',  FILTER_SANITIZE_STRING);
-$wmpDbLogin = isset($_POST['wmpDbLogin']) ?       filter_input(INPUT_POST, 'wmpDbLogin',      FILTER_SANITIZE_STRING) : $configuration->get('dbUser');
-$wmpDbPassword = isset($_POST['wmpDbPassword']) ?    filter_input(INPUT_POST, 'wmpDbPassword',   FILTER_SANITIZE_STRING) : $configuration->get('dbPwd');
-$wmpDbName = isset($_POST['wmpDbName']) ?        filter_input(INPUT_POST, 'wmpDbName',       FILTER_SANITIZE_STRING) : $configuration->get('dbName');
-$process = filter_input(INPUT_POST, 'process',         FILTER_SANITIZE_STRING);
-$wmpDbDrop = isset($_POST['wmpDbDrop']) ?        filter_input(INPUT_POST, 'wmpDbDrop',       FILTER_SANITIZE_STRING) : 0;
+$wmpDbLogin = isset($_POST['wmpDbLogin']) ? filter_input(INPUT_POST, 'wmpDbLogin', FILTER_SANITIZE_STRING) : $configuration->get('dbUser');
+$wmpDbPassword = isset($_POST['wmpDbPassword']) ? filter_input(INPUT_POST, 'wmpDbPassword', FILTER_SANITIZE_STRING) : $configuration->get('dbPwd');
+$wmpDbName = isset($_POST['wmpDbName']) ? filter_input(INPUT_POST, 'wmpDbName', FILTER_SANITIZE_STRING) : $configuration->get('dbName');
+$process = filter_input(INPUT_POST, 'process', FILTER_SANITIZE_STRING);
+$wmpDbDrop = isset($_POST['wmpDbDrop']) ? filter_input(INPUT_POST, 'wmpDbDrop', FILTER_SANITIZE_STRING) : 0;
+$hashKey = isset($_POST['hashKey']) ? filter_input(INPUT_POST, 'hashKey', FILTER_SANITIZE_STRING) : $configuration->get('hashKey');
+$adminUserPwd = isset($_POST['adminUserPwd']) ? filter_input(INPUT_POST, 'adminUserPwd', FILTER_SANITIZE_STRING) : '';
 
 //initialize variables
 $results = array();
 $results['user'] = array();
 $results['schema'] = array();
 $results['tables'] = array();
+$results['local'] = array();
 
 if (isset($process) &&
         $rootDbLogin !== null && $rootDbLogin !== '' &&
@@ -46,8 +49,8 @@ if (isset($process) &&
         $query->bindValue(':user', $wmpDbLogin);
         $query->bindValue(':password', $wmpDbPassword);
         if ($query->execute()) {
-            fwrite($localConfigFile, "dbUser = $wmpDbLogin\n");
-            fwrite($localConfigFile, "dbPwd = $wmpDbPassword\n");
+            fwrite($localConfigFile, "dbUser = \"$wmpDbLogin\"\n");
+            fwrite($localConfigFile, "dbPwd = \"$wmpDbPassword\"\n");
             $results['user']['Database user'] = '<span class="valid"> Ok </span>User `'.$wmpDbLogin.'` is set';
             //create schema
             if ($wmpDbDrop) {
@@ -58,7 +61,7 @@ if (isset($process) &&
             $queryString = "CREATE SCHEMA IF NOT EXISTS $wmpDbName DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;";
             $query = $connection->prepare($queryString);
             if ($query->execute()) {
-                fwrite($localConfigFile, "dbName = $wmpDbName\n");
+                fwrite($localConfigFile, "dbName = \"$wmpDbName\"\n");
                 $results['schema']['Database schema'] = '<span class="valid"> Ok </span>Schema `'.$wmpDbName.'` is set';
                 //grant user on schema
                 $queryString = "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE ON $wmpDbName.* TO :user@'localhost';";
@@ -70,16 +73,29 @@ if (isset($process) &&
                     $sqlFilename = $_SERVER['DOCUMENT_ROOT'].'/server/configuration/create.sql';
                     $array = explode(";\n", file_get_contents($sqlFilename));
                     for ($i = 0; $i < count($array); ++$i) {
-                        $queryString = $array[$i];
-                        if ($queryString !== '') {
+                        $queryString = str_replace("\n", ' ', filter_var($array[$i]));
+                        if ($queryString !== '' && $queryString !== ' ') {
                             $queryString .= ';';
                             $queryString = str_replace('`wmp`', "`$wmpDbName`", $queryString);
                             $query = $connection->prepare($queryString);
                             if (!$query->execute()) {
+                                error_log(json_encode($query->errorInfo()));
                                 $results['tables']['Tables creation'] = '<span class="error"> Failed </span>'.$query->errorInfo()[2];
+                                $continue = false;
                                 break;
                             }
                             $results['tables']['Tables creation'] = '<span class="valid"> Ok </span>'.$i.' tables set';
+                            $continue = true;
+                        }
+                    }
+                    $results['tables']['Admin user account'] = '<span class="error"> Skipped </span> Admin user account password has not been changed';
+                    if ($continue && $adminUserPwd !== '') {
+                        $results['tables']['Admin user account'] = '<span class="valid"> Ok </span> Admin user account password has been changed';
+                        //update admin user password
+                        $query = $connection->prepare('UPDATE `user` SET `password`=:password WHERE `id`=1 LIMIT 1;');
+                        $query->bindValue(':password', md5($adminUserPwd), PDO::PARAM_STR);
+                        if (!$query->execute()) {
+                            $results['tables']['Admin user account'] = '<span class="error"> Failed </span> Admin user account password has not been changed';
                         }
                     }
                 } else {
@@ -94,10 +110,12 @@ if (isset($process) &&
     } catch (Exception $exception) {
         $results['user']['Database access'] = '<span class="error"> Failed </span>'.$exception->getMessage();
     }
-    fwrite($localConfigFile, "\n");
+    //update local hash key
+    fwrite($localConfigFile, "hashKey = \"$hashKey\"\n");
+    $results['local']['Hash key'] = '<span class="valid"> Ok </span> tokens will use your cipher';
+    //achieve local configuration file
     fclose($localConfigFile);
 }
-
 ?>
 <!doctype html>
 <html>
@@ -154,12 +172,22 @@ if (isset($process) &&
                 <label for="wmpDbDrop">Drop existing schema</label>
                 <input type="checkbox" name="wmpDbDrop" id="wmpDbDrop"/>
             </p>
+            <p>
+                <label for="hashKey">Hash key (used for token signing)</label>
+                <input type="text" name="hashKey" id="hashKey" placeholder="Your cipher" required="required" value="<?=$hashKey?>"/>
+            </p>
+            <p>
+                <label for="adminUserPwd">Admin user password</label>
+                <input type="password" name="adminUserPwd" id="adminUserPwd" placeholder="Admin user password" required="required" value="<?=$adminUserPwd?>"/>
+            </p>
             <input type="submit" name="process" value="process">
             <?foreach ($results['user'] as $key => $value):?><p><span><?=$key?></span><span><?=$value?></span></p>
             <?endforeach;?>
             <?foreach ($results['schema'] as $key => $value):?><p><span><?=$key?></span><span><?=$value?></span></p>
             <?endforeach;?>
             <?foreach ($results['tables'] as $key => $value):?><p><span><?=$key?></span><span><?=$value?></span></p>
+            <?endforeach;?>
+            <?foreach ($results['local'] as $key => $value):?><p><span><?=$key?></span><span><?=$value?></span></p>
             <?endforeach;?>
         </form>
     </body>

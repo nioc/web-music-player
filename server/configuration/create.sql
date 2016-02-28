@@ -71,7 +71,6 @@ CREATE TABLE `wmp`.`track` (
   CONSTRAINT `track_fk_2` FOREIGN KEY (`artist`) REFERENCES `artist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tracks';
 
-
 CREATE TABLE `wmp`.`playlist` (
   `userId` smallint(6) unsigned NOT NULL COMMENT 'Owner',
   `sequence` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Sequence for ordering tracks',
