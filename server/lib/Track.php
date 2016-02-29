@@ -95,8 +95,8 @@ class Track
      */
     public function populate()
     {
-        global $connection;
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        $connection = new DatabaseConnection();
         //prepare query
         $query = $connection->prepare('SELECT `track`.`id`, `track`.`track`, `track`.`title`, `track`.`file`, `track`.`time`, `track`.`year`, `track`.`artist`, `artist`.`name` AS `artistName`, `track`.`album`, `album`.`name` AS `albumName` FROM `track` INNER JOIN `artist` ON `artist`.`id` = `track`.`artist` INNER JOIN `album` ON `album`.`id` = `track`.`album` WHERE `track`.`id` = :id LIMIT 1;');
         $query->bindValue(':id', $this->id, PDO::PARAM_INT);
@@ -178,8 +178,8 @@ class Track
     {
         $error = '';
         if (is_int($this->id)) {
-            global $connection;
-            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+            $connection = new DatabaseConnection();
             $query = $connection->prepare('UPDATE `track` SET `title`=:title, `track`=:track, `year`=:year WHERE `id`=:id LIMIT 1;');
             $query->bindValue(':id', $this->id, PDO::PARAM_INT);
             $query->bindValue(':title', $this->title, PDO::PARAM_STR);
@@ -207,8 +207,8 @@ class Track
         if (!is_null($id)) {
             $this->id = $id;
         }
-        global $connection;
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        $connection = new DatabaseConnection();
         $query = $connection->prepare('SELECT `file` FROM `track` WHERE `id`=:id LIMIT 1;');
         $query->bindValue(':id', $this->id, PDO::PARAM_INT);
         $query->execute();
@@ -227,8 +227,8 @@ class Track
      */
     public function insert()
     {
-        global $connection;
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        $connection = new DatabaseConnection();
         $query = $connection->prepare('INSERT INTO `track` (`file`, `album`, `year`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `mbid`, `updateTime`, `additionTime`, `composer`) VALUES (:file, :album, :year, :artist, :title, :bitrate, :rate, :mode, :size, :time, :track, :mbid, unix_timestamp(), unix_timestamp(), :composer);');
         $query->bindValue(':file',     $this->file,     PDO::PARAM_STR);
         $query->bindValue(':album',    $this->album,    PDO::PARAM_INT);
@@ -355,8 +355,8 @@ class Tracks
      */
     public function populateTracks($parameters)
     {
-        global $connection;
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        $connection = new DatabaseConnection();
         //handle requested parameters
         $sqlCondition = '';
         foreach ($parameters as $parameter => $value) {

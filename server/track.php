@@ -30,7 +30,6 @@ if (!$token->decode() || !property_exists($token->payload, 'sub')) {
     return;
 }
 //get filename
-include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
 $track = new Track();
 $filename = $track->getFile($trackId);

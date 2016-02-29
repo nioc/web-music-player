@@ -58,8 +58,8 @@ class User
     public function populate()
     {
         if (is_int($this->id)) {
-            global $connection;
-            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+            $connection = new DatabaseConnection();
             $query = $connection->prepare('SELECT * FROM `user` WHERE `id`=:id LIMIT 1;');
             $query->bindValue(':id', $this->id, PDO::PARAM_INT);
             if ($query->execute() && $query->rowCount() > 0) {
@@ -134,8 +134,8 @@ class User
     public function create($user, &$error)
     {
         $error = '';
-        global $connection;
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        $connection = new DatabaseConnection();
         $query = $connection->prepare('INSERT INTO `user` (`login`, `name`, `email`, `password`, `status`) VALUES (:login, :name, :email, :password, :status);');
         $query->bindValue(':login', $this->login, PDO::PARAM_STR);
         $query->bindValue(':name', $this->name, PDO::PARAM_STR);
@@ -165,8 +165,8 @@ class User
      */
     public function updateScope($scope)
     {
-        global $connection;
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        $connection = new DatabaseConnection();
         $scopes = explode(' ', $scope);
         $result = true;
         $query = $connection->prepare('DELETE FROM `scope` WHERE `userId` = :userId;');
@@ -200,8 +200,8 @@ class User
     {
         $error = '';
         if (is_int($user->id)) {
-            global $connection;
-            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+            $connection = new DatabaseConnection();
             $query = $connection->prepare('UPDATE `user` SET `login`=:login, `name`=:name, `email`=:email, `password`=:password, `status`=:status WHERE `id`=:id LIMIT 1;');
             $query->bindValue(':id', $this->id, PDO::PARAM_INT);
             $query->bindValue(':login', $this->login, PDO::PARAM_STR);
@@ -235,8 +235,8 @@ class User
     {
         $this->login = $login;
         $this->password = $password;
-        global $connection;
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        $connection = new DatabaseConnection();
         $query = $connection->prepare('SELECT * FROM `user` WHERE `login`=:login AND `password`=:password LIMIT 1;');
         $query->bindValue(':login', $this->login, PDO::PARAM_STR);
         $query->bindValue(':password', md5($this->password), PDO::PARAM_STR);
@@ -256,8 +256,8 @@ class User
      */
     public function getScope()
     {
-        global $connection;
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        $connection = new DatabaseConnection();
         $query = $connection->prepare('SELECT `scope` FROM `scope` WHERE `userId`=:userId;');
         $query->bindValue(':userId', $this->id, PDO::PARAM_INT);
         if ($query->execute()) {
@@ -294,8 +294,8 @@ class User
      */
     public function getAllUsers()
     {
-        global $connection;
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        $connection = new DatabaseConnection();
         $query = $connection->prepare('SELECT * FROM `user`;');
         if ($query->execute() && $query->rowCount() > 0) {
             //return array of users

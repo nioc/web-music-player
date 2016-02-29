@@ -71,8 +71,8 @@ class Album
      */
     private function insert()
     {
-        global $connection;
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        $connection = new DatabaseConnection();
         $query = $connection->prepare('INSERT INTO `album` (`name`, `mbid`, `artist`, `year`, `disk`, `country`, `mbidGroup`) VALUES ( :name, :mbid, :artist, :year, :disk, :country, :mbidGroup);');
         $query->bindValue(':name',      $this->name,      PDO::PARAM_STR);
         $query->bindValue(':mbid',      $this->mbid,      PDO::PARAM_STR);
@@ -127,8 +127,8 @@ class Album
      */
     public function populate($parameters)
     {
-        global $connection;
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        $connection = new DatabaseConnection();
         //handle requested parameters
         $sqlCondition = '';
         foreach ($parameters as $parameter => $value) {
@@ -236,8 +236,8 @@ class Album
     {
         $error = '';
         if (is_int($this->id)) {
-            global $connection;
-            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+            $connection = new DatabaseConnection();
             $query = $connection->prepare('UPDATE `album` SET `name`=:name, `year`=:year WHERE `id`=:id LIMIT 1;');
             $query->bindValue(':id', $this->id, PDO::PARAM_INT);
             $query->bindValue(':name', $this->name, PDO::PARAM_STR);
@@ -259,9 +259,9 @@ class Album
      */
     public function getTracks()
     {
-        global $connection;
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        $connection = new DatabaseConnection();
         $query = $connection->prepare('SELECT `track`.`id`, `track`.`track`, `track`.`title`, `track`.`time`, `track`.`artist`, `artist`.`name` AS `artistName` FROM `track` INNER JOIN `artist` ON `artist`.`id` = `track`.`artist` WHERE `track`.`album` = :albumId  ORDER BY `track`.`track` ASC;');
         $query->bindValue(':albumId', $this->id, PDO::PARAM_INT);
         if ($query->execute()) {
@@ -285,8 +285,8 @@ class Album
     public function delete()
     {
         if (is_int($this->id)) {
-            global $connection;
-            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Connection.php';
+            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+            $connection = new DatabaseConnection();
             $query = $connection->prepare('DELETE FROM `album` WHERE `id` = :id LIMIT 1;');
             $query->bindValue(':id', $this->id, PDO::PARAM_INT);
             //returns deletion result
