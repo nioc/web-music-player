@@ -17,7 +17,7 @@
         function submit() {
             var user = LocalUser;
             $http
-            .post('../demo-files/data/token.json', $scope.user)
+            .get('../demo-files/data/token.json', $scope.user)
             .then(successCallback, errorCallback);
             function successCallback(response) {
                 if (user.handleToken(response.data)) {

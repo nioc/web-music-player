@@ -11,7 +11,7 @@ function Library($resource) {
     return $resource('../demo-files/data/:resource-:action-:identifer.json/', null,
     {
         'query': {method: 'GET', params: {resource: 'library', action: 'query'}, isArray: true},
-        'save': {method: 'POST', params: {resource: 'library', action: 'query'}, isArray: true},
-        'update': {method: 'PUT', params: {resource: 'library', action: 'query'}}
+        'save': {method: 'GET', params: {resource: 'library', action: 'query'}, isArray: true},
+        'update': {method: 'GET', params: {resource: 'library', action: 'query'}}
     });
 }
