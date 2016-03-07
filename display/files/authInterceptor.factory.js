@@ -14,7 +14,7 @@ function AuthInterceptor(LocalUser, $q, $window) {
         request: function(config) {
             //before each request, add token if it exists
             var token = LocalUser.getToken();
-            if (token && (LocalUser.exp > Math.trunc(Date.now() / 1000))) {
+            if (token && (LocalUser.exp > parseInt(Date.now() / 1000))) {
                 //valid token to provide, add it in the Authorization header
                 config.headers['Authorization'] = 'Bearer ' + token;
             }

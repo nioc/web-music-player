@@ -100,7 +100,7 @@ function PlayerController($scope, Playlist, PlaylistItem, Audio, LocalUser, $win
     var player = this;
     //check user profile
     player.user = LocalUser;
-    if (!player.user.getProfile() || !Number.isInteger(player.user.id)) {
+    if (!player.user.getProfile() || (typeof player.user.id !== 'number')) {
         $window.location = 'index.html';
         //redirect to sign in page
         return false;
@@ -133,7 +133,7 @@ function PlayerController($scope, Playlist, PlaylistItem, Audio, LocalUser, $win
         filter: '.grid-header',
         sort: true,
         animation: 1000,
-        onUpdate(evt) {
+        onUpdate: function(evt) {
             //apply local change
             if (evt.oldIndex < player.playlist.currentTrack && evt.newIndex >= player.playlist.currentTrack) {
                 player.playlist.currentTrack--;
@@ -294,7 +294,7 @@ function LibraryController(Library, Playlist) {
             album: false,
             title: false
         },
-        query() {
+        query: function() {
             librarys.tracks = Library.query({
                 title: this.title,
                 album: this.album,
@@ -342,7 +342,7 @@ function MenuController(LocalUser, $window, $scope) {
     menu.toggle = toggle;
     //check user profile
     var user = LocalUser;
-    if (!user.getProfile() || !Number.isInteger(user.id)) {
+    if (!user.getProfile() || (typeof user.id !== 'number')) {
         $window.location = 'index.html';
         //no valid token found, redirect to sign in page
         return false;
@@ -458,7 +458,7 @@ function UserController(LocalUser, User, $routeParams) {
     profile.result = {text: '', class: ''};
     profile.submit = submit;
     if ($routeParams && $routeParams.id) {
-        if (Number.isInteger(parseInt($routeParams.id))) {
+        if (parseInt($routeParams.id)) {
             //edit existing user, get his profile from url id parameter
             profile.user = User.get({id: $routeParams.id});
             profile.title = 'Edit user';
