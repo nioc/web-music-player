@@ -21,7 +21,7 @@ function LocalUser($window) {
         scope: [],
         exp: null,
         //populate attributes with a payload
-        populate(payload) {
+        populate: function(payload) {
             this.token = payload.token;
             this.id = payload.id;
             this.login = payload.login;
@@ -30,7 +30,7 @@ function LocalUser($window) {
             this.exp = payload.exp;
         },
         //return user profile
-        getProfile() {
+        getProfile: function() {
             if (this.getToken()) {
                 var profile = JSON.parse(JSON.stringify(this));
                 return profile;
@@ -38,7 +38,7 @@ function LocalUser($window) {
             return false;
         },
         //return stored token
-        getToken() {
+        getToken: function() {
             try {
                 var payload = JSON.parse($window.localStorage.user);
                 this.populate(payload);
@@ -48,7 +48,7 @@ function LocalUser($window) {
             }
         },
         //handle received token and store it
-        handleToken(data) {
+        handleToken: function(data) {
             if (!data || !data.token) {
                 //token is not provided in data
                 return false;
@@ -75,7 +75,7 @@ function LocalUser($window) {
             }
         },
         //delete token
-        deleteToken() {
+        deleteToken: function() {
             delete $window.localStorage.user;
         }
     };
