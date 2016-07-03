@@ -13,7 +13,7 @@ CREATE TABLE `wmp`.`user` (
 
 CREATE TABLE `wmp`.`scope` (
   `userId` smallint(6) unsigned NOT NULL AUTO_INCREMENT COMMENT 'User identifier',
-  `scope` varchar(32) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Scope',
+  `scope` varchar(32) CHARACTER SET utf8 NOT NULL COMMENT 'Scope',
   PRIMARY KEY (`userId`,`scope`),
   KEY `userId` (`userId`),
   CONSTRAINT `scope_fk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE

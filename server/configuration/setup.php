@@ -19,6 +19,7 @@ $process = filter_input(INPUT_POST, 'process', FILTER_SANITIZE_STRING);
 $wmpDbDrop = isset($_POST['wmpDbDrop']) ? filter_input(INPUT_POST, 'wmpDbDrop', FILTER_SANITIZE_STRING) : 0;
 $hashKey = isset($_POST['hashKey']) ? filter_input(INPUT_POST, 'hashKey', FILTER_SANITIZE_STRING) : $configuration->get('hashKey');
 $adminUserPwd = isset($_POST['adminUserPwd']) ? filter_input(INPUT_POST, 'adminUserPwd', FILTER_SANITIZE_STRING) : '';
+$filesPath = isset($_POST['filesPath']) ? filter_input(INPUT_POST, 'filesPath', FILTER_SANITIZE_STRING) : $configuration->get('filesPath');
 
 //initialize variables
 $results = array();
@@ -116,6 +117,22 @@ if (isset($process) &&
     //achieve local configuration file
     fclose($localConfigFile);
 }
+if (isset($process) && $filesPath !== null && $filesPath !== '') {
+    //check if folder exists
+    $results['local']['Files path'] = '<span class="error"> Failed </span> Folder '.$filesPath.' do not exists';
+    if (file_exists($filesPath)) {
+        //check if folder is readable
+        $results['local']['Files path'] = '<span class="error"> Failed </span> Folder '.$filesPath.' can not be read by the webserver user, check permissions';
+        if (is_readable($filesPath)) {
+            //update local root files path
+            $localConfigFile = fopen('local.ini', 'w');
+            fwrite($localConfigFile, "filesPath = \"$filesPath\"\n");
+            $results['local']['Files path'] = '<span class="valid"> Ok </span> Your library root path is set to '.$filesPath;
+            //achieve local configuration file
+            fclose($localConfigFile);
+        }
+    }
+}
 ?>
 <!doctype html>
 <html>
@@ -130,7 +147,7 @@ if (isset($process) &&
         form p {
             display: table-row;
         }
-        label, input {
+        label, input, button {
             display: table-cell;
             margin: 3px 10px;
         }
@@ -149,45 +166,52 @@ if (isset($process) &&
         </p>
         <form method="post">
             <p>
-                <label for="rootDbLogin">Root database login</label>
+                <label for="rootDbLogin">Root database login*</label>
                 <input type="text" name="rootDbLogin" id="rootDbLogin" placeholder="root" required="required" value="<?=$rootDbLogin?>"/>
             </p>
             <p>
-                <label for="rootDbPassword">Root database password</label>
+                <label for="rootDbPassword">Root database password*</label>
                 <input type="password" name="rootDbPassword" id="rootDbPassword" placeholder="Your MySQL root password" required="required" value="<?=$rootDbPassword?>"/>
             </p>
             <p>
-                <label for="wmpDbLogin">WMP database login</label>
+                <label for="wmpDbLogin">WMP database login*</label>
                 <input type="text" name="wmpDbLogin" id="wmpDbLogin" placeholder="wmp" required="required" value="<?=$wmpDbLogin?>"/>
             </p>
             <p>
-                <label for="wmpDbPassword">WMP batabase password</label>
+                <label for="wmpDbPassword">WMP batabase password*</label>
                 <input type="password" name="wmpDbPassword" id="wmpDbPassword" placeholder="wmp" required="required" value="<?=$wmpDbPassword?>"/>
             </p>
             <p>
-                <label for="wmpDbName">WMP schema name</label>
+                <label for="wmpDbName">WMP schema name*</label>
                 <input type="text" name="wmpDbName" id="wmpDbName" placeholder="wmp" required="required" value="<?=$wmpDbName?>"/>
             </p>
             <p>
-                <label for="wmpDbDrop">Drop existing schema</label>
+                <label for="wmpDbDrop">Drop existing schema*</label>
                 <input type="checkbox" name="wmpDbDrop" id="wmpDbDrop"/>
             </p>
             <p>
-                <label for="hashKey">Hash key (used for token signing)</label>
+                <label for="hashKey">Hash key (used for token signing)*</label>
                 <input type="text" name="hashKey" id="hashKey" placeholder="Your cipher" required="required" value="<?=$hashKey?>"/>
             </p>
             <p>
-                <label for="adminUserPwd">Admin user password</label>
+                <label for="adminUserPwd">Admin user password*</label>
                 <input type="password" name="adminUserPwd" id="adminUserPwd" placeholder="Admin user password" required="required" value="<?=$adminUserPwd?>"/>
             </p>
-            <input type="submit" name="process" value="process">
-            <?foreach ($results['user'] as $key => $value):?><p><span><?=$key?></span><span><?=$value?></span></p>
+            <p>
+                <label for="filesPath">Root files path*</label>
+                <input type="text" name="filesPath" id="filesPath" placeholder="/home/user/music" required="required" value="<?=$filesPath?>"/>
+            </p>
+            <p>
+                <label></label>
+                <button type="submit" class="plain-button" name="process" value="process">Process</button>
+            </p>
+            <?foreach ($results['user'] as $key => $value):?><p><label><?=$key?>:</label><span>&nbsp;<?=$value?></span></p>
             <?endforeach;?>
-            <?foreach ($results['schema'] as $key => $value):?><p><span><?=$key?></span><span><?=$value?></span></p>
+            <?foreach ($results['schema'] as $key => $value):?><p><label><?=$key?>:</label><span>&nbsp;<?=$value?></span></p>
             <?endforeach;?>
-            <?foreach ($results['tables'] as $key => $value):?><p><span><?=$key?></span><span><?=$value?></span></p>
+            <?foreach ($results['tables'] as $key => $value):?><p><label><?=$key?>:</label><span>&nbsp;<?=$value?></span></p>
             <?endforeach;?>
-            <?foreach ($results['local'] as $key => $value):?><p><span><?=$key?></span><span><?=$value?></span></p>
+            <?foreach ($results['local'] as $key => $value):?><p><label><?=$key?>:</label><span>&nbsp;<?=$value?></span></p>
             <?endforeach;?>
         </form>
     </body>

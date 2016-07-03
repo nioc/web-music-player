@@ -33,12 +33,15 @@ header * {
     color: #F50057;
     text-shadow: 0 0 1rem #000000;
 }
-input[type="text"] {
+input[type="text"], input[type="password"] {
     box-sizing: border-box;
     border: 1px solid #222222;
     border-radius: 3px;
     padding: 3px 6px;
     box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+}
+label {
+    text-align: right;
 }
 .auth-form,
 .form {
