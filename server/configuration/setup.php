@@ -124,6 +124,10 @@ if (isset($process) && $filesPath !== null && $filesPath !== '') {
         //check if folder is readable
         $results['local']['Files path'] = '<span class="error"> Failed </span> Folder '.$filesPath.' can not be read by the webserver user, check permissions';
         if (is_readable($filesPath)) {
+            //add '/' on path if missing
+            if (substr($filesPath,-1) != '/') {
+                $filesPath .= '/';
+            }
             //update local root files path
             $localConfigFile = fopen('local.ini', 'w');
             fwrite($localConfigFile, "filesPath = \"$filesPath\"\n");

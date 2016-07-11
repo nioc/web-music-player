@@ -60,10 +60,12 @@ class HttpRequest
         if (count($this->parameters) > 0) {
             $this->url .= '?'.http_build_query($this->parameters);
         }
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
+        $configuration = new Configuration();
         $opts = array('http' => array(
                 'method' => $method,
                 'timeout' => $timeout,
-                'user_agent' => 'WMP',
+                'user_agent' => $configuration->get('userAgent')
             ),
         );
         if ($body !== null) {
@@ -78,7 +80,8 @@ class HttpRequest
         //try the call
         try {
             $stream = @fopen($this->url, 'r', false, $context);
-            if (!$stream) {
+            if ($stream === false) {
+                error_log('SRV-HTTP-OPEN Failed to open stream: '.$this->url);
                 //there was an error, return false
                 return false;
             }
