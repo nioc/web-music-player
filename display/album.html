@@ -18,17 +18,29 @@
                             <span class="value" ng-if="album.editMode"><input type="text" ng-model="album.album.year"></span>
                         </li>
                         <li class="table-row">
-                            <span class="label">Disk</span>
-                            <span class="value" ng-bind="::album.album.disk"></span>
-                        </li>
-                        <li class="table-row">
                             <span class="label">Country</span>
-                            <span class="value" ng-bind="::album.album.country"></span>
+                            <span class="value" ng-if="!album.editMode" ng-bind="::album.album.country"></span>
+                            <span class="value" ng-if="album.editMode"><input type="text" ng-model="album.album.country"></span>
                         </li>
                     </ul>
                     <button class="plain-button" ng-if="!album.editMode" ng-click="album.remove()"><i class="fa fa-trash"></i> Delete album</button>
                     <button class="plain-button" ng-if="!album.editMode" ng-click="album.edit()"><i class="fa fa-pencil"></i> Edit album</button>
                     <button class="plain-button" ng-if="album.editMode" ng-click="album.save()"><i class="fa fa-save"></i> Save</button>
+                    <button class="plain-button" ng-if="album.editMode" ng-click="album.searchMusicBrainz()"><i class="fa fa-search"></i> Search in MusicBrainz</button>
+                    <ul class="table" ng-if="album.MusicBrainzResults.length">
+	                    <li class="grid-header">
+	                        <span class="grid-cell">Country</span>
+	                        <span class="grid-cell">Name</span>
+	                        <span class="grid-cell">Year</span>
+	                        <span class="grid-cell">Artist</span>
+	                    </li>
+                    	<li class="grid-row clickable" ng-repeat="musicBrainzAlbum in album.MusicBrainzResults | orderBy:['name', 'mbid'] track by musicBrainzAlbum.mbid" title="{{::musicBrainzAlbum.description}}" ng-click="album.useMusicBrainz(musicBrainzAlbum);">
+                    		<span class="grid-cell" ng-bind="::musicBrainzAlbum.country"></span>
+                    		<span class="grid-cell" ng-bind="::musicBrainzAlbum.name"></span>
+                    		<span class="grid-cell" ng-bind="::musicBrainzAlbum.year"></span>
+                    		<span class="grid-cell" ng-bind="::musicBrainzAlbum.artist.label"></span>
+                    	</li>
+                    </ul>
                 </fieldset>
                 <ul class="table">
                     <li class="grid-header">

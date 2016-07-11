@@ -4,6 +4,8 @@
 Web Music Player is a simple way to play your own music on any device connected to the web (pc, smartphone, tablet, ...).
 It can work as a standalone application or in your smartphone browser.
 
+You can manage your music with the [MusicBrainz](https://musicbrainz.org) API integration.
+
 Live demo [here](http://nioc.github.io/web-music-player/).
 
 ## Installation and usage

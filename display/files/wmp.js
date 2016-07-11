@@ -1,6 +1,6 @@
 /*
  * main AngularJS code for wmp
- * version 1.0.0
+ * version 1.1.0
  */
 'use strict';
 angular
@@ -27,9 +27,9 @@ angular
 //declare users management controller
 .controller('UsersController', ['User', UsersController])
 //declare album controller
-.controller('AlbumController', ['$routeParams', '$location', 'Playlist', 'Album', AlbumController])
+.controller('AlbumController', ['$routeParams', '$location', 'Playlist', 'Album', 'MusicBrainz', AlbumController])
 //declare artist controller
-.controller('ArtistController', ['$routeParams', '$location', 'Playlist', 'Artist', ArtistController])
+.controller('ArtistController', ['$routeParams', '$location', 'Playlist', 'Artist', 'MusicBrainz', ArtistController])
 //declare track controller
 .controller('TrackController', ['$routeParams', 'Library', TrackController])
 //declare filter converting duration in seconds into a datetime
@@ -514,13 +514,16 @@ function UsersController(User) {
     usersManagement.users = User.query();
 }
 //AlbumController function
-function AlbumController($routeParams, $location, Playlist, Album) {
+function AlbumController($routeParams, $location, Playlist, Album, MusicBrainz) {
     var album = this;
     album.album = Album.get({id: $routeParams.id});
     album.editMode = false;
+    album.MusicBrainzResults = [];
     album.remove = remove;
     album.edit = edit;
     album.save = save;
+    album.searchMusicBrainz = searchMusicBrainz;
+    album.useMusicBrainz = useMusicBrainz;
     //add link to Playlist service ("add track to playlist" function)
     album.add = Playlist.add;
     function remove() {
@@ -540,15 +543,27 @@ function AlbumController($routeParams, $location, Playlist, Album) {
     function save() {
         album.album.$update(successCallback, errorCallback);
     }
+    function searchMusicBrainz() {
+        album.MusicBrainzResults = MusicBrainz.query({type: 'albums', title: album.album.name});
+    }
+    function useMusicBrainz(musicBrainzAlbum) {
+        album.album.name = musicBrainzAlbum.name;
+        album.album.country = musicBrainzAlbum.country;
+        album.album.year = musicBrainzAlbum.year;
+        album.album.mbid = musicBrainzAlbum.mbid;
+    }
 }
 //ArtistController function
-function ArtistController($routeParams, $location, Playlist, Artist) {
+function ArtistController($routeParams, $location, Playlist, Artist, MusicBrainz) {
     var artist = this;
     artist.artist = Artist.get({id: $routeParams.id});
     artist.editMode = false;
+    artist.MusicBrainzResults = [];
     artist.remove = remove;
     artist.edit = edit;
     artist.save = save;
+    artist.searchMusicBrainz = searchMusicBrainz;
+    artist.useMusicBrainz = useMusicBrainz;
     //add link to Playlist service ("add track to playlist" function)
     artist.add = Playlist.add;
     function remove() {
@@ -567,6 +582,15 @@ function ArtistController($routeParams, $location, Playlist, Artist) {
     }
     function save() {
         artist.artist.$update(successCallback, errorCallback);
+    }
+    function searchMusicBrainz() {
+        artist.MusicBrainzResults = MusicBrainz.query({type: 'artists', name: artist.artist.name});
+    }
+    function useMusicBrainz(musicBrainzArtist) {
+        artist.artist.name = musicBrainzArtist.name;
+        artist.artist.country = musicBrainzArtist.country;
+        artist.artist.summary = musicBrainzArtist.summary;
+        artist.artist.mbid = musicBrainzArtist.mbid;
     }
 }
 //TrackController function

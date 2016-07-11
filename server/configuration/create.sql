@@ -22,7 +22,7 @@ CREATE TABLE `wmp`.`scope` (
 CREATE TABLE `wmp`.`artist` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Identifier',
   `name` varchar(255) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Artist name',
-  `mbid` varchar(1369) CHARACTER SET utf8 DEFAULT NULL COMMENT 'MusicBrainz artist identifier',
+  `mbid` varchar(36) CHARACTER SET utf8 DEFAULT NULL COMMENT 'MusicBrainz artist identifier',
   `summary` text CHARACTER SET utf8 COMMENT 'Biography of the artist',
   `country` varchar(64) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Country where the group come from',
   PRIMARY KEY (`id`),

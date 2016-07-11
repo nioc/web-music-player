@@ -5,7 +5,7 @@
  *
  * The album is a songs collection and is linked to an artist
  *
- * @version 1.0.0
+ * @version 1.1.0
  *
  * @internal
  */
@@ -221,6 +221,26 @@ class Album
                 return false;
             }
         }
+        if (isset($this->country)) {
+            if (!is_string($this->country) || $this->country === '') {
+                $this->country = null;
+            }
+            if ($this->country !== null && strlen($this->country) !== 2) {
+                $error = 'String with a valid format must be provided in country attribute';
+                //return false and detailed error message
+                return false;
+            }
+        }
+        if (isset($this->mbid)) {
+            if (!is_string($this->mbid) || $this->mbid === '') {
+                $this->mbid = null;
+            }
+            if ($this->mbid !== null && strlen($this->mbid) !== 36) {
+                $error = 'String with a valid format must be provided in MBID attribute';
+                //return false and detailed error message
+                return false;
+            }
+        }
         //Album is valid
         return true;
     }
@@ -238,10 +258,12 @@ class Album
         if (is_int($this->id)) {
             include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
             $connection = new DatabaseConnection();
-            $query = $connection->prepare('UPDATE `album` SET `name`=:name, `year`=:year WHERE `id`=:id LIMIT 1;');
+            $query = $connection->prepare('UPDATE `album` SET `name`=:name, `year`=:year, `country`=:country, `mbid`=:mbid WHERE `id`=:id LIMIT 1;');
             $query->bindValue(':id', $this->id, PDO::PARAM_INT);
             $query->bindValue(':name', $this->name, PDO::PARAM_STR);
             $query->bindValue(':year', $this->year, PDO::PARAM_INT);
+            $query->bindValue(':country', $this->country, PDO::PARAM_STR);
+            $query->bindValue(':mbid', $this->mbid, PDO::PARAM_STR);
             if ($query->execute()) {
                 //return true to indicate a successful album update
                 return true;

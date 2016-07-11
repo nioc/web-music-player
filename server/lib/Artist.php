@@ -5,7 +5,7 @@
  *
  * Artist is a single person or band who wrote or performed a song or album (almost obvious, I know ...)
  *
- * @version 1.0.0
+ * @version 1.1.0
  *
  * @internal
  */
@@ -187,6 +187,31 @@ class Artist
             //return false and detailed error message
             return false;
         }
+        if (isset($this->summary)) {
+            if (!is_string($this->summary) || $this->summary === '') {
+                $this->summary = null;
+            }
+        }
+        if (isset($this->country)) {
+            if (!is_string($this->country) || $this->country === '') {
+                $this->country = null;
+            }
+            if ($this->country !== null && strlen($this->country) !== 2) {
+                $error = 'String with a valid format must be provided in country attribute';
+                //return false and detailed error message
+                return false;
+            }
+        }
+        if (isset($this->mbid)) {
+            if (!is_string($this->mbid) || $this->mbid === '') {
+                $this->mbid = null;
+            }
+            if ($this->mbid !== null && strlen($this->mbid) !== 36) {
+                $error = 'String with a valid format must be provided in MBID attribute';
+                //return false and detailed error message
+                return false;
+            }
+        }
         //Artist is valid
         return true;
     }
@@ -204,9 +229,12 @@ class Artist
         if (is_int($this->id)) {
             include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
             $connection = new DatabaseConnection();
-            $query = $connection->prepare('UPDATE `artist` SET `name`=:name WHERE `id`=:id LIMIT 1;');
+            $query = $connection->prepare('UPDATE `artist` SET `name`=:name, `summary`=:summary, `country`=:country, `mbid`=:mbid WHERE `id`=:id LIMIT 1;');
             $query->bindValue(':id', $this->id, PDO::PARAM_INT);
             $query->bindValue(':name', $this->name, PDO::PARAM_STR);
+            $query->bindValue(':summary', $this->summary, PDO::PARAM_STR);
+            $query->bindValue(':country', $this->country, PDO::PARAM_STR);
+            $query->bindValue(':mbid', $this->mbid, PDO::PARAM_STR);
             if ($query->execute()) {
                 //return true to indicate a successful artist update
                 return true;

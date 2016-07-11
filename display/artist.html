@@ -9,16 +9,29 @@
                         </li>
                         <li class="table-row">
                             <span class="label">Summary</span>
-                            <span class="value" ng-bind="::artist.artist.summary"></span>
+                            <span class="value" ng-if="!artist.editMode" ng-bind="::artist.artist.summary"></span>
+                            <span class="value" ng-if="artist.editMode"><input type="text" ng-model="artist.artist.summary"></span>
                         </li>
                         <li class="table-row">
                             <span class="label">Country</span>
-                            <span class="value" ng-bind="::artist.artist.country"></span>
+                            <span class="value" ng-if="!artist.editMode" ng-bind="::artist.artist.country"></span>
+                            <span class="value" ng-if="artist.editMode"><input type="text" ng-model="artist.artist.country"></span>
                         </li>
                     </ul>
                     <button class="plain-button" ng-if="!artist.editMode" ng-click="artist.remove()"><i class="fa fa-trash"></i> Delete artist</button>
                     <button class="plain-button" ng-if="!artist.editMode" ng-click="artist.edit()"><i class="fa fa-pencil"></i> Edit artist</button>
                     <button class="plain-button" ng-if="artist.editMode" ng-click="artist.save()"><i class="fa fa-save"></i> Save</button>
+                    <button class="plain-button" ng-if="artist.editMode" ng-click="artist.searchMusicBrainz()"><i class="fa fa-search"></i> Search in MusicBrainz</button>
+                    <ul class="table" ng-if="artist.MusicBrainzResults.length">
+	                    <li class="grid-header">
+	                        <span class="grid-cell">Country</span>
+	                        <span class="grid-cell">Name</span>
+	                    </li>
+                    	<li class="grid-row clickable" ng-repeat="musicBrainzArtist in artist.MusicBrainzResults | orderBy:['name', 'mbid'] track by musicBrainzArtist.mbid" title="{{::musicBrainzArtist.summary}}" ng-click="artist.useMusicBrainz(musicBrainzArtist);">
+                    		<span class="grid-cell" ng-bind="::musicBrainzArtist.country"></span>
+                    		<span class="grid-cell" ng-bind="::musicBrainzArtist.name"></span>
+                    	</li>
+                    </ul>
                 </fieldset>
                 <ul class="table" ng-if="artist.artist.tracks.length">
                     <li class="grid-header">
