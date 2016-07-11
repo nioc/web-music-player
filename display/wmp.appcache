@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-#version 1.0 2-28-2016
+#version 1.1 2016-07-11
 
 CACHE:
 
@@ -51,6 +51,7 @@ CACHE:
 /display/files/album.factory.js
 /display/files/artist.factory.js
 /display/files/user.factory.js
+/display/files/musicBrainz.factory.js
 /display/files/authInterceptor.factory.js
 
 NETWORK:
