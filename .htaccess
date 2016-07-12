@@ -11,4 +11,5 @@ RewriteRule ^tracks$             /display/track.html [L]
 RewriteRule ^profile$            /display/profile.html [L]
 RewriteRule ^users$              /display/users.html [L]
 RewriteRule ^stream/([0-9]+)$    /server/track.php?track=$1 [QSA,L]
-RewriteRule ^server/covers/([0-9]+).jpeg$    /display/files/images/default_cover.png [QSA,L] #dummy line before develop #8
+RewriteRule ^server/covers/([0-9]+).jpeg$    /server/cover.php?id=$1 [QSA,L]
+RewriteRule ^server/covers/default.png$    /display/files/images/default_cover.png [QSA,L]

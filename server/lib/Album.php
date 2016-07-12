@@ -147,7 +147,7 @@ class Album
             }
         }
         //prepare query
-        $query = $connection->prepare('SELECT `album`.*, `artist`.`name` AS `artistName`, `cover`.`id` AS `coverId` FROM `artist`, `album`LEFT JOIN `cover` ON `album`.`id`=`cover`.`albumId` AND `cover`.`status` = 1 WHERE `album`.`artist`=`artist`.`id`'.$sqlCondition.' LIMIT 1;');
+        $query = $connection->prepare('SELECT `album`.*, `artist`.`name` AS `artistName`, `cover`.`albumId` AS `coverId` FROM `artist`, `album`LEFT JOIN `cover` ON `album`.`id`=`cover`.`albumId` AND `cover`.`status` = 1 WHERE `album`.`artist`=`artist`.`id`'.$sqlCondition.' LIMIT 1;');
         //add query criteria value
         foreach ($parameters as $parameter => $value) {
             if (isset($value)) {
@@ -347,5 +347,102 @@ class Album
         $album->artist = $artist;
         //return structured album
         return $album;
+    }
+
+    /**
+     * Populate album MBID.
+     *
+     * @return bool Result
+     */
+    private function getMBID()
+    {
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        $connection = new DatabaseConnection();
+        $query = $connection->prepare('SELECT `mbid` FROM `album` WHERE `id` = :id;');
+        $query->bindValue(':id', $this->id, PDO::PARAM_INT);
+        $query->execute();
+        $this->mbid = $query->fetchColumn();
+        //return true if there is a MBID
+        return $this->mbid !== false;
+    }
+
+    /**
+     * Call Cover Art Archive wrapper and store image.
+     *
+     * @return bool Result
+     */
+    private function callCoverArtArchive()
+    {
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/CoverArtArchive.php';
+        $CoverArtArchive = new CoverArtArchive();
+        $stream = $CoverArtArchive->getCoverImage($this->mbid);
+        if ($stream !== false) {
+            //store image
+            $this->storeCover($stream);
+            //returns image
+            return $stream;
+        }
+        //returns Cover Art Archive search has encountered an error
+        return false;
+    }
+
+    /**
+     * Store cover image.
+     *
+     * @param string $stream Image data
+     *
+     * @return bool Result
+     */
+    private function storeCover($stream)
+    {
+        //default values
+        $height = null;
+        $width = null;
+        $mime = 'image/jpeg';
+        //get image informations
+        $size = getimagesizefromstring($stream);
+        if ($size !== false) {
+            $height = $size[0];
+            $width = $size[1];
+            $mime = $size['mime'];
+        }
+        //insert in database
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        $connection = new DatabaseConnection();
+        $query = $connection->prepare('INSERT INTO `cover` (`albumId`, `status`, `width`, `height`, `mime`, `image`) VALUES ( :albumId, :status, :width, :height, :mime, :image);');
+        $query->bindValue(':albumId', $this->id,  PDO::PARAM_INT);
+        $query->bindValue(':status',  1,          PDO::PARAM_INT);
+        $query->bindValue(':width',   $width,     PDO::PARAM_INT);
+        $query->bindValue(':height',  $height,    PDO::PARAM_INT);
+        $query->bindValue(':mime',    $mime,      PDO::PARAM_STR);
+        $query->bindValue(':image',   $stream,    PDO::PARAM_STR);
+        //return result
+        return $query->execute();
+    }
+
+    /**
+     * Get album cover.
+     *
+     * @return bool|string Stream of the cover image or false on failure
+     */
+    public function getCoverImage()
+    {
+        //check if there is already a cover
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        $connection = new DatabaseConnection();
+        $query = $connection->prepare('SELECT `image` FROM `cover` WHERE `albumId` = :albumId AND `status` = 1;');
+        $query->bindValue(':albumId', $this->id, PDO::PARAM_INT);
+        $query->execute();
+        $image = $query->fetchColumn();
+        if ($image !== false) {
+            //image found in database
+            return $image;
+        }
+        //not found in database, try to get it from Cover Art Archive if there is a MBID
+        if ($this->getMBID()) {
+            return $this->callCoverArtArchive();
+        }
+        //returns there is no MBID for this album
+        return false;
     }
 }
