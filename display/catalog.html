@@ -6,7 +6,6 @@
             <ul class="tree">
                 <li ng-repeat="folder in catalog.folders track by folder.path" ng-include="'folder.html'"></li>
             </ul>
-            <span class="progressInfo" ng-bind="catalog.result"></span>
         </section>
     <script type="text/ng-template" id="folder.html">
     <button class="button-icon" title="Expand folder" ng-click="catalog.expandFolder(folder)"><i style="width:18px;" class="fa folder-icn" ng-class="{'fa-folder-open': folder.show, 'fa-folder': !folder.show}"></i>{{::folder.path}}</button>
