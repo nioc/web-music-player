@@ -5,7 +5,7 @@
  *
  * The Cover Art Archive is a joint project between the Internet Archive and MusicBrainz, whose goal is to make cover art images available to everyone on the Internet in an organised and convenient way. See https://coverartarchive.org/
  *
- * @version 1.0.0
+ * @version 1.1.0
  *
  * @internal
  */
@@ -21,6 +21,20 @@ class CoverArtArchive
     public $errorMessage = '';
 
     /**
+     * Provide album cover URL based on MBID.
+     *
+     * @param string $mbid MusicBrainz release identifier
+     *
+     * @return string URL of the cover image
+     */
+    public function getCoverURL($mbid)
+    {
+        $this->endpoint = $this->endpoint.'release/'.$mbid.'/front';
+        //returns endpoint
+        return $this->endpoint;
+    }
+
+    /**
      * Get album cover image.
      *
      * @param string $mbid MusicBrainz release identifier
@@ -29,7 +43,7 @@ class CoverArtArchive
      */
     public function getCoverImage($mbid)
     {
-        $this->endpoint .= 'release/'.$mbid.'/front';
+        $this->getCoverURL($mbid);
         $results = $this->executeCall();
         if ($results !== false) {
             return $results;

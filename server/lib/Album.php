@@ -20,7 +20,7 @@ class Album
      */
     public $name;
     /**
-     * @var string MusicBrainz release identifier
+     * @var string MusicBrainz release identifier (36 characters)
      */
     public $mbid;
     /**
@@ -108,6 +108,10 @@ class Album
             $this->mbid = $mbid;
             $this->artist = $artist;
             if ($this->insert()) {
+                //if there is a valid MBID, try to get cover
+                if (strlen($this->mbid) == 36) {
+                    $this->callCoverArtArchive();
+                }
                 //returns album identifier
                 return $this->id;
             }
@@ -363,7 +367,7 @@ class Album
         $query->execute();
         $this->mbid = $query->fetchColumn();
         //return true if there is a MBID
-        return $this->mbid !== false;
+        return $this->mbid !== false && !is_null($this->mbid);
     }
 
     /**
@@ -416,6 +420,21 @@ class Album
         $query->bindValue(':height',  $height,    PDO::PARAM_INT);
         $query->bindValue(':mime',    $mime,      PDO::PARAM_STR);
         $query->bindValue(':image',   $stream,    PDO::PARAM_STR);
+        //return result
+        return $query->execute();
+    }
+
+    /**
+     * Delete album cover.
+     *
+     * @return bool Result
+     */
+    public function deleteCoverImage()
+    {
+        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        $connection = new DatabaseConnection();
+        $query = $connection->prepare('DELETE FROM `cover` WHERE `albumId` = :albumId AND `status` = 1;');
+        $query->bindValue(':albumId', $this->id,  PDO::PARAM_INT);
         //return result
         return $query->execute();
     }

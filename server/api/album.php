@@ -5,7 +5,7 @@
  *
  * Provides album informations
  *
- * @version 1.0.0
+ * @version 1.1.0
  *
  * @api
  */
@@ -79,6 +79,8 @@ switch ($api->method) {
             //indicate the album was not found
             return;
         }
+        //store previous MBID
+        $previousMBID = $album->mbid;
         //adapt and validate object received
         $updatedAlbum = $api->query['body'];
         if (!$album->validateModel($updatedAlbum, $errorMessage)) {
@@ -91,6 +93,12 @@ switch ($api->method) {
             //something gone wrong :(
             return;
         }
+        //if MBID has changed, update cover
+        if ($previousMBID !== $album->mbid) {
+            $album->deleteCoverImage();
+            $album->getCoverImage();
+        }
+        $album->populate(['id' => $id]);
         $album->getTracks();
         $api->output(200, $album->structureData());
         break;

@@ -198,6 +198,10 @@ class MusicBrainz
                     $media = $musicBrainzRelease->media[0]->format;
                 }
                 $album->description = $type.' - '.$status.' - '.$packaging.' - '.$media;
+                //propose a cover URL with Cover Art Archive
+                include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/CoverArtArchive.php';
+                $coverArtArchive = new CoverArtArchive();
+                $album->coverPath = $coverArtArchive->getCoverURL($musicBrainzRelease->id);
                 $album->structureData();
                 unset($album->id, $album->tracks, $album->disk);
                 array_push($albums, $album);

@@ -1,11 +1,11 @@
             <article class="album">
                 <h2><i class="fa fa-dot-circle-o"></i>Album</h2>
                 <fieldset class="form">
-                    <img ng-if="::album.album.coverPath" class="player-cover" ng-src="{{::album.album.coverPath}}" alt="cover"/>
+                    <img ng-if="album.album.coverPath" class="player-cover" ng-src="{{album.album.coverPath}}" alt="cover"/>
                     <ul class="table">
                         <li class="table-row">
                             <span class="label">Name</span>
-                            <span class="value" ng-if="!album.editMode" ng-bind="::album.album.name"></span>
+                            <span class="value" ng-if="!album.editMode" ng-bind="album.album.name"></span>
                             <span class="value" ng-if="album.editMode"><input type="text" ng-model="album.album.name"></span>
                         </li>
                         <li class="table-row">
@@ -14,12 +14,12 @@
                         </li>
                         <li class="table-row">
                             <span class="label">Year</span>
-                            <span class="value" ng-if="!album.editMode" ng-bind="::album.album.year"></span>
+                            <span class="value" ng-if="!album.editMode" ng-bind="album.album.year"></span>
                             <span class="value" ng-if="album.editMode"><input type="text" ng-model="album.album.year"></span>
                         </li>
                         <li class="table-row">
                             <span class="label">Country</span>
-                            <span class="value" ng-if="!album.editMode" ng-bind="::album.album.country"></span>
+                            <span class="value" ng-if="!album.editMode" ng-bind="album.album.country"></span>
                             <span class="value" ng-if="album.editMode"><input type="text" ng-model="album.album.country"></span>
                         </li>
                     </ul>
@@ -28,18 +28,20 @@
                     <button class="plain-button" ng-if="album.editMode" ng-click="album.save()"><i class="fa fa-save"></i> Save</button>
                     <button class="plain-button" ng-if="album.editMode" ng-click="album.searchMusicBrainz()"><i class="fa fa-search"></i> Search in MusicBrainz</button>
                     <ul class="table" ng-if="album.MusicBrainzResults.length">
-	                    <li class="grid-header">
-	                        <span class="grid-cell">Country</span>
-	                        <span class="grid-cell">Name</span>
-	                        <span class="grid-cell">Year</span>
-	                        <span class="grid-cell">Artist</span>
-	                    </li>
-                    	<li class="grid-row clickable" ng-repeat="musicBrainzAlbum in album.MusicBrainzResults | orderBy:['name', 'mbid'] track by musicBrainzAlbum.mbid" title="{{::musicBrainzAlbum.description}}" ng-click="album.useMusicBrainz(musicBrainzAlbum);">
-                    		<span class="grid-cell" ng-bind="::musicBrainzAlbum.country"></span>
-                    		<span class="grid-cell" ng-bind="::musicBrainzAlbum.name"></span>
-                    		<span class="grid-cell" ng-bind="::musicBrainzAlbum.year"></span>
-                    		<span class="grid-cell" ng-bind="::musicBrainzAlbum.artist.label"></span>
-                    	</li>
+                        <li class="grid-header">
+                            <span class="grid-cell"></span>
+                            <span class="grid-cell">Country</span>
+                            <span class="grid-cell">Name</span>
+                            <span class="grid-cell">Year</span>
+                            <span class="grid-cell">Artist</span>
+                        </li>
+                        <li class="grid-row clickable" ng-repeat="musicBrainzAlbum in album.MusicBrainzResults | orderBy:['name', 'mbid'] track by musicBrainzAlbum.mbid" title="{{::musicBrainzAlbum.description}}" ng-click="album.useMusicBrainz(musicBrainzAlbum);">
+                            <span class="grid-cell"><img ng-src="{{musicBrainzAlbum.coverPath}}" alt="cover" width="50" ng-err-src="/server/covers/default.png"/></span>
+                            <span class="grid-cell" ng-bind="::musicBrainzAlbum.country"></span>
+                            <span class="grid-cell" ng-bind="::musicBrainzAlbum.name"></span>
+                            <span class="grid-cell" ng-bind="::musicBrainzAlbum.year"></span>
+                            <span class="grid-cell" ng-bind="::musicBrainzAlbum.artist.label"></span>
+                        </li>
                     </ul>
                 </fieldset>
                 <ul class="table">

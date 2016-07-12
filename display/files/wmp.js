@@ -33,7 +33,9 @@ angular
 //declare track controller
 .controller('TrackController', ['$routeParams', 'Library', TrackController])
 //declare filter converting duration in seconds into a datetime
-.filter('duration', duration);
+.filter('duration', duration)
+//declare image missing directive
+.directive('ngErrSrc', errSrc);
 //tooltip function
 function Tooltip($animate, $timeout, $compile, $rootScope) {
     var tooltip = this;
@@ -551,6 +553,7 @@ function AlbumController($routeParams, $location, Playlist, Album, MusicBrainz) 
         album.album.country = musicBrainzAlbum.country;
         album.album.year = musicBrainzAlbum.year;
         album.album.mbid = musicBrainzAlbum.mbid;
+        album.album.coverPath = musicBrainzAlbum.coverPath;
     }
 }
 //ArtistController function
@@ -618,6 +621,18 @@ function duration() {
     return function(seconds) {
         return new Date(1970, 0, 1).setSeconds(seconds);
     };
+}
+//image missing function
+function errSrc() {
+    return {
+        link: function(scope, element, attrs) {
+            element.bind('error', function() {
+                if (attrs.src != attrs.ngErrSrc) {
+                    attrs.$set('src', attrs.ngErrSrc);
+                }
+            });
+        }
+    }
 }
 //Configuration function
 function config($routeProvider, cfpLoadingBarProvider) {
