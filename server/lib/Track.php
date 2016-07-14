@@ -229,7 +229,7 @@ class Track
     {
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
-        $query = $connection->prepare('INSERT INTO `track` (`file`, `album`, `year`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `mbid`, `updateTime`, `additionTime`, `composer`) VALUES (:file, :album, :year, :artist, :title, :bitrate, :rate, :mode, :size, :time, :track, :mbid, unix_timestamp(), unix_timestamp(), :composer);');
+        $query = $connection->prepare('INSERT INTO `track` (`file`, `album`, `year`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `mbid`, `updateTime`, `additionTime`, `composer`) VALUES (:file, :album, :year, :artist, :title, :bitrate, :rate, :mode, :size, :time, :track, :mbid, :update, :addition, :composer);');
         $query->bindValue(':file',     $this->file,     PDO::PARAM_STR);
         $query->bindValue(':album',    $this->album,    PDO::PARAM_INT);
         $query->bindValue(':year',     $this->year,     PDO::PARAM_INT);
@@ -242,6 +242,8 @@ class Track
         $query->bindValue(':time',     $this->time,     PDO::PARAM_INT);
         $query->bindValue(':track',    $this->track,    PDO::PARAM_INT);
         $query->bindValue(':mbid',     $this->mbid,     PDO::PARAM_STR);
+        $query->bindValue(':update',   time(),          PDO::PARAM_INT);
+        $query->bindValue(':addition', time(),          PDO::PARAM_INT);
         $query->bindValue(':composer', $this->composer, PDO::PARAM_STR);
         if ($query->execute()) {
             $this->id = $connection->lastInsertId();
@@ -272,6 +274,9 @@ class Track
         }
         if (property_exists($track, 'year') && $track->year !== null) {
             $track->year = intval($track->year);
+        }
+        if (property_exists($track, 'file') && $track->file !== null) {
+            $track->file = '/stream/'.$track->file;
         }
         //create album structure
         if (property_exists($track, 'album') && property_exists($track, 'albumName')) {
@@ -375,7 +380,7 @@ class Tracks
             }
         }
         //prepare query
-        $query = $connection->prepare('SELECT `track`.`id`, `track`.`title`, `track`.`artist`, `artist`.`name` AS `artistName`, `track`.`album`, `album`.`name` AS `albumName`, CONCAT(\'/stream/\',`track`.`id`) AS `file`, `cover`.`albumId` AS `coverId` FROM `track`, `artist` ,`album` LEFT JOIN `cover` ON `album`.`id`=`cover`.`albumId` AND `cover`.`status` = 1 WHERE `track`.`artist`=`artist`.`id` AND `track`.`album`=`album`.`id`'.$sqlCondition.' ORDER BY `additionTime` DESC;');
+        $query = $connection->prepare('SELECT `track`.`id`, `track`.`title`, `track`.`artist`, `artist`.`name` AS `artistName`, `track`.`album`, `album`.`name` AS `albumName`, `track`.`id` AS `file`, `cover`.`albumId` AS `coverId` FROM `track`, `artist` ,`album` LEFT JOIN `cover` ON `album`.`id`=`cover`.`albumId` AND `cover`.`status` = 1 WHERE `track`.`artist`=`artist`.`id` AND `track`.`album`=`album`.`id`'.$sqlCondition.' ORDER BY `additionTime` DESC;');
         //add query criteria value
         foreach ($parameters as $parameter => $value) {
             if (isset($value)) {

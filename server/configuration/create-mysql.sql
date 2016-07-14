@@ -12,7 +12,7 @@ CREATE TABLE `wmp`.`user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT 'Users';
 
 CREATE TABLE `wmp`.`scope` (
-  `userId` smallint(6) unsigned NOT NULL AUTO_INCREMENT COMMENT 'User identifier',
+  `userId` smallint(6) unsigned NOT NULL COMMENT 'User identifier',
   `scope` varchar(32) CHARACTER SET utf8 NOT NULL COMMENT 'Scope',
   PRIMARY KEY (`userId`,`scope`),
   KEY `userId` (`userId`),
@@ -27,7 +27,7 @@ CREATE TABLE `wmp`.`artist` (
   `country` varchar(64) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Country where the group come from',
   PRIMARY KEY (`id`),
   FULLTEXT KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Artists';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT 'Artists';
 
 CREATE TABLE `wmp`.`album` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Identifier',
@@ -69,7 +69,7 @@ CREATE TABLE `wmp`.`track` (
   FULLTEXT KEY `title` (`title`),
   CONSTRAINT `track_fk_1` FOREIGN KEY (`album`) REFERENCES `album` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `track_fk_2` FOREIGN KEY (`artist`) REFERENCES `artist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tracks';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT 'Tracks';
 
 CREATE TABLE `wmp`.`playlist` (
   `userId` smallint(6) unsigned NOT NULL COMMENT 'Owner',

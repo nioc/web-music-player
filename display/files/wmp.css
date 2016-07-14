@@ -1,5 +1,5 @@
 @CHARSET "UTF-8";
-/*! wmp.css v1.0.1 */
+/*! wmp.css v1.1.0 */
 body {
     font-family: "Helvetica Neue", "Helvetica", "Calibri", "sans";
     background-color: #383838;
@@ -79,6 +79,11 @@ input[type="submit"],
     background-image: linear-gradient(#333333, #222222);
     color: #FFFFFF;
 }
+input[type="radio"],
+input[type="checkbox"] {
+    border: none;
+    box-shadow: none;
+}
 .auth-form input[type="button"],
 .auth-form input[type="reset"],
 .auth-form input[type="submit"],
@@ -101,6 +106,23 @@ input[type="submit"],
     text-align: center;
     width: 100%;
     box-sizing: border-box;
+}
+fieldset {
+    border: 1px solid #222222;
+    border-radius: 3px;
+    margin: 10px 0;
+}
+fieldset.radios {
+    display: table;
+}
+fieldset.radios .radio {
+    display: table-row;
+}
+fieldset.radios .radio > * {
+    display: table-cell;
+    text-align: left;
+    padding: 0 16px;
+    margin: 6px 12px;
 }
 .fa {
     padding: 0.1em;

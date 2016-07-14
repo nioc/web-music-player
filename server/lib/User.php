@@ -62,7 +62,7 @@ class User
             $connection = new DatabaseConnection();
             $query = $connection->prepare('SELECT * FROM `user` WHERE `id`=:id LIMIT 1;');
             $query->bindValue(':id', $this->id, PDO::PARAM_INT);
-            if ($query->execute() && $query->rowCount() > 0) {
+            if ($query->execute()) {
                 $query->setFetchMode(PDO::FETCH_INTO, $this);
                 //return true if there is user fetched, false otherwise
                 return (bool) $query->fetch();
@@ -240,7 +240,7 @@ class User
         $query = $connection->prepare('SELECT * FROM `user` WHERE `login`=:login AND `password`=:password LIMIT 1;');
         $query->bindValue(':login', $this->login, PDO::PARAM_STR);
         $query->bindValue(':password', md5($this->password), PDO::PARAM_STR);
-        if ($query->execute() && $query->rowCount() > 0) {
+        if ($query->execute()) {
             $query->setFetchMode(PDO::FETCH_INTO, $this);
             //return true if there is user fetched, false otherwise
             return (bool) $query->fetch();
@@ -297,7 +297,7 @@ class User
         include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         $query = $connection->prepare('SELECT * FROM `user`;');
-        if ($query->execute() && $query->rowCount() > 0) {
+        if ($query->execute()) {
             //return array of users
             return $query->fetchAll(PDO::FETCH_CLASS, 'User');
         }
