@@ -118,7 +118,8 @@ fieldset.radios {
 fieldset.radios .radio {
     display: table-row;
 }
-fieldset.radios .radio > * {
+fieldset.radios .radio input,
+fieldset.radios .radio label {
     display: table-cell;
     text-align: left;
     padding: 0 16px;

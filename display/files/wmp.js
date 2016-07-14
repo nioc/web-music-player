@@ -625,14 +625,14 @@ function duration() {
 //image missing function
 function errSrc() {
     return {
-        link: function(scope, element, attrs) {
+        link(scope, element, attrs) {
             element.bind('error', function() {
-                if (attrs.src != attrs.ngErrSrc) {
+                if (attrs.src !== attrs.ngErrSrc) {
                     attrs.$set('src', attrs.ngErrSrc);
                 }
             });
         }
-    }
+    };
 }
 //Configuration function
 function config($routeProvider, cfpLoadingBarProvider) {

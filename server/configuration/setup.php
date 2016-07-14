@@ -56,7 +56,8 @@ function createTable($connection, $dbEngine, $wmpDbName, $adminUserPwd, &$result
         $sqlFilename = $_SERVER['DOCUMENT_ROOT'].'/server/configuration/create-'.$dbEngine.'.sql';
         //split each query (separated by the ";EOL")
         $array = explode(";\n", file_get_contents($sqlFilename));
-        for ($i = 0; $i < count($array); ++$i) {
+        $nbLines = count($array);
+        for ($i = 0; $i < $nbLines; ++$i) {
             //remove comments (-- and text behind) and handle line
             $queryString = preg_replace('/--.*$/m', '', filter_var($array[$i]));
             //remove EOL
