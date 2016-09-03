@@ -114,8 +114,12 @@ class TestingTool
         fwrite($localConfigFile, "dbEngine = \"sqlite\"\n");
         fwrite($localConfigFile, "dbPath = \"$path\"\n");
         fclose($localConfigFile);
-        //drop previous schema
-        unlink($_SERVER['DOCUMENT_ROOT'].$path);
+        //create directory and drop previous schema
+        if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
+            unlink($_SERVER['DOCUMENT_ROOT'].$path);
+        } else {
+            mkdir(dirname($_SERVER['DOCUMENT_ROOT'].$path), 0700);
+        }
         //create schema
         $this->createSchema('sqlite');
     }

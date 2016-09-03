@@ -21,6 +21,7 @@ class ApiTest extends PHPUnit_Framework_TestCase
     {
         require_once dirname(__FILE__).'/../../TestingTool.php';
         $test = new TestingTool();
+        $test->setupDummySqliteConnection();
     }
 
     /**
@@ -32,6 +33,17 @@ class ApiTest extends PHPUnit_Framework_TestCase
         $this->object = new Api();
         unset($_SERVER['REQUEST_METHOD']);
         $_GET = [];
+    }
+
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a the test case class' last test.
+     */
+    public static function tearDownAfterClass()
+    {
+        require_once dirname(__FILE__).'/../../TestingTool.php';
+        $test = new TestingTool();
+        $test->restoreConfig();
     }
 
     /**
