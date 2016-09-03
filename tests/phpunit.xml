@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/5.5/phpunit.xsd"
+         backupGlobals="false"
+         verbose="true">
+    <php>
+        <server name="DOCUMENT_ROOT" value=".."/>
+    </php>
+    <testsuite name="Server Lib">
+        <directory suffix="Test.php">../tests/server/lib</directory>
+    </testsuite>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true" addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../server/lib</directory>
+            <exclude>
+                <directory suffix=".php">../server/lib/vendor</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-html" target="/tmp/PHPUnit" lowUpperBound="35" highLowerBound="70"/>
+        <log type="testdox-html" target="/tmp/PHPUnit/Results.html"/>
+    </logging>
+</phpunit>
