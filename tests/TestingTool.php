@@ -12,9 +12,7 @@ class TestingTool
     public function __construct()
     {
         //set document root for use in CLI
-        if (!isset($_SERVER) || !array_key_exists('DOCUMENT_ROOT', $_SERVER) || $_SERVER['DOCUMENT_ROOT'] == '' ) {
-            $_SERVER['DOCUMENT_ROOT'] = dirname(__FILE__).'/../';
-        }
+        $_SERVER['DOCUMENT_ROOT'] = dirname(__FILE__).'/..';
     }
     /**
      * Create SQL schema and tables.
@@ -29,6 +27,32 @@ class TestingTool
             //connect to database
             require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
             $connection = new DatabaseConnection();
+            //clean previous schema (MySQL only)
+            if ($dbEngine == 'mysql') {
+                //get all tables
+                $query = $connection->prepare("SELECT table_name FROM information_schema.TABLES WHERE table_schema = :schema;");
+                $query->bindValue('schema', $wmpDbName);
+                if (!$query->execute()) {
+                    throw new RuntimeException('Schema drop has failed: unable to get tables');
+                }
+                $tables = $query->fetchAll();
+                $query->execute();
+                //disable foreign keys before droping table
+                $query = $connection->prepare("SET FOREIGN_KEY_CHECKS=0;");
+                //drop each table
+                foreach ($tables as $table) {
+                    $table_name = $table['table_name'];
+                    $query = $connection->prepare("DELETE FROM $wmpDbName.$table_name WHERE 1;");
+                    $query->execute();
+                    $query = $connection->prepare("DROP TABLE $wmpDbName.$table_name;");
+                    if (!$query->execute()) {
+                        throw new RuntimeException('Schema drop has failed on table '.$table_name);
+                    }
+                }
+            }
+            //enable foreign keys
+            $query = $connection->prepare("SET FOREIGN_KEY_CHECKS=1;");
+            $query->execute();
             //load language dependant script
             $sqlFilename = $_SERVER['DOCUMENT_ROOT'].'/server/configuration/create-'.$dbEngine.'.sql';
             //split each query (separated by the ";EOL")
@@ -102,25 +126,35 @@ class TestingTool
         }
     }
     /**
-     * Setup a SQLlite database and configuration
+     * Setup a MySQL or SQLlite database and configuration
      */
-    public function setupDummySqliteConnection()
+    public function setupDummySqlConnection($dbEngine = 'mysql')
     {
         $this->backupConfig();
         //create local configuration
-        $path = '/tests/server/data/wmpDummyPHPUnit.sqlite';
         $localConfigFile = fopen($_SERVER['DOCUMENT_ROOT'].'/server/configuration/local.ini', 'w');
         fwrite($localConfigFile, "; This a dummy configuration file for PHPUnit tests\n");
-        fwrite($localConfigFile, "dbEngine = \"sqlite\"\n");
-        fwrite($localConfigFile, "dbPath = \"$path\"\n");
-        fclose($localConfigFile);
-        //create directory and drop previous schema
-        if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
-            unlink($_SERVER['DOCUMENT_ROOT'].$path);
-        } else {
-            mkdir(dirname($_SERVER['DOCUMENT_ROOT'].$path), 0700);
+        switch ($dbEngine) {
+            case 'sqlite':
+                $path = '/tests/server/data/wmpDummyPHPUnit.sqlite';
+                fwrite($localConfigFile, "dbEngine = \"sqlite\"\n");
+                fwrite($localConfigFile, "dbPath = \"$path\"\n");
+                //create directory and drop previous schema
+                if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
+                    unlink($_SERVER['DOCUMENT_ROOT'].$path);
+                } else {
+                    mkdir(dirname($_SERVER['DOCUMENT_ROOT'].$path), 0700);
+                }
+                break;
+            case 'mysql':
+                fwrite($localConfigFile, "dbEngine = \"mysql\"\n");
+                fwrite($localConfigFile, "dbUser = \"wmp_test\"\n");
+                fwrite($localConfigFile, "dbPwd = \"wmp_test\"\n");
+                fwrite($localConfigFile, "dbName = \"wmp_test\"\n");
+                break;
         }
+        fclose($localConfigFile);
         //create schema
-        $this->createSchema('sqlite');
+        $this->createSchema('mysql', 'wmp_test');
     }
 }

@@ -9,8 +9,13 @@ before_install:
   - wget http://cs.sensiolabs.org/get/php-cs-fixer.phar
 
 env:
-  - DB=sqlite
   - DB=mysql
+
+before_script:
+  - mysql -u root -e "DROP DATABASE IF EXISTS wmp_test; CREATE DATABASE wmp_test DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
+  - mysql -u root -e "DROP USER IF EXISTS 'wmp_test'; CREATE USER 'wmp_test'@'localhost' IDENTIFIED BY 'wmp_test';"
+  - mysql -u root -e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, REFERENCES, DROP ON wmp_test.* TO wmp_test@'localhost';"
+  - sed 's/`wmp`/`wmp_test`/g' server/configuration/create-mysql.sql | mysql -u root
 
 services:
   - mysql

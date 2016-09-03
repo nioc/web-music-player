@@ -59,15 +59,15 @@ class DatabaseConnectionTest extends PHPUnit_Framework_TestCase
         $localConfigFile = fopen($_SERVER['DOCUMENT_ROOT'].'/server/configuration/local.ini', 'w');
         fwrite($localConfigFile, "; This a dummy configuration file for PHPUnit tests\n");
         fwrite($localConfigFile, "dbEngine = \"mysql\"\n");
-        fwrite($localConfigFile, "dbUser = \"wmp\"\n");
-        fwrite($localConfigFile, "dbPwd = \"wmp\"\n");
-        fwrite($localConfigFile, "dbName = \"wmpDummyPHPUnit\"\n");
+        fwrite($localConfigFile, "dbUser = \"wmp_test\"\n");
+        fwrite($localConfigFile, "dbPwd = \"wmp_test\"\n");
+        fwrite($localConfigFile, "dbName = \"wmp_test\"\n");
         fclose($localConfigFile);
         try {
             $this->object = new DatabaseConnection();
             $this->assertInstanceOf('DatabaseConnection', $this->object, 'Object constructed should be a DatabaseConnection');
         } catch (Exception $exception) {
-            $this->markTestIncomplete('You need to grant access on "wmpDummyPHPUnit" MySQL schema to the user "wmp" to run this test');
+            $this->markTestIncomplete('You need to grant access on "wmp_test" MySQL schema to the user "wmp_test" to run this test');
         }
     }
 }

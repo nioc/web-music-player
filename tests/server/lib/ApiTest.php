@@ -21,7 +21,7 @@ class ApiTest extends PHPUnit_Framework_TestCase
     {
         require_once dirname(__FILE__).'/../../TestingTool.php';
         $test = new TestingTool();
-        $test->setupDummySqliteConnection();
+        $test->setupDummySqlConnection();
     }
 
     /**

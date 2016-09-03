@@ -20,7 +20,7 @@ class UserTest extends PHPUnit_Framework_TestCase
     {
         require_once dirname(__FILE__).'/../../TestingTool.php';
         $test = new TestingTool();
-        $test->setupDummySqliteConnection();
+        $test->setupDummySqlConnection();
     }
 
     /**
@@ -239,7 +239,7 @@ class UserTest extends PHPUnit_Framework_TestCase
         $password = 'password';
         $this->assertTrue($this->object->checkCredentials($login, $password), 'Credentials should be ok');
         $login = 'ADMIN';
-        $this->assertFalse($this->object->checkCredentials($login, $password), 'Credentials should be ok, login should be case insensitive');
+        $this->assertTrue($this->object->checkCredentials($login, $password), 'Credentials should be ok, login should be case insensitive');
     }
 
     /**
