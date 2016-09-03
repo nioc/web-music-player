@@ -149,7 +149,7 @@ class User
         }
         $error = $query->errorInfo()[2];
         //try to return intelligible error
-        if ($query->errorInfo()[1] === 1062) {
+        if ($query->errorInfo()[1] === 1062 || $query->errorInfo()[2] === 'UNIQUE constraint failed: user.login') {
             $error = 'login `'.$this->login.'` already exists';
         }
         //return false to indicate an error occurred while creating user
@@ -215,7 +215,7 @@ class User
             }
             $error = $query->errorInfo()[2];
             //try to return intelligible error
-            if ($query->errorInfo()[1] === 1062) {
+            if ($query->errorInfo()[1] === 1062 || $query->errorInfo()[2] === 'UNIQUE constraint failed: user.login') {
                 $error = ': login `'.$this->login.'` already exists';
             }
         }

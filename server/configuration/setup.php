@@ -180,11 +180,11 @@ if (isset($process) &&
         }
     try {
         //if path does not exist, create it
-            if (!file_exists($filesPath)) {
-                mkdir(dirname($_SERVER['DOCUMENT_ROOT'].$dbPath), 0700);
-            }
-            //connect to database with provided informations
-            $connection = new PDO('sqlite:'.$_SERVER['DOCUMENT_ROOT'].$dbPath);
+        if (!file_exists($filesPath)) {
+            mkdir(dirname($_SERVER['DOCUMENT_ROOT'].$dbPath), 0700);
+        }
+        //connect to database with provided informations
+        $connection = new PDO('sqlite:'.$_SERVER['DOCUMENT_ROOT'].$dbPath);
         fwrite($localConfigFile, "dbEngine = \"$dbEngine\"\n");
         if ($connection !== false) {
             $results['schema']['Database schema'] = '<span class="valid"> Ok </span>SQLite database `'.$dbPath.'` is set';
@@ -195,6 +195,11 @@ if (isset($process) &&
     } catch (Exception $exception) {
         $results['user']['Database schema'] = '<span class="error"> Failed </span>'.$exception->getMessage();
     }
+    //update local hash key
+    fwrite($localConfigFile, "hashKey = \"$hashKey\"\n");
+    $results['local']['Hash key'] = '<span class="valid"> Ok </span> tokens will use your cipher';
+    //achieve local configuration file
+    fclose($localConfigFile);
 }
 
 //file path processing

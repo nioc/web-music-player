@@ -55,7 +55,7 @@ class Api
             if (!in_array($this->method, $this->allowedMethods)) {
                 //return a 501 error
                 $this->output(501, $this->method.' method is not supported for this ressource');
-                exit();
+                throw new RuntimeException($this->method.' method is not supported for this ressource');
             }
             //get parameters
             $this->query = array();
