@@ -79,13 +79,20 @@ class ApiTest extends PHPUnit_Framework_TestCase
      * @covers Api::__construct
      * @covers Api::output
      * @runInSeparateProcess
-     * @expectedException RuntimeException
      */
     public function testCheckConstructMethodNotAllowed()
     {
         //set method for use in CLI
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $this->object = new Api('json', array('POST'));
+        ob_start();
+        try {
+            $this->object = new Api('json', array('POST'));
+            $this->assertTrue(false, 'Process should have been stopped');
+        } catch (RuntimeException $e) {
+        }
+        $output = ob_get_contents();
+        ob_end_clean();
+        $this->assertEquals('{"code":501,"message":"GET method is not supported for this ressource"}', $output, 'Output should be a json string but found: '.$output);
     }
 
     /**

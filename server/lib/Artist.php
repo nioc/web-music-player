@@ -53,7 +53,7 @@ class Artist
      *
      * @return bool True on success or false on failure
      */
-    private function insert()
+    public function insert()
     {
         require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
