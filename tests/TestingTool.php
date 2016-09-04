@@ -36,9 +36,9 @@ class TestingTool
                     throw new RuntimeException('Schema drop has failed: unable to get tables');
                 }
                 $tables = $query->fetchAll();
-                $query->execute();
                 //disable foreign keys before droping table
                 $query = $connection->prepare("SET FOREIGN_KEY_CHECKS=0;");
+                $query->execute();
                 //drop each table
                 foreach ($tables as $table) {
                     $table_name = $table['table_name'];
@@ -155,6 +155,8 @@ class TestingTool
         }
         fclose($localConfigFile);
         //create schema
-        $this->createSchema('mysql', 'wmp_test');
+        if (!$this->createSchema('mysql', 'wmp_test')) {
+            throw new RuntimeException('Schema setup has failed');
+        }
     }
 }

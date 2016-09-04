@@ -12,6 +12,7 @@ env:
   - DB=mysql
 
 before_script:
+  - mkdir tests/server/data/
   - mysql -u root -e "DROP DATABASE IF EXISTS wmp_test; CREATE DATABASE wmp_test DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
   - mysql -u root -e "CREATE USER 'wmp_test'@'localhost' IDENTIFIED BY 'wmp_test';"
   - mysql -u root -e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, REFERENCES, DROP ON wmp_test.* TO wmp_test@'localhost';"
