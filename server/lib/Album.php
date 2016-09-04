@@ -71,7 +71,7 @@ class Album
      */
     private function insert()
     {
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         $query = $connection->prepare('INSERT INTO `album` (`name`, `mbid`, `artist`, `year`, `disk`, `country`, `mbidGroup`) VALUES ( :name, :mbid, :artist, :year, :disk, :country, :mbidGroup);');
         $query->bindValue(':name',      $this->name,      PDO::PARAM_STR);
@@ -131,7 +131,7 @@ class Album
      */
     public function populate($parameters)
     {
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         //handle requested parameters
         $sqlCondition = '';
@@ -260,7 +260,7 @@ class Album
     {
         $error = '';
         if (is_int($this->id)) {
-            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+            require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
             $connection = new DatabaseConnection();
             $query = $connection->prepare('UPDATE `album` SET `name`=:name, `year`=:year, `country`=:country, `mbid`=:mbid WHERE `id`=:id LIMIT 1;');
             $query->bindValue(':id', $this->id, PDO::PARAM_INT);
@@ -285,8 +285,8 @@ class Album
      */
     public function getTracks()
     {
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         $query = $connection->prepare('SELECT `track`.`id`, `track`.`track`, `track`.`title`, `track`.`time`, `track`.`artist`, `artist`.`name` AS `artistName` FROM `track` INNER JOIN `artist` ON `artist`.`id` = `track`.`artist` WHERE `track`.`album` = :albumId  ORDER BY `track`.`track` ASC;');
         $query->bindValue(':albumId', $this->id, PDO::PARAM_INT);
@@ -311,7 +311,7 @@ class Album
     public function delete()
     {
         if (is_int($this->id)) {
-            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+            require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
             $connection = new DatabaseConnection();
             $query = $connection->prepare('DELETE FROM `album` WHERE `id` = :id LIMIT 1;');
             $query->bindValue(':id', $this->id, PDO::PARAM_INT);
@@ -360,7 +360,7 @@ class Album
      */
     private function getMBID()
     {
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         $query = $connection->prepare('SELECT `mbid` FROM `album` WHERE `id` = :id;');
         $query->bindValue(':id', $this->id, PDO::PARAM_INT);
@@ -377,7 +377,7 @@ class Album
      */
     private function callCoverArtArchive()
     {
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/CoverArtArchive.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/CoverArtArchive.php';
         $CoverArtArchive = new CoverArtArchive();
         $stream = $CoverArtArchive->getCoverImage($this->mbid);
         if ($stream !== false) {
@@ -411,7 +411,7 @@ class Album
             $mime = $size['mime'];
         }
         //insert in database
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         $query = $connection->prepare('INSERT INTO `cover` (`albumId`, `status`, `width`, `height`, `mime`, `image`) VALUES ( :albumId, :status, :width, :height, :mime, :image);');
         $query->bindValue(':albumId', $this->id,  PDO::PARAM_INT);
@@ -431,7 +431,7 @@ class Album
      */
     public function deleteCoverImage()
     {
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         $query = $connection->prepare('DELETE FROM `cover` WHERE `albumId` = :albumId AND `status` = 1;');
         $query->bindValue(':albumId', $this->id,  PDO::PARAM_INT);
@@ -447,7 +447,7 @@ class Album
     public function getCoverImage()
     {
         //check if there is already a cover
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         $query = $connection->prepare('SELECT `image` FROM `cover` WHERE `albumId` = :albumId AND `status` = 1;');
         $query->bindValue(':albumId', $this->id, PDO::PARAM_INT);

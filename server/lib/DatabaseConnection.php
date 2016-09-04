@@ -15,7 +15,7 @@ class DatabaseConnection extends PDO
     public function __construct()
     {
         //get configuration informations
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
         $configuration = new Configuration();
         //create PDO constructor
         if ($configuration->get('dbEngine') === 'sqlite') {

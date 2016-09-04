@@ -128,8 +128,8 @@ class Api
             //Authorization header not provided
             return false;
         }
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Token.php';
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Token.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
         $configuration = new Configuration();
         $token = new Token($configuration->get('hashKey'));
         list($scheme, $token->value) = explode(' ', $headers['Authorization'], 2);
@@ -166,7 +166,7 @@ class Api
     public function checkScope($requiredScope)
     {
         if (is_int($this->requesterId)) {
-            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/User.php';
+            require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/User.php';
             $requester = new User($this->requesterId);
             $scope = $requester->getScope();
             //return if required scope is found in user scope
@@ -233,8 +233,8 @@ class Api
      */
     public function generateToken($payload)
     {
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Token.php';
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Token.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
         $configuration = new Configuration();
         $token = new Token($configuration->get('hashKey'));
         $token->payload = $payload;

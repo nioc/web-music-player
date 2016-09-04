@@ -60,7 +60,7 @@ class HttpRequest
         if (count($this->parameters) > 0) {
             $this->url .= '?'.http_build_query($this->parameters);
         }
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
         $configuration = new Configuration();
         $opts = array('http' => array(
                 'method' => $method,

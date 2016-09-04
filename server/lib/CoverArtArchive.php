@@ -59,7 +59,7 @@ class CoverArtArchive
     private function executeCall()
     {
         //create a HTTP request object and call
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/HttpRequest.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/HttpRequest.php';
         $request = new HttpRequest();
         if (!$request->execute($this->endpoint, 'GET', null, null, null, $response, $responseHeaders)) {
             $this->errorMessage = 'Error during request';

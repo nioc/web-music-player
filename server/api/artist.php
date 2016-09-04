@@ -9,8 +9,8 @@
  *
  * @api
  */
-include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Api.php';
-include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Artist.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Api.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Artist.php';
 $api = new Api('json', ['GET', 'DELETE', 'PUT']);
 switch ($api->method) {
     case 'GET':

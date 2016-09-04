@@ -18,8 +18,8 @@ if (!isset($tokenProvided)) {
     //User not authentified/authorized
     return;
 }
-include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Token.php';
-include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Token.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
 $configuration = new Configuration();
 $token = new Token($configuration->get('hashKey'));
 $token->value = $tokenProvided;
@@ -30,7 +30,7 @@ if (!$token->decode() || !property_exists($token->payload, 'sub')) {
     return;
 }
 //get filename
-include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
 $track = new Track();
 $filename = $track->getFile($trackId);
 //open file

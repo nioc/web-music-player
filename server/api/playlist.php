@@ -9,9 +9,9 @@
  *
  * @api
  */
-include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Api.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Api.php';
 $api = new Api('json', ['POST', 'GET', 'DELETE', 'PUT']);
-include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Playlist.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Playlist.php';
 switch ($api->method) {
     case 'GET':
         //querying a user playlist

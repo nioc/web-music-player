@@ -95,7 +95,7 @@ class Track
      */
     public function populate()
     {
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         //prepare query
         $query = $connection->prepare('SELECT `track`.`id`, `track`.`track`, `track`.`title`, `track`.`file`, `track`.`time`, `track`.`year`, `track`.`artist`, `artist`.`name` AS `artistName`, `track`.`album`, `album`.`name` AS `albumName` FROM `track` INNER JOIN `artist` ON `artist`.`id` = `track`.`artist` INNER JOIN `album` ON `album`.`id` = `track`.`album` WHERE `track`.`id` = :id LIMIT 1;');
@@ -178,7 +178,7 @@ class Track
     {
         $error = '';
         if (is_int($this->id)) {
-            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+            require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
             $connection = new DatabaseConnection();
             $query = $connection->prepare('UPDATE `track` SET `title`=:title, `track`=:track, `year`=:year WHERE `id`=:id LIMIT 1;');
             $query->bindValue(':id', $this->id, PDO::PARAM_INT);
@@ -207,7 +207,7 @@ class Track
         if (!is_null($id)) {
             $this->id = $id;
         }
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         $query = $connection->prepare('SELECT `file` FROM `track` WHERE `id`=:id LIMIT 1;');
         $query->bindValue(':id', $this->id, PDO::PARAM_INT);
@@ -227,7 +227,7 @@ class Track
      */
     public function insert()
     {
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         $query = $connection->prepare('INSERT INTO `track` (`file`, `album`, `year`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `mbid`, `updateTime`, `additionTime`, `composer`) VALUES (:file, :album, :year, :artist, :title, :bitrate, :rate, :mode, :size, :time, :track, :mbid, :update, :addition, :composer);');
         $query->bindValue(':file',     $this->file,     PDO::PARAM_STR);
@@ -309,7 +309,7 @@ class Track
     public function readId3()
     {
         if ($this->file != null) {
-            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/vendor/getid3/getid3/getid3.php';
+            require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/vendor/getid3/getid3/getid3.php';
             // Initialize getID3 engine
             $getID3 = new getID3();
             $getID3->setOption(array('encoding' => 'UTF-8'));
@@ -360,7 +360,7 @@ class Tracks
      */
     public function populateTracks($parameters)
     {
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         //handle requested parameters
         $sqlCondition = '';
@@ -473,8 +473,8 @@ class Tracks
      */
     public function addFiles($folder)
     {
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Artist.php';
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Album.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Artist.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Album.php';
         $result = array();
         $this->scanFolders($folder, $this->folders);
         foreach ($this->files as $file) {

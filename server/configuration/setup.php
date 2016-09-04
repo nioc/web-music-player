@@ -10,7 +10,7 @@
  */
 
 //get posted parameters and set default value
-include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Configuration.php';
 $configuration = new Configuration();
 //MySQL parameters
 $rootDbLogin = isset($_POST['rootDbLogin']) ? filter_input(INPUT_POST, 'rootDbLogin', FILTER_SANITIZE_STRING) : 'root';

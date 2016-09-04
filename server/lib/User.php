@@ -58,7 +58,7 @@ class User
     public function populate()
     {
         if (is_int($this->id)) {
-            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+            require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
             $connection = new DatabaseConnection();
             $query = $connection->prepare('SELECT * FROM `user` WHERE `id`=:id LIMIT 1;');
             $query->bindValue(':id', $this->id, PDO::PARAM_INT);
@@ -134,7 +134,7 @@ class User
     public function create($user, &$error)
     {
         $error = '';
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         $query = $connection->prepare('INSERT INTO `user` (`login`, `name`, `email`, `password`, `status`) VALUES (:login, :name, :email, :password, :status);');
         $query->bindValue(':login', $this->login, PDO::PARAM_STR);
@@ -165,7 +165,7 @@ class User
      */
     public function updateScope($scope)
     {
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         $scopes = explode(' ', $scope);
         $result = true;
@@ -200,7 +200,7 @@ class User
     {
         $error = '';
         if (is_int($user->id)) {
-            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+            require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
             $connection = new DatabaseConnection();
             $query = $connection->prepare('UPDATE `user` SET `login`=:login, `name`=:name, `email`=:email, `password`=:password, `status`=:status WHERE `id`=:id LIMIT 1;');
             $query->bindValue(':id', $this->id, PDO::PARAM_INT);
@@ -235,7 +235,7 @@ class User
     {
         $this->login = $login;
         $this->password = $password;
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         $query = $connection->prepare('SELECT * FROM `user` WHERE `login`=:login AND `password`=:password LIMIT 1;');
         $query->bindValue(':login', $this->login, PDO::PARAM_STR);
@@ -256,7 +256,7 @@ class User
      */
     public function getScope()
     {
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         $query = $connection->prepare('SELECT `scope` FROM `scope` WHERE `userId`=:userId;');
         $query->bindValue(':userId', $this->id, PDO::PARAM_INT);
@@ -294,7 +294,7 @@ class User
      */
     public function getAllUsers()
     {
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         $query = $connection->prepare('SELECT * FROM `user`;');
         if ($query->execute()) {

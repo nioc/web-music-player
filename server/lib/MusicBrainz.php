@@ -47,7 +47,7 @@ class MusicBrainz
         //request JSON output format
         $this->setRequestedFormat('json');
         //create a HTTP request object and call
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/HttpRequest.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/HttpRequest.php';
         $request = new HttpRequest();
         if (!$request->execute($this->endpoint, 'GET', null, null, $this->queryParameters, $response, $responseHeaders)) {
             $this->errorMessage = 'Error during request';
@@ -115,7 +115,7 @@ class MusicBrainz
         $thresholdScore = $musicBrainzArtists[0]->score * 0.9;
         $artists = array();
         //transform MusicBrainz artists into WMP artists
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Artist.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Artist.php';
         foreach ($musicBrainzArtists as $musicBrainzArtist) {
             if ($musicBrainzArtist->score >= $thresholdScore) {
                 $artist = new Artist();
@@ -164,7 +164,7 @@ class MusicBrainz
         $thresholdScore = $musicBrainzReleases[0]->score * 0.9;
         $albums = array();
         //transform MusicBrainz albums into WMP albums
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Album.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Album.php';
         foreach ($musicBrainzReleases as $musicBrainzRelease) {
             if ($musicBrainzRelease->score >= $thresholdScore) {
                 $album = new Album();
@@ -199,7 +199,7 @@ class MusicBrainz
                 }
                 $album->description = $type.' - '.$status.' - '.$packaging.' - '.$media;
                 //propose a cover URL with Cover Art Archive
-                include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/CoverArtArchive.php';
+                require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/CoverArtArchive.php';
                 $coverArtArchive = new CoverArtArchive();
                 $album->coverPath = $coverArtArchive->getCoverURL($musicBrainzRelease->id);
                 $album->structureData();

@@ -9,7 +9,7 @@
  *
  * @api
  */
-include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Api.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Api.php';
 $api = new Api('json', ['GET']);
 switch ($api->method) {
     case 'GET':
@@ -22,7 +22,7 @@ switch ($api->method) {
             //Type was not provided, return an error
             return;
         }
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/MusicBrainz.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/MusicBrainz.php';
         $musicBrainz = new MusicBrainz();
         switch ($type) {
             case 'artist':

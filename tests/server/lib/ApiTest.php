@@ -128,7 +128,7 @@ class ApiTest extends PHPUnit_Framework_TestCase
         //set method for use in CLI
         $_SERVER['REQUEST_METHOD'] = 'GET';
         //create valid token
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/User.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/User.php';
         $user = new User(1);
         $token = $this->object->generateToken($user->getProfile());
         $_SERVER['HTTP_AUTHORIZATION'] = 'Bearer '.$token->token;
@@ -196,7 +196,7 @@ class ApiTest extends PHPUnit_Framework_TestCase
         //set method for use in CLI
         $_SERVER['REQUEST_METHOD'] = 'GET';
         //create valid token
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/User.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/User.php';
         $user = new User(1);
         $userProfile=$user->getProfile();
         unset($userProfile->sub);

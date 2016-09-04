@@ -11,7 +11,7 @@ if (is_null($id)) {
     header('HTTP/1.0 404 Not Found');
     exit;
 }
-include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Album.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Album.php';
 $album = new Album($id);
 $image = $album->getCoverImage();
 if ($image === false) {

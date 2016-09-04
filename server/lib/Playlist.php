@@ -32,8 +32,8 @@ class Playlist
      */
     public function populate()
     {
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         $query = $connection->prepare('SELECT `track`.`id`, `track`.`title`, `track`.`artist`, `artist`.`name` AS `artistName`, `track`.`album`, `album`.`name` AS `albumName`, `track`.`id` AS `file`, `playlist`.`userId` , `playlist`.`sequence`, `cover`.`albumId` AS `coverId` FROM `track`, `artist`, `playlist`, `album` LEFT JOIN `cover` ON `album`.`id`=`cover`.`albumId` AND `cover`.`status` = 1 WHERE `track`.`artist`=`artist`.`id` AND `track`.`album`=`album`.`id` AND `track`.`id`=`playlist`.`id` AND `playlist`.`userId`=:userId ORDER BY `sequence` ASC;');
         $query->bindValue(':userId', $this->userId, PDO::PARAM_INT);
@@ -53,7 +53,7 @@ class Playlist
      */
     private function getSequenceMax()
     {
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         $query = $connection->prepare('SELECT MAX(`sequence`) FROM `playlist` WHERE `userId`=:userId;');
         $query->bindValue(':userId', $this->userId, PDO::PARAM_INT);
@@ -74,8 +74,8 @@ class Playlist
     public function reorder($oldSequence, $newSequence)
     {
         if ($oldSequence !== $newSequence) {
-            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
-            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+            require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
+            require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
             $connection = new DatabaseConnection();
             //get sequence max
             $max = $this->getSequenceMax();
@@ -147,8 +147,8 @@ class PlaylistItem
      */
     public function get()
     {
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         $query = $connection->prepare('SELECT `track`.`id`, `track`.`title`, `track`.`artist`, `artist`.`name` AS `artistName`, `track`.`album`, `album`.`name` AS `albumName`, `track`.`id` AS `file`, `playlist`.`userId` , `playlist`.`sequence`, `cover`.`albumId` AS `coverId` FROM `track`, `artist`, `playlist`, `album` LEFT JOIN `cover` ON `album`.`id`=`cover`.`albumId` AND `cover`.`status` = 1 WHERE `track`.`artist`=`artist`.`id` AND `track`.`album`=`album`.`id` AND `track`.`id`=`playlist`.`id` AND `playlist`.`userId`=:userId AND `playlist`.`sequence`=:sequence LIMIT 1;');
         $query->bindValue(':userId',   $this->userId,   PDO::PARAM_INT);
@@ -170,7 +170,7 @@ class PlaylistItem
      */
     public function insert()
     {
-        include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
         //get next sequence for this user
         $query = $connection->prepare('SELECT max(`sequence`) FROM `playlist` WHERE `userId`=:userId;');
@@ -200,7 +200,7 @@ class PlaylistItem
     public function delete()
     {
         if (isset($this->userId, $this->sequence)) {
-            include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+            require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
             $connection = new DatabaseConnection();
             $query = $connection->prepare('DELETE FROM `playlist` WHERE `userId`=:userId AND `sequence`=:sequence LIMIT 1;');
             $query->bindValue(':userId',   $this->userId,   PDO::PARAM_INT);

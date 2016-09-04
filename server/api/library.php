@@ -9,9 +9,9 @@
  *
  * @api
  */
-include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Api.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Api.php';
 $api = new Api('json', ['GET', 'POST', 'PUT']);
-include_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/Track.php';
 switch ($api->method) {
     case 'GET':
         //returns the library
