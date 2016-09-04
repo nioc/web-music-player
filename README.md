@@ -71,8 +71,9 @@ A little how-to for github:
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request
 
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/fa150783-5bf2-4e9d-bcee-395401edf439/mini.png)](https://insight.sensiolabs.com/projects/fa150783-5bf2-4e9d-bcee-395401edf439)
+[![Build Status](https://travis-ci.org/nioc/web-music-player.svg?branch=master)](https://travis-ci.org/nioc/web-music-player)
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/615c9f1907364f9a8812298c11b8eb31)](https://www.codacy.com/app/nioc/web-music-player)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/fa150783-5bf2-4e9d-bcee-395401edf439/mini.png)](https://insight.sensiolabs.com/projects/fa150783-5bf2-4e9d-bcee-395401edf439)
 
 ## License
 
