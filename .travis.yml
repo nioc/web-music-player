@@ -9,6 +9,7 @@ before_install:
 
 env:
   - DB=mysql
+  - DB=sqlite
 
 before_script:
   - mkdir tests/server/data/

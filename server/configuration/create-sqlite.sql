@@ -1,6 +1,6 @@
 CREATE TABLE `user` (
   `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, -- 'Identifier'
-  `login` TEXT DEFAULT NULL UNIQUE, -- 'Login'
+  `login` TEXT DEFAULT NULL UNIQUE COLLATE NOCASE, -- 'Login'
   `name` TEXT DEFAULT NULL, -- 'Full name'
   `email` TEXT DEFAULT NULL, -- 'Email'
   `password` TEXT DEFAULT NULL, -- 'Crypted password '

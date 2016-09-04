@@ -49,10 +49,10 @@ class TestingTool
                         throw new RuntimeException('Schema drop has failed on table '.$table_name);
                     }
                 }
+                //enable foreign keys
+                $query = $connection->prepare("SET FOREIGN_KEY_CHECKS=1;");
+                $query->execute();
             }
-            //enable foreign keys
-            $query = $connection->prepare("SET FOREIGN_KEY_CHECKS=1;");
-            $query->execute();
             //load language dependant script
             $sqlFilename = $_SERVER['DOCUMENT_ROOT'].'/server/configuration/create-'.$dbEngine.'.sql';
             //split each query (separated by the ";EOL")
@@ -125,11 +125,18 @@ class TestingTool
             rename($_SERVER['DOCUMENT_ROOT'].'/server/configuration/localBeforePHPUnit.ini', $_SERVER['DOCUMENT_ROOT'].'/server/configuration/local.ini');
         }
     }
+
     /**
      * Setup a MySQL or SQLlite database and configuration
      */
     public function setupDummySqlConnection($dbEngine = 'mysql')
     {
+        //get database engine from environment variable if set
+        $envDbEngine = getenv('DB');
+        if ($envDbEngine === 'mysql' || $envDbEngine === 'sqlite') {
+            $dbEngine = $envDbEngine;
+        }
+        //back up local configuration file
         $this->backupConfig();
         //create local configuration
         $localConfigFile = fopen($_SERVER['DOCUMENT_ROOT'].'/server/configuration/local.ini', 'w');
@@ -139,10 +146,12 @@ class TestingTool
                 $path = '/tests/server/data/wmpDummyPHPUnit.sqlite';
                 fwrite($localConfigFile, "dbEngine = \"sqlite\"\n");
                 fwrite($localConfigFile, "dbPath = \"$path\"\n");
-                //create directory and drop previous schema
+                //drop previous schema
                 if (file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {
                     unlink($_SERVER['DOCUMENT_ROOT'].$path);
-                } else {
+                }
+                //create directory if it does not already exist
+                if (!file_exists(dirname($_SERVER['DOCUMENT_ROOT'].$path))) {
                     mkdir(dirname($_SERVER['DOCUMENT_ROOT'].$path), 0700);
                 }
                 break;
@@ -155,7 +164,7 @@ class TestingTool
         }
         fclose($localConfigFile);
         //create schema
-        if (!$this->createSchema('mysql', 'wmp_test')) {
+        if (!$this->createSchema($dbEngine, 'wmp_test')) {
             throw new RuntimeException('Schema setup has failed');
         }
     }
