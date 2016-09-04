@@ -26,7 +26,7 @@ CREATE TABLE `wmp`.`artist` (
   `summary` text CHARACTER SET utf8 COMMENT 'Biography of the artist',
   `country` varchar(64) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Country where the group come from',
   PRIMARY KEY (`id`),
-  FULLTEXT KEY `name` (`name`)
+  KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT 'Artists';
 
 CREATE TABLE `wmp`.`album` (
@@ -41,7 +41,7 @@ CREATE TABLE `wmp`.`album` (
   PRIMARY KEY (`id`),
   KEY `year` (`year`),
   KEY `disk` (`disk`),
-  FULLTEXT KEY `name` (`name`),
+  KEY `name` (`name`),
   CONSTRAINT `album_fk_1` FOREIGN KEY (`artist`) REFERENCES `artist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT 'Albums';
 
@@ -66,7 +66,7 @@ CREATE TABLE `wmp`.`track` (
   KEY `album` (`album`),
   KEY `artist` (`artist`),
   KEY `file` (`file`(255)),
-  FULLTEXT KEY `title` (`title`),
+  KEY `title` (`title`),
   CONSTRAINT `track_fk_1` FOREIGN KEY (`album`) REFERENCES `album` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `track_fk_2` FOREIGN KEY (`artist`) REFERENCES `artist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT 'Tracks';
