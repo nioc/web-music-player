@@ -92,7 +92,7 @@ class TestingTool
             if ($continue && $adminUserPwd !== '') {
                 $results['tables']['Admin user account'] = 'Admin user account password has been changed';
                 //update admin user password
-                $query = $connection->prepare('UPDATE `user` SET `password`=:password WHERE `id`=1 LIMIT 1;');
+                $query = $connection->prepare('UPDATE `user` SET `password`=:password WHERE `id`=1;');
                 $query->bindValue(':password', md5($adminUserPwd), PDO::PARAM_STR);
                 if (!$query->execute()) {
                     $results['tables']['Admin user account'] = 'Admin user account password has not been changed';

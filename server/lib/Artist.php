@@ -229,7 +229,7 @@ class Artist
         if (is_int($this->id)) {
             require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
             $connection = new DatabaseConnection();
-            $query = $connection->prepare('UPDATE `artist` SET `name`=:name, `summary`=:summary, `country`=:country, `mbid`=:mbid WHERE `id`=:id LIMIT 1;');
+            $query = $connection->prepare('UPDATE `artist` SET `name`=:name, `summary`=:summary, `country`=:country, `mbid`=:mbid WHERE `id`=:id;');
             $query->bindValue(':id', $this->id, PDO::PARAM_INT);
             $query->bindValue(':name', $this->name, PDO::PARAM_STR);
             $query->bindValue(':summary', $this->summary, PDO::PARAM_STR);
@@ -280,7 +280,7 @@ class Artist
         if (is_int($this->id)) {
             require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
             $connection = new DatabaseConnection();
-            $query = $connection->prepare('DELETE FROM `artist` WHERE `id` = :id LIMIT 1;');
+            $query = $connection->prepare('DELETE FROM `artist` WHERE `id` = :id;');
             $query->bindValue(':id', $this->id, PDO::PARAM_INT);
             //returns deletion result
             return $query->execute();

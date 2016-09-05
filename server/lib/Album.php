@@ -262,7 +262,7 @@ class Album
         if (is_int($this->id)) {
             require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
             $connection = new DatabaseConnection();
-            $query = $connection->prepare('UPDATE `album` SET `name`=:name, `year`=:year, `country`=:country, `mbid`=:mbid WHERE `id`=:id LIMIT 1;');
+            $query = $connection->prepare('UPDATE `album` SET `name`=:name, `year`=:year, `country`=:country, `mbid`=:mbid WHERE `id`=:id;');
             $query->bindValue(':id', $this->id, PDO::PARAM_INT);
             $query->bindValue(':name', $this->name, PDO::PARAM_STR);
             $query->bindValue(':year', $this->year, PDO::PARAM_INT);
@@ -313,7 +313,7 @@ class Album
         if (is_int($this->id)) {
             require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
             $connection = new DatabaseConnection();
-            $query = $connection->prepare('DELETE FROM `album` WHERE `id` = :id LIMIT 1;');
+            $query = $connection->prepare('DELETE FROM `album` WHERE `id` = :id;');
             $query->bindValue(':id', $this->id, PDO::PARAM_INT);
             //returns deletion result
             return $query->execute();

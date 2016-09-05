@@ -80,7 +80,7 @@ class Playlist
             //get sequence max
             $max = $this->getSequenceMax();
             //move to the end the track
-            $query = $connection->prepare('UPDATE `playlist` SET `sequence`=:maxSequence WHERE `userId`=:userId AND `sequence`=:oldSequence LIMIT 1;');
+            $query = $connection->prepare('UPDATE `playlist` SET `sequence`=:maxSequence WHERE `userId`=:userId AND `sequence`=:oldSequence;');
             $query->bindValue(':userId', $this->userId, PDO::PARAM_INT);
             $query->bindValue(':oldSequence', $oldSequence, PDO::PARAM_INT);
             $query->bindValue(':maxSequence', $max + 1, PDO::PARAM_INT);
@@ -96,7 +96,7 @@ class Playlist
                 $query->bindValue(':newSequence', $newSequence, PDO::PARAM_INT);
                 if ($query->execute()) {
                     //set requested sequence for the track
-                    $query = $connection->prepare('UPDATE `playlist` SET `sequence`=:newSequence WHERE `userId`=:userId AND `sequence`=:maxSequence LIMIT 1;');
+                    $query = $connection->prepare('UPDATE `playlist` SET `sequence`=:newSequence WHERE `userId`=:userId AND `sequence`=:maxSequence;');
                     $query->bindValue(':userId', $this->userId, PDO::PARAM_INT);
                     $query->bindValue(':newSequence', $newSequence, PDO::PARAM_INT);
                     $query->bindValue(':maxSequence', $max + 1, PDO::PARAM_INT);
@@ -202,7 +202,7 @@ class PlaylistItem
         if (isset($this->userId, $this->sequence)) {
             require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
             $connection = new DatabaseConnection();
-            $query = $connection->prepare('DELETE FROM `playlist` WHERE `userId`=:userId AND `sequence`=:sequence LIMIT 1;');
+            $query = $connection->prepare('DELETE FROM `playlist` WHERE `userId`=:userId AND `sequence`=:sequence;');
             $query->bindValue(':userId',   $this->userId,   PDO::PARAM_INT);
             $query->bindValue(':sequence', $this->sequence, PDO::PARAM_INT);
             //return true to indicate a successful track deletion

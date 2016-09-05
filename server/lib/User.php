@@ -202,7 +202,7 @@ class User
         if (is_int($user->id)) {
             require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
             $connection = new DatabaseConnection();
-            $query = $connection->prepare('UPDATE `user` SET `login`=:login, `name`=:name, `email`=:email, `password`=:password, `status`=:status WHERE `id`=:id LIMIT 1;');
+            $query = $connection->prepare('UPDATE `user` SET `login`=:login, `name`=:name, `email`=:email, `password`=:password, `status`=:status WHERE `id`=:id;');
             $query->bindValue(':id', $this->id, PDO::PARAM_INT);
             $query->bindValue(':login', $this->login, PDO::PARAM_STR);
             $query->bindValue(':name', $this->name, PDO::PARAM_STR);
