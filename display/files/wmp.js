@@ -1,6 +1,6 @@
 /*
  * main AngularJS code for wmp
- * version 1.1.0
+ * version 1.2.0
  */
 'use strict';
 angular
@@ -32,6 +32,8 @@ angular
 .controller('ArtistController', ['$routeParams', '$location', 'Playlist', 'Artist', 'MusicBrainz', ArtistController])
 //declare track controller
 .controller('TrackController', ['$routeParams', 'Library', TrackController])
+//declare settings controller
+.controller('SettingsController', ['Setting', SettingsController])
 //declare filter converting duration in seconds into a datetime
 .filter('duration', duration)
 //declare image missing directive
@@ -335,7 +337,7 @@ function MenuController(LocalUser, $window, $scope) {
         {require: 'admin', label: 'Catalog', icon: 'fa-folder-open', link: '#/catalog'},
         {require: 'user', label: 'Profile', icon: 'fa-user', link: '#/profile'},
         {require: 'admin', label: 'Users management', icon: 'fa-users', link: '#/users'},
-        {require: 'admin', label: 'Admin', icon: 'fa-sliders', link: '#/admin'},
+        {require: 'admin', label: 'Settings', icon: 'fa-sliders', link: '#/settings'},
         {require: 'user', label: 'Sign out', icon: 'fa-sign-out', link: '#/sign-out'},
         {require: 'user', label: 'Find an issue ?', icon: 'fa-bug', link: 'https://github.com/nioc/web-music-player/issues/new'},
         {require: 'user', label: 'Contribute', icon: 'fa-code-fork', link: 'https://github.com/nioc/web-music-player#contributing'}
@@ -616,6 +618,22 @@ function TrackController($routeParams, Library) {
         track.track.$update(successCallback, errorCallback);
     }
 }
+//SettingsController function
+function SettingsController(Setting) {
+    var panel = this;
+    panel.settings = Setting.query();
+    panel.edit = edit;
+    panel.save = save;
+    //switch in edition mode
+    function edit(setting) {
+        setting.edit = true;
+    }
+    //save current setting
+    function save(setting) {
+        delete setting.edit;
+        setting.$update();
+    }
+}
 //duration filter function
 function duration() {
     return function(seconds) {
@@ -682,6 +700,11 @@ function config($routeProvider, cfpLoadingBarProvider) {
     .when('/sign-out', {
         templateUrl: '/sign-out',
         controller: 'SignOutController'
+    })
+    .when('/settings', {
+        templateUrl: '/settings',
+        controller: 'SettingsController',
+        controllerAs: 'panel'
     })
     .otherwise({
         redirectTo: '/player'

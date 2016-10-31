@@ -1,0 +1,16 @@
+            <section>
+                <h2><i class="fa fa-sliders"></i>Administration</h2>
+                <p class="center"><i class="fa fa-warning"></i>&nbsp;Changing these settings can sometimes break WMP or cause strange behavior. You should only do this if you know what you're doing.</p>
+                <ul class="grid" ng-cloak>
+                    <li class="grid-header">
+                        <span class="grid-cell">Key</span>
+                        <span class="grid-cell">Value</span>
+                        <span class="grid-cell"></span>
+                    </li>
+                    <li class="grid-row" ng-repeat="setting in panel.settings track by setting.key">
+                        <span class="grid-cell" ng-bind="::setting.key"></span>
+                        <span class="grid-cell" ng-bind="setting.value" ng-show="!setting.edit"></span><span class="grid-cell" ng-show="setting.edit"><input ng-model="setting.value"></span>
+                        <span class="grid-cell" ng-show="!setting.edit" ng-click="panel.edit(setting)" title="Edit setting"><i class="fa fa-pencil"></i></span><span class="grid-cell" ng-show="setting.edit" ng-click="panel.save(setting)" title="Save modification"><i class="fa fa-save"></i></span>
+                    </li>
+                </ul>
+            </section>

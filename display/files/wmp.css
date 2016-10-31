@@ -1,5 +1,5 @@
 @CHARSET "UTF-8";
-/*! wmp.css v1.1.0 */
+/*! wmp.css v1.1.1 */
 body {
     font-family: "Helvetica Neue", "Helvetica", "Calibri", "sans";
     background-color: #383838;
@@ -14,11 +14,7 @@ a {
     display: flex;
     padding: 0.4rem 0;
 }
-h1 {
-    text-align: center;
-    width: 100%;
-}
-h2 {
+h1, h2, .center {
     text-align: center;
     width: 100%;
 }
