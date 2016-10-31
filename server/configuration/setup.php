@@ -113,12 +113,10 @@ if (isset($process) &&
     $DbName = $wmpDbName;
     $DbUser = $rootDbLogin;
     $DbPwd = $rootDbPassword;
-    $localConfigFile = fopen('local.ini', 'w');
-    fwrite($localConfigFile, "; This your local configuration file\n");
     try {
         //connect to database with provided informations
         $connection = new PDO('mysql:host=localhost;port=3306;', $DbUser, $DbPwd, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
-        fwrite($localConfigFile, "dbEngine = \"$dbEngine\"\n");
+        $configuration->set('dbEngine', $dbEngine);
         //create user
         $query = $connection->prepare("DROP USER :user@'localhost';");
         $query->bindValue(':user', $wmpDbLogin);
@@ -127,8 +125,8 @@ if (isset($process) &&
         $query->bindValue(':user', $wmpDbLogin);
         $query->bindValue(':password', $wmpDbPassword);
         if ($query->execute()) {
-            fwrite($localConfigFile, "dbUser = \"$wmpDbLogin\"\n");
-            fwrite($localConfigFile, "dbPwd = \"$wmpDbPassword\"\n");
+            $configuration->set('dbUser', $wmpDbLogin);
+            $configuration->set('dbPwd', $wmpDbPassword);
             $results['user']['Database user'] = '<span class="valid"> Ok </span>User `'.$wmpDbLogin.'` is set';
             //create schema
             if ($wmpDbDrop) {
@@ -139,7 +137,7 @@ if (isset($process) &&
             $queryString = "CREATE SCHEMA IF NOT EXISTS $wmpDbName DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;";
             $query = $connection->prepare($queryString);
             if ($query->execute()) {
-                fwrite($localConfigFile, "dbName = \"$wmpDbName\"\n");
+                $configuration->set('dbName', $wmpDbName);
                 $results['schema']['Database schema'] = '<span class="valid"> Ok </span>Schema `'.$wmpDbName.'` is set';
                 //grant user on schema
                 $queryString = "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE ON $wmpDbName.* TO :user@'localhost';";
@@ -162,22 +160,19 @@ if (isset($process) &&
         $results['user']['Database access'] = '<span class="error"> Failed </span>'.$exception->getMessage();
     }
     //update local hash key
-    fwrite($localConfigFile, "hashKey = \"$hashKey\"\n");
+    $configuration->set('hashKey', $hashKey);
     $results['local']['Hash key'] = '<span class="valid"> Ok </span> tokens will use your cipher';
     //achieve local configuration file
-    fclose($localConfigFile);
 }
 
 //SQLite processing
 if (isset($process) &&
     $dbEngine === 'sqlite' &&
     $dbPath !== null && $dbPath !== '') {
-    $localConfigFile = fopen('local.ini', 'w');
-    fwrite($localConfigFile, "; This your local configuration file\n");
-        //delete SQLite database if asked
-        if ($wmpDbDrop) {
-            unlink($_SERVER['DOCUMENT_ROOT'].$dbPath);
-        }
+    //delete SQLite database if asked
+    if ($wmpDbDrop) {
+        unlink($_SERVER['DOCUMENT_ROOT'].$dbPath);
+    }
     try {
         //if path does not exist, create it
         if (!file_exists($filesPath)) {
@@ -185,21 +180,20 @@ if (isset($process) &&
         }
         //connect to database with provided informations
         $connection = new PDO('sqlite:'.$_SERVER['DOCUMENT_ROOT'].$dbPath);
-        fwrite($localConfigFile, "dbEngine = \"$dbEngine\"\n");
+        $configuration->set('dbEngine', $dbEngine);
         if ($connection !== false) {
             $results['schema']['Database schema'] = '<span class="valid"> Ok </span>SQLite database `'.$dbPath.'` is set';
-            fwrite($localConfigFile, "dbPath = \"$dbPath\"\n");
-                //create tables
-                createTable($connection, $dbEngine, $wmpDbName, $adminUserPwd, $results);
+            $configuration->set('dbPath', $dbPath);
+            //create tables
+            createTable($connection, $dbEngine, $wmpDbName, $adminUserPwd, $results);
         }
     } catch (Exception $exception) {
         $results['user']['Database schema'] = '<span class="error"> Failed </span>'.$exception->getMessage();
     }
     //update local hash key
-    fwrite($localConfigFile, "hashKey = \"$hashKey\"\n");
+    $configuration->set('hashKey', $hashKey);
     $results['local']['Hash key'] = '<span class="valid"> Ok </span> tokens will use your cipher';
     //achieve local configuration file
-    fclose($localConfigFile);
 }
 
 //file path processing
@@ -215,11 +209,9 @@ if (isset($process) && $filesPath !== null && $filesPath !== '') {
                 $filesPath .= '/';
             }
             //update local root files path
-            $localConfigFile = fopen('local.ini', 'a+');
-            fwrite($localConfigFile, "filesPath = \"$filesPath\"\n");
+            $configuration->set('filesPath', $filesPath);
             $results['local']['Files path'] = '<span class="valid"> Ok </span> Your library root path is set to '.$filesPath;
             //achieve local configuration file
-            fclose($localConfigFile);
         }
     }
 }
