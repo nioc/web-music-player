@@ -23,12 +23,6 @@
                         <span class="grid-cell album"><a ng-href="#/albums/{{::track.album.id}}" ng-bind="::track.album.label"></a></span>
                         <span class="grid-cell"><button class="button-icon" ng-click="library.add(track)" title="Add to playlist"><i class="fa fa-plus-square-o"></i></button></span>
                     </li>
-                    <li class="grid-row" ng-if="library.tracks.length === 0">
-                        <span class="grid-cell">No results found</span>
-                        <span class="grid-cell"></span>
-                        <span class="grid-cell"></span>
-                        <span class="grid-cell"></span>
-                    </li>
                 </ul>
                 <ul class="grid pagination" ng-if="library.pagesCount > 1" ng-cloak>
                     <li class="grid-footer">
@@ -42,4 +36,5 @@
                         </span>
                     </li>
                 </ul>
+                <div class="center" ng-if="library.tracks.length === 0">No results found</div>
             </section>

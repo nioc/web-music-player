@@ -13,25 +13,25 @@ angular
 //declare playlist service
 .service('Playlist', ['LocalUser', 'Tooltip', 'PlaylistItem', Playlist])
 //declare player controller
-.controller('PlayerController', ['$scope', 'Playlist', 'PlaylistItem', 'Audio', 'LocalUser', '$window', PlayerController])
+.controller('PlayerController', ['$scope', 'Playlist', 'PlaylistItem', 'Tooltip', 'Audio', 'LocalUser', '$window', PlayerController])
 //declare menu controller
 .controller('MenuController', ['LocalUser', '$window', '$scope', MenuController])
 //declare library controller
-.controller('LibraryController', ['Library', 'Playlist', LibraryController])
+.controller('LibraryController', ['Library', 'Tooltip', 'Playlist', LibraryController])
 //declare catalog controller
 .controller('CatalogController', ['Library', 'Folder', '$q', CatalogController])
 //declare sign-out controller
 .controller('SignOutController', ['LocalUser', '$window', SignOutController])
 //declare profile controller
-.controller('UserController', ['LocalUser', 'User', '$routeParams', UserController])
+.controller('UserController', ['LocalUser', 'User', 'Tooltip', '$routeParams', UserController])
 //declare users management controller
-.controller('UsersController', ['User', UsersController])
+.controller('UsersController', ['User', 'Tooltip', UsersController])
 //declare album controller
-.controller('AlbumController', ['$routeParams', '$location', 'Playlist', 'Album', 'MusicBrainz', AlbumController])
+.controller('AlbumController', ['$routeParams', '$location', 'Tooltip', 'Playlist', 'Album', 'MusicBrainz', AlbumController])
 //declare artist controller
-.controller('ArtistController', ['$routeParams', '$location', 'Playlist', 'Artist', 'MusicBrainz', ArtistController])
+.controller('ArtistController', ['$routeParams', '$location', 'Tooltip', 'Playlist', 'Artist', 'MusicBrainz', ArtistController])
 //declare track controller
-.controller('TrackController', ['$routeParams', 'Library', TrackController])
+.controller('TrackController', ['$routeParams', 'Tooltip', 'Library', TrackController])
 //declare settings controller
 .controller('SettingsController', ['Setting', SettingsController])
 //declare filter converting duration in seconds into a datetime
@@ -79,7 +79,12 @@ function Tooltip($animate, $timeout, $compile, $rootScope) {
 function Playlist(LocalUser, Tooltip, PlaylistItem) {
     var playlist = this;
     //get tracks
-    playlist.tracks = PlaylistItem.query({userId: LocalUser.id});
+    playlist.tracks = PlaylistItem.query({userId: LocalUser.id}, function (success) {}, function (error) {
+        //function for handling API error
+        if (error.status === -1) {
+            Tooltip.display('Can not access to your current playlist, please check your internet connection or try again later', 5000, 'error');
+        }
+    });
     //initialize current track
     playlist.currentTrack = 0;
     //declare function for add track in playlist
@@ -94,13 +99,21 @@ function Playlist(LocalUser, Tooltip, PlaylistItem) {
             //notify user with a tooltip
             Tooltip.display('Track "' + track.title + '" added to your playlist', 2000, 'info');
         }, function(error) {
-            //error, alert user
-            alert(error.data.message);
+            //handling API error
+            if (error.status === -1) {
+                Tooltip.display('Can not access to your current playlist, please check your internet connection or try again later', 5000, 'error');
+                return;
+            }
+            if (error.data && error.data.message) {
+                //catched error
+                Tooltip.display(error.data.message, 5000, 'error');
+                return;
+            }
         });
     }
 }
 //PlayerController function
-function PlayerController($scope, Playlist, PlaylistItem, Audio, LocalUser, $window) {
+function PlayerController($scope, Playlist, PlaylistItem, Tooltip, Audio, LocalUser, $window) {
     var player = this;
     //check user profile
     player.user = LocalUser;
@@ -157,8 +170,16 @@ function PlayerController($scope, Playlist, PlaylistItem, Audio, LocalUser, $win
                 //success, apply display change
                 player.playlist.tracks = data;
             }, function(error) {
-                //error, alert user
-                alert(error.data.message);
+                //handling API error
+                if (error.status === -1) {
+                    Tooltip.display('Can not access to your current playlist, please check your internet connection or try again later', 5000, 'error');
+                    return;
+                }
+                if (error.data && error.data.message) {
+                    //catched error
+                    Tooltip.display(error.data.message, 5000, 'error');
+                    return;
+                }
             });
         }
     };
@@ -261,8 +282,16 @@ function PlayerController($scope, Playlist, PlaylistItem, Audio, LocalUser, $win
                 }
             }
         }, function(error) {
-            //error, alert user
-            alert(error.data.message);
+            //handling API error
+            if (error.status === -1) {
+                Tooltip.display('Can not access to your current playlist, please check your internet connection or try again later', 5000, 'error');
+                return;
+            }
+            if (error.data && error.data.message) {
+                //catched error
+                Tooltip.display(error.data.message, 5000, 'error');
+                return;
+            }
         });
     }
     //automatic call to the next function when track is ended
@@ -279,7 +308,7 @@ function PlayerController($scope, Playlist, PlaylistItem, Audio, LocalUser, $win
     }
 }
 //LibraryController function
-function LibraryController(Library, Playlist) {
+function LibraryController(Library, Tooltip, Playlist) {
     var librarys = this;
     //get library
     librarys.tracks = [];
@@ -307,6 +336,11 @@ function LibraryController(Library, Playlist) {
                 //update pagination system when query ends
                 librarys.currentPage = 1;
                 updateFilteredItems();
+            }, function (error) {
+                //function for handling API error
+                if (error.status === -1) {
+                    Tooltip.display('Can not access to library, please check your internet connection or try again later', 5000, 'error');
+                }
             });
         }
     };
@@ -457,14 +491,25 @@ function SignOutController(LocalUser, $window) {
     $window.location = '/sign';
 }
 //ProfileController function
-function UserController(LocalUser, User, $routeParams) {
+function UserController(LocalUser, User, Tooltip, $routeParams) {
     var profile = this;
     profile.result = {text: '', class: ''};
     profile.submit = submit;
     if ($routeParams && $routeParams.id) {
         if (parseInt($routeParams.id)) {
             //edit existing user, get his profile from url id parameter
-            profile.user = User.get({id: $routeParams.id});
+            profile.user = User.get({id: $routeParams.id}, function() {}, function (error){
+                //handling API error
+                if (error.status === -1) {
+                    Tooltip.display('Can not access to user profile, please check your internet connection or try again later', 5000, 'error');
+                    return;
+                }
+                if (error.data && error.data.message) {
+                    //catched error
+                    Tooltip.display(error.data.message, 5000, 'error');
+                    return;
+                }
+            });
             profile.title = 'Edit user';
             profile.scopeEditable = true;
         } else {
@@ -477,7 +522,18 @@ function UserController(LocalUser, User, $routeParams) {
     } else {
         //edit current user, get his local profile
         LocalUser.getProfile();
-        profile.user = User.get({id: LocalUser.id});
+        profile.user = User.get({id: LocalUser.id}, function() {}, function (error){
+            //handling API error
+            if (error.status === -1) {
+                Tooltip.display('Can not access to your profile, please check your internet connection or try again later', 5000, 'error');
+                return;
+            }
+            if (error.data && error.data.message) {
+                //catched error
+                Tooltip.display(error.data.message, 5000, 'error');
+                return;
+            }
+        });
         profile.title = 'Edit your profile';
         profile.scopeEditable = false;
     }
@@ -487,10 +543,14 @@ function UserController(LocalUser, User, $routeParams) {
             profile.result.text = 'Profile successfully created';
             profile.result.class = 'form-valid';
         }
-        function errorCallback(response) {
+        function errorCallback(error) {
             profile.result.text = 'Error, profile not created';
-            if (response.data && response.data.message) {
-                profile.result.text = response.data.message;
+            //handling API error
+            if (error.status === -1) {
+                Tooltip.display('Can not create user, please check your internet connection or try again later', 5000, 'error');
+            }
+            if (error.data && error.data.message) {
+                profile.result.text = error.data.message;
             }
             profile.result.class = 'form-error';
         }
@@ -502,10 +562,14 @@ function UserController(LocalUser, User, $routeParams) {
             profile.result.text = 'Profile successfully updated';
             profile.result.class = 'form-valid';
         }
-        function errorCallback(response) {
+        function errorCallback(error) {
             profile.result.text = 'Error, profile not updated';
-            if (response.data && response.data.message) {
-                profile.result.text = response.data.message;
+            //handling API error
+            if (error.status === -1) {
+                Tooltip.display('Can not update user, please check your internet connection or try again later', 5000, 'error');
+            }
+            if (error.data && error.data.message) {
+                profile.result.text = error.data.message;
             }
             profile.result.class = 'form-error';
         }
@@ -513,14 +577,25 @@ function UserController(LocalUser, User, $routeParams) {
     }
 }
 //UsersController function
-function UsersController(User) {
+function UsersController(User, Tooltip) {
     var usersManagement = this;
-    usersManagement.users = User.query();
+    usersManagement.users = User.query({}, function () {}, function (error) {
+        //handling API error
+        if (error.status === -1) {
+            Tooltip.display('Can not access to users management, please check your internet connection or try again later', 5000, 'error');
+            return;
+        }
+        if (error.data && error.data.message) {
+            //catched error
+            Tooltip.display(error.data.message, 5000, 'error');
+            return;
+        }
+    });
 }
 //AlbumController function
-function AlbumController($routeParams, $location, Playlist, Album, MusicBrainz) {
+function AlbumController($routeParams, $location, Tooltip, Playlist, Album, MusicBrainz) {
     var album = this;
-    album.album = Album.get({id: $routeParams.id});
+    album.album = Album.get({id: $routeParams.id}, function () {}, errorCallback);
     album.editMode = false;
     album.MusicBrainzResults = [];
     album.remove = remove;
@@ -532,7 +607,7 @@ function AlbumController($routeParams, $location, Playlist, Album, MusicBrainz) 
     album.add = Playlist.add;
     function remove() {
         if (confirm('This will delete "' + album.album.name + '" album from the library, are you sure?')) {
-            album.album.$delete(function() {$location.path('/library').replace();}, function(error) {alert(error.data.message);});
+            album.album.$delete(function() {$location.path('/library').replace();}, errorCallback);
         }
     }
     function edit() {
@@ -541,8 +616,17 @@ function AlbumController($routeParams, $location, Playlist, Album, MusicBrainz) 
     function successCallback() {
         album.editMode = false;
     }
-    function errorCallback(response) {
-        alert(response.data.message);
+    function errorCallback(error) {
+        //handling API error
+        if (error.status === -1) {
+            Tooltip.display('Can not access to this album, please check your internet connection or try again later', 5000, 'error');
+            return;
+        }
+        if (error.data && error.data.message) {
+            //catched error
+            Tooltip.display(error.data.message, 5000, 'error');
+            return;
+        }
     }
     function save() {
         album.album.$update(successCallback, errorCallback);
@@ -559,9 +643,9 @@ function AlbumController($routeParams, $location, Playlist, Album, MusicBrainz) 
     }
 }
 //ArtistController function
-function ArtistController($routeParams, $location, Playlist, Artist, MusicBrainz) {
+function ArtistController($routeParams, $location, Tooltip, Playlist, Artist, MusicBrainz) {
     var artist = this;
-    artist.artist = Artist.get({id: $routeParams.id});
+    artist.artist = Artist.get({id: $routeParams.id}, function () {}, errorCallback);
     artist.editMode = false;
     artist.MusicBrainzResults = [];
     artist.remove = remove;
@@ -573,7 +657,7 @@ function ArtistController($routeParams, $location, Playlist, Artist, MusicBrainz
     artist.add = Playlist.add;
     function remove() {
         if (confirm('This will delete "' + artist.artist.name + '" artist from the library and all his tracks, are you sure?')) {
-            artist.artist.$delete(function() {$location.path('/library').replace();}, function(error) {alert(error.data.message);});
+            artist.artist.$delete(function() {$location.path('/library').replace();}, errorCallback);
         }
     }
     function edit() {
@@ -582,8 +666,17 @@ function ArtistController($routeParams, $location, Playlist, Artist, MusicBrainz
     function successCallback() {
         artist.editMode = false;
     }
-    function errorCallback(response) {
-        alert(response.data.message);
+    function errorCallback(error) {
+        //handling API error
+        if (error.status === -1) {
+            Tooltip.display('Can not access to this artist, please check your internet connection or try again later', 5000, 'error');
+            return;
+        }
+        if (error.data && error.data.message) {
+            //catched error
+            Tooltip.display(error.data.message, 5000, 'error');
+            return;
+        }
     }
     function save() {
         artist.artist.$update(successCallback, errorCallback);
@@ -599,9 +692,9 @@ function ArtistController($routeParams, $location, Playlist, Artist, MusicBrainz
     }
 }
 //TrackController function
-function TrackController($routeParams, Library) {
+function TrackController($routeParams, Tooltip, Library) {
     var track = this;
-    track.track = Library.get({id: $routeParams.id});
+    track.track = Library.get({id: $routeParams.id}, function () {}, errorCallback);
     track.editMode = false;
     track.edit = edit;
     track.save = save;
@@ -611,8 +704,17 @@ function TrackController($routeParams, Library) {
     function successCallback() {
         track.editMode = false;
     }
-    function errorCallback(response) {
-        alert(response.data.message);
+    function errorCallback(error) {
+        //handling API error
+        if (error.status === -1) {
+            Tooltip.display('Can not access to this track, please check your internet connection or try again later', 5000, 'error');
+            return;
+        }
+        if (error.data && error.data.message) {
+            //catched error
+            Tooltip.display(error.data.message, 5000, 'error');
+            return;
+        }
     }
     function save() {
         track.track.$update(successCallback, errorCallback);

@@ -1,6 +1,6 @@
 /*
  * sign AngularJS code for wmp
- * version 1.0.0
+ * version 1.1.0
  */
 (function() {
     'use strict';
@@ -28,6 +28,11 @@
                 }
             }
             function errorCallback(response) {
+                // Offline
+                if (response.status === -1) {
+                    $scope.result = {text: 'Can not reach server, please check your internet connection or try again later', class: 'form-error'};
+                    return;
+                }
                 // Erase the token if the user fails to log in
                 user.deleteToken();
                 $scope.result = {text: 'Invalid credentials', class: 'form-error'};

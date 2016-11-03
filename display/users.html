@@ -2,7 +2,7 @@
                 <h2><i class="fa fa-users"></i>Users management</h2>
                 <fieldset class="form">
                     <a class="plain-button" href="#/users/new"><i class="fa fa-user-plus"></i> Create a user</a>
-                    <ul class="grid" ng-cloak>
+                    <ul class="grid" ng-cloak  ng-if="usersManagement.users.length > 0">
                         <li class="grid-header">
                             <span class="grid-cell">Login</span>
                             <span class="grid-cell">Name</span>

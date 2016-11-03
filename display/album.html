@@ -1,4 +1,4 @@
-            <article class="album">
+            <article class="album" ng-if="album.album.id">
                 <h2><i class="fa fa-dot-circle-o"></i>Album</h2>
                 <fieldset class="form">
                     <img ng-if="album.album.coverPath" class="player-cover" ng-src="{{album.album.coverPath}}" alt="cover"/>

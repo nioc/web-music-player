@@ -59,7 +59,7 @@
                 <button class="button-icon player-control pause" ng-click="player.pause()" ng-if="player.isPlaying" title="Pause"><i class="fa fa-pause"></i></button>
                 <button class="button-icon player-control next" ng-click="player.next()"><i class="fa fa-fast-forward" title="Next"></i></button>
             </nav>
-            <ul class="grid" ng-cloak ng-sortable="player.playlistSort">
+            <ul class="grid" ng-cloak ng-sortable="player.playlistSort" ng-if="player.playlist.tracks.length > 0">
                 <li class="grid-header">
                     <span class="grid-cell"></span>
                     <span class="grid-cell">Title</span>
@@ -70,14 +70,12 @@
                 <li class="grid-row track" ng-repeat="track in player.playlist.tracks track by track.sequence" ng-class="{'player-current': player.playlist.currentTrack === $index}">
                     <span class="grid-cell track-handle"><i class="fa fa-ellipsis-v sortable-v" title="Drag and drop to reorder tracks"></i></span>
                     <span class="grid-cell clickable" ng-click="player.play($index)" ng-bind="track.title"></span>
-                    <span class="grid-cell clickable" ng-click="player.play($index)" ng-bind="track.artist.label"></span>
-                    <span class="grid-cell clickable" ng-click="player.play($index)" ng-bind="track.album.label"></span>
+                    <a class="grid-cell clickable" ng-href="#/albums/{{::track.artist.id}}" ng-bind="track.artist.label"></a>
+                    <a class="grid-cell clickable" ng-href="#/albums/{{::track.album.id}}" ng-bind="track.album.label"></a>
                     <span class="grid-cell"><button class="button-icon remove" ng-click="player.playlist.remove(track)"><i class="fa fa-trash"></i></button></span>
                 </li>
-                <li class="grid-row" ng-if="player.playlist.tracks.length === 0">
-                    <span class="grid-cell">No track in playlist, add some from library</span>
-                </li>
             </ul>
+            <div class="center" ng-if="player.playlist.tracks.length === 0">No track in playlist, add some from <a href="#/library">library</a></div>
         </div>
         <div ng-view ng-show="!menu.visible"></div>
         </div>
