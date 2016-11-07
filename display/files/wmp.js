@@ -1,6 +1,6 @@
 /*
  * main AngularJS code for wmp
- * version 1.2.0
+ * version 1.2.1
  */
 'use strict';
 angular
@@ -79,7 +79,7 @@ function Tooltip($animate, $timeout, $compile, $rootScope) {
 function Playlist(LocalUser, Tooltip, PlaylistItem) {
     var playlist = this;
     //get tracks
-    playlist.tracks = PlaylistItem.query({userId: LocalUser.id}, function (success) {}, function (error) {
+    playlist.tracks = PlaylistItem.query({userId: LocalUser.id}, function () {}, function (error) {
         //function for handling API error
         if (error.status === -1) {
             Tooltip.display('Can not access to your current playlist, please check your internet connection or try again later', 5000, 'error');
@@ -467,7 +467,7 @@ function CatalogController(Library, Folder, $q) {
                 previous = previous.then(function() {
                     return Library.save({'folder': folderPathsWithFiles[i]}, function(data) {
                         //success, display progression
-                        filesProcessed += data.length;
+                        filesProcessed += data.data.length;
                         catalog.progress = parseInt(100 * filesProcessed / filesCounter);
                         catalog.result = 'Processing, please wait (' + catalog.progress + '%)';
                     }).$promise;

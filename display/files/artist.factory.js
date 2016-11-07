@@ -1,6 +1,6 @@
 /**
  * Artist Factory
- * @version 1.1.0
+ * @version 1.1.1
  */
 'use strict';
 angular
@@ -13,10 +13,12 @@ function Artist($resource, $cacheFactory) {
 
     //this interceptor will clear cached resources (only item)
     var removeCache = {
-        response: function (response) {
+        response(response) {
             cache.remove(response.config.url);
             //remove Library cache
-            $cacheFactory.get('LibraryCache').removeAll();
+            if($cacheFactory.get('LibraryCache')) {
+                $cacheFactory.get('LibraryCache').removeAll();
+            }
             return response;
         }
     };
@@ -25,6 +27,6 @@ function Artist($resource, $cacheFactory) {
     {
         'get':    {method: 'GET', cache: cache},
         'update': {method: 'PUT', interceptor: removeCache},
-        'delete': {interceptor: removeCache}
+        'delete': {method: 'DELETE', interceptor: removeCache}
     });
 }

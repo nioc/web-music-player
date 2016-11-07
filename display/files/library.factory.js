@@ -1,6 +1,6 @@
 /**
  * Library Factory
- * @version 1.1.0
+ * @version 1.1.1
  */
 'use strict';
 angular
@@ -13,7 +13,7 @@ function Library($resource, $cacheFactory) {
 
     //this interceptor will clear cached resources (collection)
     var removeCache = {
-        response: function (response) {
+        response(response) {
             cache.removeAll();
             return response;
         }
@@ -21,8 +21,8 @@ function Library($resource, $cacheFactory) {
 
     return $resource('/server/api/library/tracks/:id', {id: '@id'},
     {
-        'get':    {cache: cache},
-        'query':  {cache: cache, isArray: true},
+        'get':    {method: 'GET', cache: cache},
+        'query':  {method: 'GET', cache: cache, isArray: true},
         'save':   {method: 'POST', isArray: true, interceptor: removeCache},
         'update': {method: 'PUT', interceptor: removeCache}
     });
