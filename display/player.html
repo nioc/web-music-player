@@ -70,7 +70,7 @@
                 <li class="grid-row track" ng-repeat="track in player.playlist.tracks track by track.sequence" ng-class="{'player-current': player.playlist.currentTrack === $index}">
                     <span class="grid-cell track-handle"><i class="fa fa-ellipsis-v sortable-v" title="Drag and drop to reorder tracks"></i></span>
                     <span class="grid-cell clickable" ng-click="player.play($index)" ng-bind="track.title"></span>
-                    <a class="grid-cell clickable" ng-href="#/albums/{{::track.artist.id}}" ng-bind="track.artist.label"></a>
+                    <a class="grid-cell clickable" ng-href="#/artists/{{::track.artist.id}}" ng-bind="track.artist.label"></a>
                     <a class="grid-cell clickable" ng-href="#/albums/{{::track.album.id}}" ng-bind="track.album.label"></a>
                     <span class="grid-cell"><button class="button-icon remove" ng-click="player.playlist.remove(track)"><i class="fa fa-trash"></i></button></span>
                 </li>
