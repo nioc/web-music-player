@@ -3,7 +3,7 @@
 /**
  * API wrapper.
  *
- * @version 1.0.0
+ * @version 1.1.0
  *
  * @internal
  */
@@ -199,7 +199,7 @@ class Api
                 //add the error in webserver log
                 error_log('client denied by server configuration: '.$_SERVER['SCRIPT_NAME']);
             }
-            if ($this->outputFormat !== 'html') {
+            if ($this->outputFormat === 'json' || $this->outputFormat === 'xml') {
                 $responseBody = new stdClass();
                 $responseBody->code = $this->httpCode;
                 $responseBody->message = '';
@@ -213,6 +213,11 @@ class Api
         switch ($this->outputFormat) {
             case 'html':
                 header('Content-type: text/html; charset=UTF-8');
+                echo $this->responseBody;
+                break;
+            case 'base64':
+                header('Content-type: text/plain; charset=UTF-8');
+                header('Content-Transfer-Encoding: base64');
                 echo $this->responseBody;
                 break;
             case 'xml':

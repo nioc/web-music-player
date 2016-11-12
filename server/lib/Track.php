@@ -5,7 +5,7 @@
  *
  * The track is a single song and is linked to the artist and the album
  *
- * @version 1.0.0
+ * @version 1.1.0
  *
  * @internal
  */
@@ -198,18 +198,17 @@ class Track
     /**
      * Returns the filename for a specific track.
      *
-     * @param string $id track identifier
-     *
      * @return string the filename on success, or false on error.
      */
-    public function getFile($id = null)
+    public function getFile()
     {
-        if (!is_null($id)) {
-            $this->id = $id;
+        if (is_null($this->id)) {
+            //return false to indicate file was not found
+            return false;
         }
         require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
         $connection = new DatabaseConnection();
-        $query = $connection->prepare('SELECT `file` FROM `track` WHERE `id`=:id LIMIT 1;');
+        $query = $connection->prepare('SELECT `file`, `additionTime` FROM `track` WHERE `id`=:id LIMIT 1;');
         $query->bindValue(':id', $this->id, PDO::PARAM_INT);
         $query->execute();
         $query->setFetchMode(PDO::FETCH_INTO, $this);
@@ -320,6 +319,17 @@ class Track
         }
         //return false to indicate ID3 was not read
         return false;
+    }
+    /**
+     * Get Base64 data from a file.
+     *
+     * @return string Base64 representation of the track
+     */
+    public function getBase64()
+    {
+        $data = file_get_contents($this->file);
+        $base64 = base64_encode($data);
+        return 'data:'.mime_content_type($this->file).';base64,'.$base64;
     }
 }
 

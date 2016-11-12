@@ -1,6 +1,6 @@
 /*
  * main AngularJS code for wmp
- * version 1.2.1
+ * version 1.3.0
  */
 'use strict';
 angular
@@ -13,7 +13,7 @@ angular
 //declare playlist service
 .service('Playlist', ['LocalUser', 'Tooltip', 'PlaylistItem', Playlist])
 //declare player controller
-.controller('PlayerController', ['$scope', 'Playlist', 'PlaylistItem', 'Tooltip', 'Audio', 'LocalUser', '$window', PlayerController])
+.controller('PlayerController', ['$scope', 'Playlist', 'PlaylistItem', 'Tooltip', 'Audio', 'LocalUser', '$window', '$http', PlayerController])
 //declare menu controller
 .controller('MenuController', ['LocalUser', '$window', '$scope', MenuController])
 //declare library controller
@@ -113,7 +113,7 @@ function Playlist(LocalUser, Tooltip, PlaylistItem) {
     }
 }
 //PlayerController function
-function PlayerController($scope, Playlist, PlaylistItem, Tooltip, Audio, LocalUser, $window) {
+function PlayerController($scope, Playlist, PlaylistItem, Tooltip, Audio, LocalUser, $window, $http) {
     var player = this;
     //check user profile
     player.user = LocalUser;
@@ -194,23 +194,31 @@ function PlayerController($scope, Playlist, PlaylistItem, Tooltip, Audio, LocalU
                 if (angular.isDefined(trackIndex)) {
                     this.playlist.currentTrack = trackIndex;
                 }
-                //get token and send it in query string
-                var token = this.user.getToken();
-                var queryParameter = '';
-                if (token) {
-                    queryParameter = '?token=' + encodeURIComponent(token);
-                }
-                audio.src = this.playlist.tracks[this.playlist.currentTrack].file + queryParameter;
-                audio.play();
-                if (this.playlist.tracks[this.playlist.currentTrack].album.coverPath) {
-                    player.coverPath = this.playlist.tracks[this.playlist.currentTrack].album.coverPath;
-                } else {
-                    player.coverPath = '/display/files/images/default_cover.png';
-                }
-                this.currentTime = 0;
+                $http.get(this.playlist.tracks[this.playlist.currentTrack].file, {cache: true})
+                .then(function successCallback(response) {
+                    //track is loaded, update src attribute and start playing
+                    audio.src = response.data;
+                    audio.play();
+                    //update cover
+                    if (player.playlist.tracks[player.playlist.currentTrack].album.coverPath) {
+                        player.coverPath = player.playlist.tracks[player.playlist.currentTrack].album.coverPath;
+                    } else {
+                        player.coverPath = '/display/files/images/default_cover.png';
+                    }
+                    player.currentTime = 0;
+                    player.isPlaying = true;
+                    player.isPaused = false;
+                }, function errorCallback(error) {
+                    player.pause();
+                    if (error.status === -1) {
+                        Tooltip.display('Can not access to the server, please check your internet connection or try again later', 5000, 'error');
+                    }
+                    if (error.data && error.data) {
+                        //catched error
+                        Tooltip.display(error.data, 5000, 'error');
+                    }
+                });
             }
-            this.isPlaying = true;
-            this.isPaused = false;
         }
     }
     //function to pause the playing
@@ -245,8 +253,6 @@ function PlayerController($scope, Playlist, PlaylistItem, Tooltip, Audio, LocalU
             this.isPlaying = false;
             return;
         }
-        this.isPaused = false;
-        this.isPlaying = true;
         if (this.playlist.tracks.length > (this.playlist.currentTrack + 1)) {
             //go to next track
             this.playlist.currentTrack++;
