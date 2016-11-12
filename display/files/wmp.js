@@ -17,7 +17,7 @@ angular
 //declare menu controller
 .controller('MenuController', ['LocalUser', '$window', '$scope', MenuController])
 //declare library controller
-.controller('LibraryController', ['Library', 'Tooltip', 'Playlist', LibraryController])
+.controller('LibraryController', ['Library', 'Tooltip', 'Playlist', '$filter', LibraryController])
 //declare catalog controller
 .controller('CatalogController', ['Library', 'Folder', '$q', CatalogController])
 //declare sign-out controller
@@ -314,7 +314,7 @@ function PlayerController($scope, Playlist, PlaylistItem, Tooltip, Audio, LocalU
     }
 }
 //LibraryController function
-function LibraryController(Library, Tooltip, Playlist) {
+function LibraryController(Library, Tooltip, Playlist, $filter) {
     var librarys = this;
     //get library
     librarys.tracks = [];
@@ -362,6 +362,7 @@ function LibraryController(Library, Tooltip, Playlist) {
     function updateFilteredItems() {
         var begin = ((librarys.currentPage - 1) * librarys.itemsPerPage);
         var end = begin + librarys.itemsPerPage;
+        librarys.tracks = $filter('orderBy')(librarys.tracks, librarys.order);
         librarys.tracksFiltered = librarys.tracks.slice(begin, end);
         librarys.pagesCount = Math.ceil(librarys.tracks.length / librarys.itemsPerPage);
     }
