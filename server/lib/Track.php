@@ -198,7 +198,7 @@ class Track
     /**
      * Returns the filename for a specific track.
      *
-     * @return string the filename on success, or false on error.
+     * @return string the filename on success, or false on error
      */
     public function getFile()
     {
@@ -329,6 +329,7 @@ class Track
     {
         $data = file_get_contents($this->file);
         $base64 = base64_encode($data);
+        //return data base64 encoded
         return 'data:'.mime_content_type($this->file).';base64,'.$base64;
     }
 }
@@ -364,7 +365,7 @@ class Tracks
     /**
      * Populates tracks collection with all library tracks matching criteria.
      *
-     * @param array $parameters Requested parameters.
+     * @param array $parameters Requested parameters
      *
      * @return bool true if the database read is ok, false otherwise
      */
@@ -377,13 +378,13 @@ class Tracks
         foreach ($parameters as $parameter => $value) {
             if (isset($value)) {
                 switch ($parameter) {
-                    case 'trackTitle' :
+                    case 'trackTitle':
                         $sqlCondition .= ' AND `track`.`title` LIKE :trackTitle';
                         break;
-                    case 'artistName' :
+                    case 'artistName':
                         $sqlCondition .= ' AND `artist`.`name` LIKE :artistName';
                         break;
-                    case 'albumName' :
+                    case 'albumName':
                         $sqlCondition .= ' AND `album`.`name` LIKE :albumName';
                         break;
                 }
@@ -395,13 +396,13 @@ class Tracks
         foreach ($parameters as $parameter => $value) {
             if (isset($value)) {
                 switch ($parameter) {
-                    case 'trackTitle' :
+                    case 'trackTitle':
                         $query->bindValue(':trackTitle', "%$value%", PDO::PARAM_STR);
                         break;
-                    case 'artistName' :
+                    case 'artistName':
                         $query->bindValue(':artistName', "%$value%", PDO::PARAM_STR);
                         break;
-                    case 'albumName' :
+                    case 'albumName':
                         $query->bindValue(':albumName', "%$value%", PDO::PARAM_STR);
                         break;
                 }

@@ -53,5 +53,4 @@ if (isset($track->additionTime)) {
 $stream = $track->getBase64();
 
 //output it
-header('Content-Length: '.$stream);
 $api->output(200, $stream);
