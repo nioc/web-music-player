@@ -44,7 +44,7 @@
             </nav>
         </div>
         <div class="container" ng-show="!menu.visible">
-        <div class="player" ng-controller="PlayerController as player" ng-show="menu.currentPage.link === '#/player'" ng-cloak>
+        <div class="player" ng-controller="PlayerController as player" ng-class="{'player-mini': menu.currentPage.link !== '#/player'}" ng-cloak>
             <div class="player-cover">
                 <img class="player-cover" ng-src="{{player.coverPath}}" alt="cover"/>
             </div>
@@ -59,7 +59,7 @@
                 <button class="button-icon player-control pause" ng-click="player.pause()" ng-if="player.isPlaying" title="Pause"><i class="fa fa-pause"></i></button>
                 <button class="button-icon player-control next" ng-click="player.next()"><i class="fa fa-fast-forward" title="Next"></i></button>
             </nav>
-            <ul class="grid" ng-cloak ng-sortable="player.playlistSort" ng-if="player.playlist.tracks.length > 0">
+            <ul class="grid" ng-cloak ng-sortable="player.playlistSort" ng-if="player.playlist.tracks.length > 0" ng-show="menu.currentPage.link === '#/player'">
                 <li class="grid-header">
                     <span class="grid-cell"></span>
                     <span class="grid-cell">Title</span>
@@ -75,7 +75,7 @@
                     <span class="grid-cell"><button class="button-icon remove" ng-click="player.playlist.remove(track)"><i class="fa fa-trash"></i></button></span>
                 </li>
             </ul>
-            <div class="center" ng-if="player.playlist.tracks.length === 0">No track in playlist, add some from <a href="#/library">library</a></div>
+            <div class="center" ng-if="player.playlist.tracks.length === 0" ng-show="menu.currentPage.link === '#/player'">No track in playlist, add some from <a href="#/library">library</a></div>
         </div>
         <div ng-view ng-show="!menu.visible"></div>
         </div>

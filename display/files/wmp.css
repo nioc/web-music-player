@@ -1,5 +1,5 @@
 @CHARSET "UTF-8";
-/*! wmp.css v1.1.1 */
+/*! wmp.css v1.2.0 */
 body {
     font-family: "Helvetica Neue", "Helvetica", "Calibri", "sans";
     background-color: #383838;
@@ -285,6 +285,29 @@ fieldset.radios .radio label {
 }
 .player-duration {
     float: right;
+}
+.player-mini {
+    position: fixed;
+    bottom: 0;
+    height: 40px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: #383838;
+    border-top: solid 1px #222222;
+    z-index: 10;
+}
+.player-mini #seek, .player-mini .player-times {
+    display: none;
+}
+.player-mini .player-cover {
+    height: 100%;
+    width: auto;
+    margin: unset;
+}
+.player-mini .player-control {
+    font-size: 1.4rem;
+    padding: 0.4rem 1rem;
 }
 .popin {
     position: absolute;
