@@ -1,6 +1,6 @@
 /*
  * main AngularJS code for wmp
- * version 1.3.1
+ * version 1.3.2
  */
 'use strict';
 angular
@@ -185,10 +185,16 @@ function PlayerController($scope, Playlist, PlaylistItem, Tooltip, Audio, LocalU
     };
     //function for playing current track in playlist
     function play(trackIndex) {
+        if (!audio.src) {
+            //first use of the audio element, force a play while handle user interaction (issue on Chrome mobile)
+            audio.play();
+        }
         if (this.playlist.tracks.length > 0 && this.playlist.tracks.length > this.playlist.currentTrack) {
             if (this.isPaused && !angular.isDefined(trackIndex)) {
                 //resume the playing (only if there is no specific track asked)
                 audio.play();
+                player.isPlaying = true;
+                player.isPaused = false;
             } else {
                 //load new track and play it
                 if (angular.isDefined(trackIndex)) {
@@ -223,11 +229,9 @@ function PlayerController($scope, Playlist, PlaylistItem, Tooltip, Audio, LocalU
     }
     //function to pause the playing
     function pause() {
-        if (this.isPlaying) {
-            audio.pause();
-            this.isPaused = true;
-            this.isPlaying = false;
-        }
+        audio.pause();
+        this.isPaused = true;
+        this.isPlaying = false;
     }
     //function for playing previous track in playlist
     function previous() {
