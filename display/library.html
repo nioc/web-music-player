@@ -3,15 +3,21 @@
                 <ul class="grid" ng-cloak>
                     <li class="grid-header">
                         <span class="grid-cell">
-                            <span>Title</span><button class="button-icon" ng-click="library.search.displayFilter.title = !library.search.displayFilter.title" title="Search by title"><i class="fa fa-search"></i></button>
+                            <span>Title</span>
+                            <button class="button-icon" ng-click="library.search.displayFilter.title = !library.search.displayFilter.title" title="Search by title"><i class="fa fa-search"></i></button>
+                            <button class="button-icon" ng-click="library.updateOrder(['title', 'album.label', 'artist.label'])" title="Order by title"><i class="fa fa-sort"></i></button>
                             <input ng-if="library.search.displayFilter.title" ng-model="library.search.title" placeholder="Title" autofocus="autofocus" ng-change="library.search.query()" ng-model-options="{ debounce: 1000 }">
                         </span>
                         <span class="grid-cell">
-                            <span>Artist</span><button class="button-icon" ng-click="library.search.displayFilter.artist = !library.search.displayFilter.artist" title="Search by artist"><i class="fa fa-search"></i></button>
+                            <span>Artist</span>
+                            <button class="button-icon" ng-click="library.search.displayFilter.artist = !library.search.displayFilter.artist" title="Search by artist"><i class="fa fa-search"></i></button>
+                            <button class="button-icon" ng-click="library.updateOrder(['artist.label', 'album.label', 'title'])" title="Order by artist"><i class="fa fa-sort"></i></button>
                             <input ng-if="library.search.displayFilter.artist" ng-model="library.search.artist" placeholder="Artist" autofocus="autofocus" ng-change="library.search.query()" ng-model-options="{ debounce: 1000 }">
                         </span>
                         <span class="grid-cell">
-                            <span>Album</span><button class="button-icon" ng-click="library.search.displayFilter.album = !library.search.displayFilter.album" title="Search by album"><i class="fa fa-search"></i></button>
+                            <span>Album</span>
+                            <button class="button-icon" ng-click="library.search.displayFilter.album = !library.search.displayFilter.album" title="Search by album"><i class="fa fa-search"></i></button>
+                            <button class="button-icon" ng-click="library.updateOrder(['album.label', 'artist.label', 'title'])" title="Order by album"><i class="fa fa-sort"></i></button>
                             <input ng-if="library.search.displayFilter.album" ng-model="library.search.album" placeholder="Album" autofocus="autofocus" ng-change="library.search.query()" ng-model-options="{ debounce: 1000 }">
                         </span>
                         <span class="grid-cell">

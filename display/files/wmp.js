@@ -1,6 +1,6 @@
 /*
  * main AngularJS code for wmp
- * version 1.3.0
+ * version 1.3.1
  */
 'use strict';
 angular
@@ -324,6 +324,7 @@ function LibraryController(Library, Tooltip, Playlist, $filter) {
     librarys.currentPage = 1;
     librarys.itemsPerPage = 50;
     librarys.setPage = setPage;
+    librarys.updateOrder = updateOrder;
     librarys.search = {
         artist: null,
         album: null,
@@ -356,6 +357,11 @@ function LibraryController(Library, Tooltip, Playlist, $filter) {
     //declare function for setting page number
     function setPage(currentPage) {
         librarys.currentPage = currentPage;
+        updateFilteredItems();
+    }
+    //declare function for update order and apply the update on the filtered items
+    function updateOrder(order) {
+        librarys.order = order;
         updateFilteredItems();
     }
     //declare function for update pagination system
