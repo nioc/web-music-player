@@ -23,15 +23,16 @@
                     <button class="plain-button" ng-if="artist.editMode" ng-click="artist.save()"><i class="fa fa-save"></i> Save</button>
                     <button class="plain-button" ng-if="artist.editMode" ng-click="artist.searchMusicBrainz()"><i class="fa fa-search"></i> Search in MusicBrainz</button>
                     <ul class="table" ng-if="artist.MusicBrainzResults.length">
-	                    <li class="grid-header">
-	                        <span class="grid-cell">Country</span>
-	                        <span class="grid-cell">Name</span>
-	                    </li>
-                    	<li class="grid-row clickable" ng-repeat="musicBrainzArtist in artist.MusicBrainzResults | orderBy:['name', 'mbid'] track by musicBrainzArtist.mbid" title="{{::musicBrainzArtist.summary}}" ng-click="artist.useMusicBrainz(musicBrainzArtist);">
-                    		<span class="grid-cell" ng-bind="::musicBrainzArtist.country"></span>
-                    		<span class="grid-cell" ng-bind="::musicBrainzArtist.name"></span>
-                    	</li>
+                        <li class="grid-header">
+                            <span class="grid-cell">Country</span>
+                            <span class="grid-cell">Name</span>
+                        </li>
+                        <li class="grid-row clickable" ng-repeat="musicBrainzArtist in artist.MusicBrainzResults | orderBy:['name', 'mbid'] track by musicBrainzArtist.mbid" title="{{::musicBrainzArtist.summary}}" ng-click="artist.useMusicBrainz(musicBrainzArtist);">
+                            <span class="grid-cell" ng-bind="::musicBrainzArtist.country"></span>
+                            <span class="grid-cell" ng-bind="::musicBrainzArtist.name"></span>
+                        </li>
                     </ul>
+                    <button class="plain-button" ng-click="artist.addTracks(artist.artist)"><i class="fa fa-plus-square-o"></i> Add artist to playlist</button>
                 </fieldset>
                 <ul class="table" ng-if="artist.artist.tracks.length">
                     <li class="grid-header">

@@ -1,6 +1,6 @@
 /*
  * main AngularJS code for wmp
- * version 1.3.2
+ * version 1.4.0
  */
 'use strict';
 angular
@@ -89,6 +89,8 @@ function Playlist(LocalUser, Tooltip, PlaylistItem) {
     playlist.currentTrack = 0;
     //declare function for add track in playlist
     playlist.add = add;
+    playlist.addAlbum = addAlbum;
+    playlist.addArtist = addArtist;
     //function to add a track to the user playlist
     function add(track) {
         var playlistItem = new PlaylistItem(track);
@@ -110,6 +112,44 @@ function Playlist(LocalUser, Tooltip, PlaylistItem) {
                 return;
             }
         });
+    }
+    //function to add tracks to the user playlist
+    function addTracks (tracks, title) {
+        PlaylistItem.addTracks({userId:LocalUser.id }, tracks, function(data) {
+            //success, refresh playlist
+            playlist.tracks = data;
+            //notify user with a tooltip
+            Tooltip.display(title + ' added to your playlist', 2000, 'info');
+        }, function(error) {
+            //handling API error
+            if (error.status === -1) {
+                Tooltip.display('Can not access to your current playlist, please check your internet connection or try again later', 5000, 'error');
+                return;
+            }
+            if (error.data && error.data.message) {
+                //catched error
+                Tooltip.display(error.data.message, 5000, 'error');
+                return;
+            }
+        });
+    }
+    //function to add album's tracks to the user playlist
+    function addAlbum (album) {
+        var tracks = [];
+        for (var i = 0; i < album.tracks.length; i++) {
+            var track = {id:album.tracks[i].id};
+            tracks.push(track);
+        }
+        addTracks(tracks, 'Album "' + album.name + '"');
+    }
+    //function to add artist's tracks to the user playlist
+    function addArtist (artist) {
+        var tracks = [];
+        for (var i = 0; i < artist.tracks.length; i++) {
+            var track = {id:artist.tracks[i].id};
+            tracks.push(track);
+        }
+        addTracks(tracks, 'Artist "' + artist.name + '"');
     }
 }
 //PlayerController function
@@ -622,6 +662,7 @@ function AlbumController($routeParams, $location, Tooltip, Playlist, Album, Musi
     album.useMusicBrainz = useMusicBrainz;
     //add link to Playlist service ("add track to playlist" function)
     album.add = Playlist.add;
+    album.addTracks = Playlist.addAlbum;
     function remove() {
         if (confirm('This will delete "' + album.album.name + '" album from the library, are you sure?')) {
             album.album.$delete(function() {$location.path('/library').replace();}, errorCallback);
@@ -672,6 +713,7 @@ function ArtistController($routeParams, $location, Tooltip, Playlist, Artist, Mu
     artist.useMusicBrainz = useMusicBrainz;
     //add link to Playlist service ("add track to playlist" function)
     artist.add = Playlist.add;
+    artist.addTracks = Playlist.addArtist;
     function remove() {
         if (confirm('This will delete "' + artist.artist.name + '" artist from the library and all his tracks, are you sure?')) {
             artist.artist.$delete(function() {$location.path('/library').replace();}, errorCallback);

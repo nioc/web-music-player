@@ -3,7 +3,7 @@
 /**
  * API wrapper.
  *
- * @version 1.1.0
+ * @version 1.2.0
  *
  * @internal
  */
@@ -62,6 +62,7 @@ class Api
             switch ($this->method) {
                 case 'POST':
                 case 'PUT':
+                case 'PATCH':
                     $this->query['body'] = json_decode(file_get_contents('php://input'));
                 case 'DELETE':
                 case 'GET':
@@ -107,7 +108,7 @@ class Api
             /**
              * Fetches all HTTP request headers from the current request.
              *
-             * @return array|bool An associative array of all the HTTP headers in the current request, or FALSE on failure.
+             * @return array|bool An associative array of all the HTTP headers in the current request, or FALSE on failure
              */
             function apache_request_headers()
             {
