@@ -223,7 +223,7 @@ if (isset($process) && $filesPath !== null && $filesPath !== '') {
         <title>Web Music Player Setup</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
         <link type="text/css" href="/display/files/vendor/normalize.css/normalize.css" rel="stylesheet"/>
-        <link type="text/css" href="/display/files/vendor/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
+        <link type="text/css" href="/display/files/vendor/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
         <link type="text/css" href="/display/files/wmp.css" rel="stylesheet"/>
         <style type="text/css">
         .form {

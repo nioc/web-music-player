@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-#version 1.1 2016-11-12
+#version 1.2 2016-11-14
 
 CACHE:
 
@@ -21,19 +21,18 @@ CACHE:
 /settings
 
 #style sheets
-/display/files/vendor/font-awesome-4.3.0/css/font-awesome.min.css
+/display/files/vendor/font-awesome-4.7.0/css/font-awesome.min.css
 /display/files/vendor/normalize.css/normalize.css
 /display/files/wmp.css
 
 #style sheet images
 
 #fonts
-/display/files/vendor/font-awesome-4.3.0/fonts/fontawesome-webfont.eot
-/display/files/vendor/font-awesome-4.3.0/fonts/fontawesome-webfont.svg
-/display/files/vendor/font-awesome-4.3.0/fonts/fontawesome-webfont.ttf
-/display/files/vendor/font-awesome-4.3.0/fonts/fontawesome-webfont.woff
-/display/files/vendor/font-awesome-4.3.0/fonts/fontawesome-webfont.woff2
-/display/files/vendor/font-awesome-4.3.0/fonts/FontAwesome.otf
+/display/files/vendor/font-awesome-4.7.0/fonts/fontawesome-webfont.eot?v=4.7.0
+/display/files/vendor/font-awesome-4.7.0/fonts/fontawesome-webfont.svg?v=4.7.0
+/display/files/vendor/font-awesome-4.7.0/fonts/fontawesome-webfont.ttf?v=4.7.0
+/display/files/vendor/font-awesome-4.7.0/fonts/fontawesome-webfont.woff?v=4.7.0
+/display/files/vendor/font-awesome-4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0
 
 #javascript files
 /display/files/vendor/angularjs/angular.min.js
