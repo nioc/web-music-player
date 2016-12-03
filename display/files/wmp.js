@@ -1,6 +1,6 @@
 /*
  * main AngularJS code for wmp
- * version 1.4.0
+ * version 1.5.0
  */
 'use strict';
 angular
@@ -690,7 +690,7 @@ function AlbumController($routeParams, $location, Tooltip, Playlist, Album, Musi
         album.album.$update(successCallback, errorCallback);
     }
     function searchMusicBrainz() {
-        album.MusicBrainzResults = MusicBrainz.query({type: 'albums', title: album.album.name});
+        album.MusicBrainzResults = MusicBrainz.query({type: 'albums', title: album.album.name, artist: album.album.artist.label});
     }
     function useMusicBrainz(musicBrainzAlbum) {
         album.album.name = musicBrainzAlbum.name;

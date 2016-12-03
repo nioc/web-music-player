@@ -5,7 +5,7 @@
  *
  * MusicBrainz is an open music encyclopedia that collects music metadata and makes it available to the public. See https://musicbrainz.org/
  *
- * @version 1.0.0
+ * @version 1.1.0
  *
  * @internal
  */
@@ -138,14 +138,18 @@ class MusicBrainz
      * Search an album by his title.
      *
      * @param string $albumTitle
+     * @param string $artistName The release artist name
      *
      * @return bool|array Albums collection or false on failure
      */
-    public function searchAlbumByTitle($albumTitle)
+    public function searchAlbumByTitle($albumTitle, $artistName = null)
     {
         //set valid request
         $this->endpoint .= '2/release/';
         $this->queryParameters['query'] = "release:$albumTitle;";
+        if ($artistName !== null) {
+            $this->queryParameters['query'] .= ' AND artist:'.$artistName;
+        }
         //execute the request
         $response = $this->executeCall();
         if ($response === false) {

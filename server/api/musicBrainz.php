@@ -5,7 +5,7 @@
  *
  * Provides access to MusicBrainz API
  *
- * @version 1.0.0
+ * @version 1.1.0
  *
  * @api
  */
@@ -45,7 +45,8 @@ switch ($api->method) {
                     //Type was not provided, return an error
                     return;
                 }
-                $result = $musicBrainz->searchAlbumByTitle($albumTitle);
+                $api->checkParameterExists('artist', $albumArtist);
+                $result = $musicBrainz->searchAlbumByTitle($albumTitle, $albumArtist);
                 if (!$result) {
                     $api->output(400, 'Error: '.$musicBrainz->errorMessage);
                     //return an error with message
