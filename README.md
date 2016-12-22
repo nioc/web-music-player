@@ -56,11 +56,11 @@ The project is open and any contribution is welcome!
 To keep the code clean, we use [php-cs-fixer](http://cs.sensiolabs.org/), before commit launch this on each edited files:
 
 ```` bash
-php /usr/local/bin/php-cs-fixer fix /path/to/editedFile.php -v
+php /usr/local/bin/php-cs-fixer fix /path/to/editedFile.php -v --fixers=-psr0
 ````
 You can handle all edited files with this single line:
 ```` bash
-cd /var/www/wmp; for file in $(git diff-index --name-only HEAD); do php /usr/local/bin/php-cs-fixer fix "$file" -v; done
+cd /var/www/wmp; for file in $(git diff-index --name-only HEAD); do php /usr/local/bin/php-cs-fixer fix "$file" -v --fixers=-psr0; done
 ````
 
 A little how-to for github:

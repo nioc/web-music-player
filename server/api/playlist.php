@@ -85,9 +85,16 @@ switch ($api->method) {
             //indicate the requester is not the playlist owner and is not allowed to update it
             return;
         }
-        if (!$api->checkParameterExists('sequence', $sequence)) {
-            $api->output(400, 'Track sequence must be provided');
-            //$sequence was not provided, return an error
+        if (!$api->checkParameterExists('sequence', $sequence) || $sequence === '') {
+            //$sequence was not provided, clear the playlist
+            $playlist = new Playlist($userId);
+            if (!$playlist->clear()) {
+                $api->output(500, 'Clear error');
+                //something happened during tracks deletion, return error
+                return;
+            }
+            $api->output(204, null);
+            //return the playlist cleared
             return;
         }
         $playlistItem = new PlaylistItem($userId, $sequence, null);

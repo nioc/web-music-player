@@ -91,13 +91,24 @@ The API returns:
 - 403 if the requester is not the playlist owner,
 - 500 in case of error.
 
+#### Clear a user's playlist
+````
+DELETE /server/api/users/:userId/playlist/tracks
+````
+The API returns:
+- 204 if the user's playlist is successfully cleared,
+- 400 if a mandatory parameter is missing (user identifier `userId`),
+- 401 if authorization token is missing or invalid,
+- 403 if the requester is not the playlist owner,
+- 500 in case of error.
+
 #### Remove a track from a user's playlist
 ````
 DELETE /server/api/users/:userId/playlist/tracks/:sequence
 ````
 The API returns:
 - 204 if the track is successfully removed from user's playlist,
-- 400 if a mandatory parameter is missing (user identifier `userId`, sequence of the track `sequence`),
+- 400 if a mandatory parameter is missing (user identifier `userId`),
 - 401 if authorization token is missing or invalid,
 - 403 if the requester is not the playlist owner,
 - 404 if the track was not in the user's playlist.

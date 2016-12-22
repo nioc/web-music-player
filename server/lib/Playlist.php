@@ -5,7 +5,7 @@
  *
  * The playlist is the user's list of tracks
  *
- * @version 1.0.0
+ * @version 1.1.0
  *
  * @internal
  */
@@ -49,7 +49,7 @@ class Playlist
     /**
      * Return the maximum sequence used for user.
      *
-     * @return int|bool The max sequence for the user or false on error.
+     * @return int|bool The max sequence for the user or false on error
      */
     private function getSequenceMax()
     {
@@ -108,6 +108,25 @@ class Playlist
             return false;
         }
     }
+
+    /**
+     * Clear the user's playlist.
+     *
+     * @return bool true if the playlist is cleared, false on error
+     */
+    public function clear()
+    {
+        if (isset($this->userId)) {
+            require_once $_SERVER['DOCUMENT_ROOT'].'/server/lib/DatabaseConnection.php';
+            $connection = new DatabaseConnection();
+            $query = $connection->prepare('DELETE FROM `playlist` WHERE `userId`=:userId;');
+            $query->bindValue(':userId', $this->userId, PDO::PARAM_INT);
+            //return true to indicate a successful track deletion
+            return $query->execute() && $query->rowCount() > 0;
+        }
+        //return false to indicate an error occurred while deleting track from user's playlist
+        return false;
+    }
 }
 
 /**
@@ -143,7 +162,7 @@ class PlaylistItem
     /**
      * Returns a specific user's track by it sequence number.
      *
-     * @return mixed|bool track on success, or false on error.
+     * @return mixed|bool track on success, or false on error
      */
     public function get()
     {
@@ -166,7 +185,7 @@ class PlaylistItem
     /**
      * Inserts a specific user's track and returns it sequence number.
      *
-     * @return mixed|bool the playlistitem inserted or false on error.
+     * @return mixed|bool the playlistitem inserted or false on error
      */
     public function insert()
     {
