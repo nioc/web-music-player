@@ -5,7 +5,7 @@
  *
  * Provides the list of all the tracks included in the library
  *
- * @version 1.0.0
+ * @version 1.1.0
  *
  * @api
  */
@@ -38,6 +38,7 @@ switch ($api->method) {
         $api->checkParameterExists('title', $parameter['trackTitle']);
         $api->checkParameterExists('artist', $parameter['artistName']);
         $api->checkParameterExists('album', $parameter['albumName']);
+        $api->checkParameterExists('search', $parameter['search']);
         //querying the library
         if (!$library->populateTracks($parameter)) {
             $api->output(500, 'Querying error');

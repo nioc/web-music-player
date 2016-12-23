@@ -169,8 +169,14 @@ Notes:
 
 #### Get all tracks from the library
 ````
-GET /server/api/library/tracks
+GET /server/api/library/tracks[?trackTitle=:title|artistName=:artist|albumName=:album|search=:anything]
 ````
+Following search criteria should be added in query string:
+- `trackTitle`,
+- `artistName`,
+- `albumName`,
+- `search` (cumulative search on track title, artist and album).
+
 The API returns:
 - 200 with an array of tracks,
 - 204 if there is no track in library,

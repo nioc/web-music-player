@@ -339,7 +339,7 @@ class Track
  *
  * This is a set of tracks (library, search, ...)
  *
- * @version 1.0.0
+ * @version 1.1.0
  *
  * @internal
  */
@@ -387,6 +387,9 @@ class Tracks
                     case 'albumName':
                         $sqlCondition .= ' AND `album`.`name` LIKE :albumName';
                         break;
+                    case 'search':
+                        $sqlCondition .= ' AND (`track`.`title` LIKE :trackTitle OR `artist`.`name` LIKE :artistName OR `album`.`name` LIKE :albumName)';
+                        break;
                 }
             }
         }
@@ -403,6 +406,11 @@ class Tracks
                         $query->bindValue(':artistName', "%$value%", PDO::PARAM_STR);
                         break;
                     case 'albumName':
+                        $query->bindValue(':albumName', "%$value%", PDO::PARAM_STR);
+                        break;
+                    case 'search':
+                        $query->bindValue(':trackTitle', "%$value%", PDO::PARAM_STR);
+                        $query->bindValue(':artistName', "%$value%", PDO::PARAM_STR);
                         $query->bindValue(':albumName', "%$value%", PDO::PARAM_STR);
                         break;
                 }
